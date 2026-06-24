@@ -536,6 +536,20 @@ async function init() {
     `Init: <strong>${yy}-${mm}</strong> · ` +
     `Centres (${_manifest.n_centres}): <strong>${_manifest.centres_included.join(", ")}</strong>`;
 
+  // Label the lead dropdown from the init month (L1 = init month), so the
+  // valid-month labels follow the data and never go stale after a rebuild.
+  const _MONTHS = ["January","February","March","April","May","June",
+                   "July","August","September","October","November","December"];
+  const _iy = parseInt(yy, 10), _im = parseInt(mm, 10);
+  const _leadSel = document.getElementById("fm-lead");
+  if (_leadSel) {
+    [..._leadSel.options].forEach(o => {
+      const L = parseInt(o.value, 10);
+      const tot = (_iy * 12 + (_im - 1)) + (L - 1);
+      o.textContent = `L${L} - ${_MONTHS[tot % 12]} ${Math.floor(tot / 12)}`;
+    });
+  }
+
   // Populate centre dropdown
   const sel = document.getElementById("fm-centre");
   for (const c of _manifest.centres_included) {
