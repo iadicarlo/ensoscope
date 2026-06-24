@@ -83,6 +83,46 @@
         ENSO, by replaying its past forecasts (hindcasts) and comparing them against what was actually
         observed. Higher, redder numbers mean more reliable; pale, lower numbers mean less reliable.
       </p>
+      <div style="margin:0.2rem 0 0.6rem;overflow-x:auto">
+        <svg viewBox="0 0 820 170" width="100%" style="max-width:820px;min-width:540px;height:auto" role="img"
+             aria-label="How skill is measured: replay the model's past forecasts, compare them to what actually happened, and score how close with a correlation from 0 to 1.">
+          <!-- boxes -->
+          <rect x="6"   y="14" width="230" height="124" rx="12" fill="#E8F4F6" stroke="#BCE0E6"/>
+          <rect x="295" y="14" width="230" height="124" rx="12" fill="#EEF3F8" stroke="#D3E0EC"/>
+          <rect x="584" y="14" width="230" height="124" rx="12" fill="#FCEFEA" stroke="#F6D2C2"/>
+          <!-- 1: clock (replay the past) -->
+          <circle cx="121" cy="46" r="13" fill="none" stroke="#1597A5" stroke-width="2.5"/>
+          <path d="M121 46 V37 M121 46 l6 4" fill="none" stroke="#1597A5" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 2: two tracks compared -->
+          <path d="M388 41 q11 -10 22 0 t22 0" fill="none" stroke="#0B2138" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M388 53 q11 -10 22 0 t22 0" fill="none" stroke="#9DB2C6" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 3: gauge (score) -->
+          <path d="M684 53 a15 15 0 0 1 30 0" fill="none" stroke="#EE6C3A" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M699 53 L709 41" fill="none" stroke="#EE6C3A" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="699" cy="53" r="2.6" fill="#EE6C3A"/>
+          <!-- arrows -->
+          <path d="M244 76 h36" stroke="#9DB2C6" stroke-width="3" stroke-linecap="round"/>
+          <path d="M276 70 l9 6 -9 6" fill="none" stroke="#9DB2C6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M533 76 h36" stroke="#9DB2C6" stroke-width="3" stroke-linecap="round"/>
+          <path d="M565 70 l9 6 -9 6" fill="none" stroke="#9DB2C6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- titles (on top of the boxes) -->
+          <text text-anchor="middle" font-weight="700" font-size="14.5" fill="#0B2138">
+            <tspan x="121" y="92">1 · Replay past forecasts</tspan>
+            <tspan x="410" y="92">2 · Compare to reality</tspan>
+            <tspan x="699" y="92">3 · Score how close</tspan>
+          </text>
+          <!-- sub labels -->
+          <text text-anchor="middle" font-size="12.5" fill="#5E7488">
+            <tspan x="121" y="111">replay the model's</tspan><tspan x="121" y="127">past hindcasts</tspan>
+            <tspan x="410" y="111">what actually</tspan><tspan x="410" y="127">happened</tspan>
+            <tspan x="699" y="111">correlation,</tspan><tspan x="699" y="127">0 (none) to 1 (perfect)</tspan>
+          </text>
+        </svg>
+      </div>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin:0 0 0.8rem">
+        That score is the <strong>skill</strong> - 1.0 is perfect, about 0.6+ is useful, near 0 is no skill.
+        The heatmap below shows it for every start month and lead time.
+      </p>
       <div class="skill-definitions">
         <p><strong>SST</strong> = sea-surface temperature, the ocean signal that defines El Niño and La Niña.</p>
         <p><strong>Niño 3.4 / Niño 3 / Niño 4</strong> = standard boxes in the tropical Pacific where that SST
