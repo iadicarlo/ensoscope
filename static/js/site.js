@@ -86,7 +86,7 @@
           '<div class="footer-col">' +
             '<div class="footer-title">ENSOscope</div>' +
             '<p>Operational El Niño / La Niña forecasts and teleconnection maps, turning seasonal climate forecasts into regional signals for anticipatory action.</p>' +
-            '<p class="footer-muted">Created by Isma Abdelkader Di Carlo (PhD), Utrecht University.</p>' +
+            '<p class="footer-muted">Created by Isma Abdelkader Di Carlo (PhD).</p>' +
           '</div>' +
           '<div class="footer-col">' +
             '<div class="footer-title">Explore</div>' +
@@ -104,7 +104,7 @@
           '</div>' +
         '</div>' +
         '<div class="footer-bottom">For research and humanitarian decision-support. Seasonal forecasts carry real uncertainty; read the Skill and Methodology pages before acting on them.' +
-          '<br><span style="opacity:0.85">© 2026 Isma Abdelkader Di Carlo · Content licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">CC BY 4.0</a> · Underlying datasets keep their own licenses (see Methodology).</span></div>';
+          '<span style="display:block;margin-top:0.85rem;opacity:0.8">© 2026 Isma Abdelkader Di Carlo · Content licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">CC BY 4.0</a> · Underlying datasets keep their own licenses (see Methodology).</span></div>';
       document.body.appendChild(f);
     }
   }
