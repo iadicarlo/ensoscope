@@ -680,7 +680,12 @@ main {
   .page-subtitle    { font-size: 0.9rem; margin-bottom: 1.25rem; }
   .card             { padding: 1rem; }
   .img-grid         { grid-template-columns: 1fr; }
-  .prob-bar-row     { min-width: unset; }
+  .prob-bar-row     { min-width: unset !important; }
+  .forecast-table   { font-size: 0.78rem; }
+  .forecast-table th,
+  .forecast-table td { min-width: 0 !important; padding: 0.4rem 0.4rem; }
+  .prob-seg         { font-size: 0.56rem; }
+  .fc-block         { padding: 0.4rem 0.55rem; }
   .skill-cell       { min-width: 64px; }
   .footer-inner     { grid-template-columns: 1fr; gap: 1.25rem; }
   #fm-map           { height: 62vh; }
