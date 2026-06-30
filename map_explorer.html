@@ -300,19 +300,22 @@
         The maps below show <strong>step 3</strong> for the phase and season you choose.
       </p>
       <div class="skill-definitions">
-        <p><strong>Data sources.</strong> <strong>CHIRPS</strong> - satellite-plus-gauge rainfall
-           observations. <strong>ERA5</strong> - reanalysis used for the heat indices. <strong>CESM2</strong>
-           - a 50-member climate-model ensemble, useful where the observed record is short.</p>
-        <p><strong>Hazards and indices.</strong> <em>Wet</em>: RX10day (heaviest 10-day rainfall) and totals.
-           <em>Drought</em>: CDD (longest run of consecutive dry days). <em>Heat stress</em>:
-           <strong>WBGT</strong> - wet-bulb globe temperature, a combined heat-and-humidity index for human
-           heat danger - and UTCI, a similar "feels-like" comfort index.</p>
-        <p><strong>Anomaly vs absolute.</strong> "Anomaly" is the difference from ENSO-neutral years, so it
-           isolates the El Niño / La Niña effect. "Absolute" is the raw value during that phase.</p>
-        <p><strong>Reading dry regions.</strong> Over hyper-arid areas such as the Sahara or Arabian Peninsula,
-           rainfall is near zero, so a rainfall anomaly there is statistically noisy and not physically
-           meaningful - treat colour over deserts with caution. Where shown, robustness dots mark pixels at
-           which fewer than 60% of events agree on the sign of the change.</p>
+        <p><strong>New here?</strong> Leave <em>Source</em> on its default, pick a <em>Hazard</em> and a
+           <em>Season</em>, and read the colour. Every term below is explained in plain words on the
+           <a href="guide.html">Guide</a>.</p>
+        <p><strong>Where the maps come from.</strong> They use rainfall that actually fell
+           (<strong>CHIRPS</strong>) and observed weather for heat (<strong>ERA5</strong>), plus a climate
+           model run many times (<strong>CESM2</strong>) that fills in where the real record has too few
+           strong events for a clear map.</p>
+        <p><strong>What each hazard shows.</strong> <em>Wet</em> is the heaviest 10-day rainfall (RX10day),
+           a flood-risk sign. <em>Drought</em> is the longest run of dry days (CDD). <em>Heat stress</em>
+           uses WBGT, a "feels-like" heat number combining temperature and humidity (high means dangerous
+           heat for the body), and UTCI, a similar comfort index.</p>
+        <p><strong>Anomaly vs absolute.</strong> "Anomaly" is the difference from normal (ENSO-neutral years),
+           so it shows just the El Niño / La Niña effect. "Absolute" is the raw value during that phase.</p>
+        <p><strong>Reading dry regions.</strong> Over near-rainless places such as the Sahara or Arabian
+           Peninsula, a rainfall change is mostly noise, so treat colour over deserts with caution. Dots mark
+           places where fewer than 60% of past events agreed on the direction of the change.</p>
       </div>
     </div>
 
@@ -323,9 +326,9 @@
         <div class="map-ctrl-group">
           <label>Source</label>
           <select id="ctrl-source" onchange="setSource(this.value)">
-            <option value="obs">CHIRPS Observations (precip)</option>
-            <option value="era5">ERA5 Observations (heat indices)</option>
-            <option value="cesm2">CESM2 Large Ensemble</option>
+            <option value="obs">Observed rainfall (CHIRPS)</option>
+            <option value="era5">Observed weather for heat (ERA5)</option>
+            <option value="cesm2">Climate model, many runs (CESM2)</option>
           </select>
         </div>
         <div class="map-ctrl-group">
