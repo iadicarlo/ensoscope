@@ -1,0 +1,28 @@
+{
+  "sources": [
+    {
+      "source": "seas5",
+      "model": "SEAS5 (ECMWF, System 51)",
+      "centre": "ECMWF",
+      "system": "51",
+      "kind": "dynamical_c3s",
+      "latest_vintage": "2026-08",
+      "calibrated": false,
+      "forecast_json": "forecast.json",
+      "members_json": "forecast_members.json"
+    },
+    {
+      "source": "mf9",
+      "model": "Meteo-France System 9",
+      "centre": "Meteo-France",
+      "system": "9",
+      "kind": "dynamical_c3s",
+      "latest_vintage": "2026-08",
+      "calibrated": false,
+      "forecast_json": "forecast_mf9.json",
+      "members_json": "forecast_members_mf9.json"
+    }
+  ],
+  "n_sources": 2,
+  "default_enso": "seas5"
+}

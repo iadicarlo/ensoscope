@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About &amp; Contact - ENSOscope</title>
+  <meta name="description" content="About ENSOscope and its author, Isma Abdelkader Di Carlo (PhD), Utrecht University: contact and code.">
+  <link rel="canonical" href="https://iadicarlo.org/ensoscope/about.html">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="stylesheet" href="static/css/style.css?v=20260624g">
+  <style>
+    .about-hero {
+      background: var(--header-bg);
+      color: #ECEFF1;
+      border-radius: var(--radius);
+      padding: 1.8rem 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .about-hero h1 { font-size: 1.7rem; margin-bottom: 0.25rem; color: #fff; }
+    .about-hero .role { color: #9FB6CE; font-size: 1rem; }
+    .about-hero .affil { color: #B6C4CF; font-size: 0.9rem; margin-top: 0.4rem; }
+    .contact-list { list-style: none; margin: 0; padding: 0; }
+    .contact-list li { padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+    .contact-list li:last-child { border-bottom: none; }
+    .contact-list strong { display: inline-block; min-width: 130px; color: var(--text-muted); font-weight: 600; }
+    .contact-list a { color: var(--accent); text-decoration: none; }
+    .contact-list a:hover { text-decoration: underline; }
+  </style>
+  <link rel="icon" type="image/png" href="favicon.png?v=20260624g">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body data-page="about">
+  <header>
+    <div class="header-inner">
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20260624g" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <nav>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
+          <div class="nav-dropdown-menu">
+            <a href="index.html" data-nav-item="forecast_enso">ENSO</a>
+            <a href="forecast_maps.html" data-nav-item="forecast_maps">Maps</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="map_explorer">Teleconnections</span>
+          <div class="nav-dropdown-menu">
+            <a href="map_explorer.html" data-nav-item="telecon_maps">Maps</a>
+            <a href="event_replay.html" data-nav-item="telecon_replay">Event replay</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="hindcasts">Hindcasts</span>
+          <div class="nav-dropdown-menu">
+            <a href="hindcast_explorer.html" data-nav-item="hindcast_enso">ENSO</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="skill">Skill</span>
+          <div class="nav-dropdown-menu">
+            <a href="hindcast_skill.html" data-nav-item="skill_enso">ENSO</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="about-hero">
+      <h1>Isma Abdelkader Di Carlo (PhD)</h1>
+      <div class="role">Postdoctoral Researcher, climate variability and its impacts</div>
+      <div class="affil">Utrecht University, The Netherlands</div>
+    </div>
+
+    <section class="card prose">
+      <h2>About</h2>
+      <p>
+        I am a postdoctoral researcher at Utrecht University working on the El Niño-Southern
+        Oscillation (ENSO) and how its behaviour and impacts change under a warming climate. My
+        research connects large-ensemble climate simulations and observations to understand how the
+        strongest El Niño and La Niña events, and the rainfall and heat extremes they drive, may shift
+        in the decades ahead.
+      </p>
+      <p>
+        This platform grew out of that work. Its
+        aim is practical: to translate the operational seasonal forecasts produced by major centres
+        (ECMWF and Météo-France) into clear, regional signals that humanitarian and health teams can
+        use for anticipatory action, months before a season unfolds. It is a transparent layer on top
+        of world-class forecasts, not a replacement for them, and every method and data source is
+        documented openly on the <a href="methodology.html">Methodology</a> page.
+      </p>
+
+      <h3>What you can do here</h3>
+      <ul>
+        <li><strong><a href="index.html">Forecast</a></strong> - the latest ENSO outlook and the
+          probability of a strong or extreme event in the months ahead.</li>
+        <li><strong><a href="map_explorer.html">Teleconnections</a></strong> - where past El Niño and
+          La Niña phases shifted rainfall, drought and heat stress.</li>
+        <li><strong><a href="hindcast_skill.html">Skill</a></strong> - how trustworthy the forecasts
+          are, by season and lead time, verified against observations.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Contact</h2>
+      <ul class="contact-list">
+        <li><strong>Current affiliation</strong> Utrecht University, The Netherlands</li>
+        <li><strong>Website</strong> <a href="https://iadicarlo.org" target="_blank" rel="noopener">iadicarlo.org</a></li>
+        <li><strong>Email</strong> <a href="mailto:i.r.d.abdelkaderdicarlo@uu.nl">i.r.d.abdelkaderdicarlo@uu.nl</a></li>
+        <li><strong>Code</strong> <a href="https://github.com/iadicarlo" target="_blank" rel="noopener">github.com/iadicarlo</a></li>
+      </ul>
+      <p style="font-size:0.84rem;color:var(--text-muted);margin-top:0.9rem">
+        For data or methodological questions, please get in touch through the channels above.
+      </p>
+    </section>
+  </main>
+
+  <script src="static/js/site.js?v=20260827d"></script>
+</body>
+</html>

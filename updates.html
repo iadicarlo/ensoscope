@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What's new - ENSOscope</title>
+  <meta name="description" content="What has been added, changed or fixed on ENSOscope, with dates: new heat and rainfall layers, forecast updates and corrections.">
+  <link rel="canonical" href="https://iadicarlo.org/ensoscope/updates.html">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="stylesheet" href="static/css/style.css?v=20260624g">
+  <style>
+    .upd-intro { margin-bottom: 1.4rem; }
+    .upd { display: flex; gap: 1.2rem; padding: 1.1rem 0; border-bottom: 1px solid var(--border); }
+    .upd:last-child { border-bottom: none; }
+    .upd-meta { flex: 0 0 150px; display: flex; flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+    .upd-meta time { font-size: 0.88rem; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+    .upd-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase;
+               padding: 0.16rem 0.5rem; border-radius: 999px; background: #ECEFF1; color: #37474F; }
+    .upd-tag-new-data { background: #E3F2FD; color: #0D47A1; }
+    .upd-tag-new-feature { background: #E8F5E9; color: #1B5E20; }
+    .upd-tag-fix { background: #FFF3E0; color: #E65100; }
+    .upd-tag-forecast-update { background: #EDE7F6; color: #4527A0; }
+    .upd-body { flex: 1 1 auto; }
+    .upd-body h3 { font-size: 1.05rem; margin: 0 0 0.35rem; color: #0B2138; }
+    .upd-body ul { margin: 0; padding-left: 1.1rem; }
+    .upd-body li { font-size: 0.92rem; line-height: 1.55; margin-bottom: 0.35rem; color: var(--text); }
+    .upd-body li:last-child { margin-bottom: 0; }
+    @media (max-width: 640px) {
+      .upd { flex-direction: column; gap: 0.5rem; }
+      .upd-meta { flex-direction: row; align-items: center; gap: 0.6rem; }
+    }
+  </style>
+  <link rel="icon" type="image/png" href="favicon.png?v=20260624g">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body data-page="updates">
+  <header>
+    <div class="header-inner">
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20260624g" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <nav>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
+          <div class="nav-dropdown-menu">
+            <a href="index.html" data-nav-item="forecast_enso">ENSO</a>
+            <a href="forecast_maps.html" data-nav-item="forecast_maps">Maps</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="map_explorer">Teleconnections</span>
+          <div class="nav-dropdown-menu">
+            <a href="map_explorer.html" data-nav-item="telecon_maps">Maps</a>
+            <a href="event_replay.html" data-nav-item="telecon_replay">Event replay</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="hindcasts">Hindcasts</span>
+          <div class="nav-dropdown-menu">
+            <a href="hindcast_explorer.html" data-nav-item="hindcast_enso">ENSO</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="skill">Skill</span>
+          <div class="nav-dropdown-menu">
+            <a href="hindcast_skill.html" data-nav-item="skill_enso">ENSO</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="page-title">What's new</h1>
+    <p class="page-subtitle">
+      What has been added, changed or fixed on ENSOscope, most recent first.
+      New to the platform? Start with the <a href="guide.html">Guide</a>.
+    </p>
+
+    <section class="card">
+      <p class="upd-intro" style="font-size:0.92rem;color:var(--text-muted);margin-top:0">
+        ENSOscope is updated monthly with the new forecast, and between those updates
+        whenever a layer is added or a problem is found. Much of what is listed here comes
+        from questions and feedback sent by the humanitarian teams using it, which is the
+        fastest way to get something fixed or added.
+      </p>
+      <div id="updates-list"></div>
+    </section>
+
+    <section class="card prose">
+      <h2>How to read the tags</h2>
+      <ul>
+        <li><strong>New data</strong> a new indicator or dataset you can now map.</li>
+        <li><strong>New feature</strong> a new page or tool on the site.</li>
+        <li><strong>Fix</strong> something that was wrong and has been corrected.</li>
+        <li><strong>Forecast update</strong> the routine monthly refresh of the forecast.</li>
+      </ul>
+      <p style="font-size:0.88rem;color:var(--text-muted)">
+        Methods behind each indicator are documented on the
+        <a href="methodology.html">Methodology and data</a> page. To report a problem or
+        request an indicator, see <a href="about.html">About and contact</a>.
+      </p>
+    </section>
+  </main>
+
+  <script src="static/js/updates.js?v=20260827d"></script>
+  <script src="static/js/site.js?v=20260827d"></script>
+</body>
+</html>

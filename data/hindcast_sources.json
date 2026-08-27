@@ -1,0 +1,22 @@
+{
+  "sources": [
+    {
+      "source": "seas5",
+      "model": "SEAS5 (ECMWF, System 51)",
+      "centre": "ECMWF",
+      "system": "51",
+      "kind": "dynamical_c3s",
+      "hindcast_json": "enso_hindcast_seas5.json"
+    },
+    {
+      "source": "mf9",
+      "model": "Meteo-France System 9",
+      "centre": "Meteo-France",
+      "system": "9",
+      "kind": "dynamical_c3s",
+      "hindcast_json": "enso_hindcast_mf9.json"
+    }
+  ],
+  "n_sources": 2,
+  "default_enso": "seas5"
+}

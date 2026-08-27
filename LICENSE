@@ -1,0 +1,30 @@
+ENSOscope - https://iadicarlo.org/ensoscope/
+Copyright (c) 2026 Isma Abdelkader Di Carlo (PhD), Utrecht University.
+
+CONTENT LICENSE
+---------------
+Original content of this platform - the website, figures, maps, text and
+generated data products - is licensed under the Creative Commons Attribution
+4.0 International License (CC BY 4.0).
+
+You are free to share and adapt this material for any purpose, including
+commercially, provided you give appropriate credit, link to the license, and
+indicate if changes were made.
+
+License text: https://creativecommons.org/licenses/by/4.0/
+
+Suggested citation:
+  Abdelkader Di Carlo, I. (2026). ENSOscope: seasonal El Nino / La Nina
+  forecasts and teleconnection maps for humanitarian anticipatory action.
+  https://iadicarlo.org/ensoscope/
+
+THIRD-PARTY DATA
+----------------
+This platform builds on third-party datasets (ECMWF SEAS5, Meteo-France
+System 9, ERA5, CHIRPS, CESM2, COBE-SST 2, GPCP, Berkeley Earth, Natural
+Earth, and others). Each dataset remains under its own license and citation
+requirements - see the Methodology page for full sources and DOIs:
+  https://iadicarlo.org/ensoscope/methodology.html#data-sources
+
+The CC BY 4.0 license above applies to original ENSOscope content, not to the
+underlying third-party data, which you must attribute separately.

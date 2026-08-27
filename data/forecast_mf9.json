@@ -1,0 +1,85 @@
+{
+  "vintage": "2026-08",
+  "model": "Meteo-France System 9",
+  "source": "mf9",
+  "calibrated": false,
+  "method": "raw_ensemble_fraction",
+  "classes_ordered": [
+    "extreme_la_nina",
+    "strong_la_nina",
+    "moderate_la_nina",
+    "neutral",
+    "moderate_el_nino",
+    "strong_el_nino",
+    "extreme_el_nino"
+  ],
+  "leads": [
+    {
+      "lead": 1,
+      "valid_time": "2026-08",
+      "extreme_la_nina": 0.0,
+      "strong_la_nina": 0.0,
+      "moderate_la_nina": 0.0,
+      "neutral": 0.0,
+      "moderate_el_nino": 0.0,
+      "strong_el_nino": 1.0,
+      "extreme_el_nino": 0.0
+    },
+    {
+      "lead": 2,
+      "valid_time": "2026-09",
+      "extreme_la_nina": 0.0,
+      "strong_la_nina": 0.0,
+      "moderate_la_nina": 0.0,
+      "neutral": 0.0,
+      "moderate_el_nino": 0.0,
+      "strong_el_nino": 0.7647,
+      "extreme_el_nino": 0.2353
+    },
+    {
+      "lead": 3,
+      "valid_time": "2026-10",
+      "extreme_la_nina": 0.0,
+      "strong_la_nina": 0.0,
+      "moderate_la_nina": 0.0,
+      "neutral": 0.0,
+      "moderate_el_nino": 0.0,
+      "strong_el_nino": 0.0196,
+      "extreme_el_nino": 0.9804
+    },
+    {
+      "lead": 4,
+      "valid_time": "2026-11",
+      "extreme_la_nina": 0.0,
+      "strong_la_nina": 0.0,
+      "moderate_la_nina": 0.0,
+      "neutral": 0.0,
+      "moderate_el_nino": 0.0,
+      "strong_el_nino": 0.0,
+      "extreme_el_nino": 1.0
+    },
+    {
+      "lead": 5,
+      "valid_time": "2026-12",
+      "extreme_la_nina": 0.0,
+      "strong_la_nina": 0.0,
+      "moderate_la_nina": 0.0,
+      "neutral": 0.0,
+      "moderate_el_nino": 0.0,
+      "strong_el_nino": 0.0,
+      "extreme_el_nino": 1.0
+    },
+    {
+      "lead": 6,
+      "valid_time": "2027-01",
+      "extreme_la_nina": 0.0,
+      "strong_la_nina": 0.0,
+      "moderate_la_nina": 0.0,
+      "neutral": 0.0,
+      "moderate_el_nino": 0.0,
+      "strong_el_nino": 0.0,
+      "extreme_el_nino": 1.0
+    }
+  ],
+  "build_month_utc": "2026-08"
+}

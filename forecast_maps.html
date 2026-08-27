@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forecast Maps - ENSOscope</title>
+  <meta name="description" content="ENSO sea-surface-temperature anomaly forecast maps by lead time, from ECMWF SEAS5 and Météo-France.">
+  <link rel="canonical" href="https://iadicarlo.org/ensoscope/forecast_maps.html">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="stylesheet" href="static/css/style.css?v=20260624g">
+  <style>
+    .fm-controls {
+      display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;
+      padding:0.8rem 1rem; background:var(--surface-2,#f0f4f8);
+      border:1px solid var(--border); border-radius:var(--radius);
+      margin-bottom:1rem;
+    }
+    .fm-ctrl { display:flex; flex-direction:column; gap:0.2rem; }
+    .fm-ctrl label { font-size:0.75rem; font-weight:600; color:var(--text-muted);
+                     text-transform:uppercase; letter-spacing:0.04em; }
+    .fm-ctrl select, .fm-ctrl button {
+      padding:0.35rem 0.7rem; border:1px solid var(--border); border-radius:6px;
+      background:var(--card-bg); color:var(--text); font-size:0.85rem;
+      cursor:pointer; min-width:140px;
+    }
+    #fm-map {
+      position:relative;
+      width:100%;
+      height:560px;
+      background:var(--card-bg);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      margin-bottom:0.5rem;
+      overflow:hidden;
+    }
+    #fm-map svg { display:block; }
+    #fm-colorbar-wrap { display:flex; align-items:center; gap:0.6rem;
+                        padding:0.4rem 0.8rem; font-size:0.8rem; }
+    #fm-colorbar { width:360px; height:14px; border:1px solid #ddd; }
+    #fm-meta { font-size:0.78rem; color:var(--text-muted); margin-bottom:0.5rem; }
+
+    /* Country detail card */
+    #fm-country-card {
+      display:none;
+      margin-top:1rem;
+      padding:1rem 1.25rem;
+      background:var(--card-bg);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+    }
+    #fm-country-card.active { display:block; }
+    #fm-country-card .fm-country-header {
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:0.8rem;
+    }
+    #fm-country-card h3 { margin:0; font-size:1.1rem; }
+    #fm-country-card button.close {
+      background:transparent; border:1px solid var(--border); border-radius:4px;
+      cursor:pointer; padding:0.2rem 0.5rem; font-size:0.85rem;
+    }
+    #fm-country-chart-wrap { position:relative; height:360px; }
+  </style>
+  <link rel="icon" type="image/png" href="favicon.png?v=20260624g">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body data-page="forecast_maps">
+  <header>
+    <div class="header-inner">
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20260624g" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <nav>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
+          <div class="nav-dropdown-menu">
+            <a href="index.html" data-nav-item="forecast_enso">ENSO</a>
+            <a href="forecast_maps.html" class="active" data-nav-item="forecast_maps">Maps</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="map_explorer">Teleconnections</span>
+          <div class="nav-dropdown-menu">
+            <a href="map_explorer.html" data-nav-item="telecon_maps">Maps</a>
+            <a href="event_replay.html" data-nav-item="telecon_replay">Event replay</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="hindcasts">Hindcasts</span>
+          <div class="nav-dropdown-menu">
+            <a href="hindcast_explorer.html" data-nav-item="hindcast_enso">ENSO</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="skill">Skill</span>
+          <div class="nav-dropdown-menu">
+            <a href="hindcast_skill.html" data-nav-item="skill_enso">ENSO</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="page-title">Multi-model Forecast Maps</h1>
+    <p class="page-subtitle">
+      Multi-model median (ECMWF SEAS5 + Météo-France) forecast SST at leads L1-L6 for the latest init.
+      The field is the <strong>variance-adjusted SST anomaly</strong> - detrended for global warming
+      and standardized by the local observed SST standard deviation (σ units), so it shows how
+      anomalous each region is relative to its own variability. Precipitation indicators
+      (total, extremes, drought) will be added once the daily forecast fields are processed.
+    </p>
+
+    <div id="fm-meta">Loading manifest…</div>
+
+    <div class="fm-controls">
+      <div class="fm-ctrl">
+        <label for="fm-variable">Variable</label>
+        <select id="fm-variable">
+          <option value="ssta" selected>SSTA - variance-adjusted (σ)</option>
+        </select>
+      </div>
+      <div class="fm-ctrl">
+        <label for="fm-lead">Lead time</label>
+        <select id="fm-lead">
+          <option value="1" selected>L1 - July 2026</option>
+          <option value="2">L2 - August 2026</option>
+          <option value="3">L3 - September 2026</option>
+          <option value="4">L4 - October 2026</option>
+          <option value="5">L5 - November 2026</option>
+          <option value="6">L6 - December 2026</option>
+        </select>
+      </div>
+      <div class="fm-ctrl">
+        <label for="fm-centre">Show centre</label>
+        <select id="fm-centre">
+          <option value="__multi" selected>Multi-model median</option>
+        </select>
+      </div>
+      <div class="fm-ctrl">
+        <label for="fm-projection">Projection</label>
+        <select id="fm-projection">
+          <option value="orthographic" selected>Orthographic (globe)</option>
+          <option value="robinson">Robinson (flat)</option>
+          <option value="naturalEarth">Natural Earth</option>
+        </select>
+      </div>
+      <div class="fm-ctrl">
+        <label>&nbsp;</label>
+        <label style="font-size:0.78rem;font-weight:500">
+          <input type="checkbox" id="fm-pixel-mode">
+          Pixel-click mode
+        </label>
+      </div>
+    </div>
+
+    <div id="fm-map"></div>
+    <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0">
+      Drag to rotate · scroll to zoom. Values shown are the equal-weight
+      multi-model median of the selected variable per cell.
+    </p>
+
+    <div id="fm-colorbar-wrap">
+      <span id="fm-cmin">-2</span>
+      <canvas id="fm-colorbar" width="360" height="14"></canvas>
+      <span id="fm-cmax">+2</span>
+      <span style="margin-left:0.6rem">SSTA [σ]</span>
+    </div>
+
+    <div id="fm-stipple-legend" style="display:none;align-items:center;gap:0.5rem;padding:0.15rem 0.8rem;font-size:0.75rem;color:var(--text-muted)">
+      <svg width="30" height="14" aria-hidden="true" style="flex:0 0 auto;border:1px solid var(--border);border-radius:3px;background:#dfe6ee">
+        <circle cx="6" cy="7" r="1.3" fill="rgba(40,40,40,0.7)"></circle>
+        <circle cx="15" cy="7" r="1.3" fill="rgba(40,40,40,0.7)"></circle>
+        <circle cx="24" cy="7" r="1.3" fill="rgba(40,40,40,0.7)"></circle>
+      </svg>
+      <span>Stippling marks low-robustness cells where fewer than two-thirds of the models agree on the sign of the anomaly.</span>
+    </div>
+
+    <div id="fm-country-card">
+      <div class="fm-country-header">
+        <h3 id="fm-country-title">-</h3>
+        <div>
+          <button class="close" id="fm-country-back" style="margin-right:0.5rem;display:none">← back to country</button>
+          <select id="fm-country-variable" style="margin-right:0.5rem">
+            <option value="pr_total_mm" selected>Monthly precip total (mm/month)</option>
+            <option value="rx1day_mm">RX1DAY - max daily precip (mm/day)</option>
+            <option value="rx10day_mm">RX10DAY - max 10-day precip (mm)</option>
+            <option value="cdd_days">CDD - max consecutive dry days</option>
+          </select>
+          <button class="close" id="fm-country-close">✕ close</button>
+        </div>
+      </div>
+      <div id="fm-country-chart-wrap">
+        <canvas id="fm-country-chart"></canvas>
+      </div>
+      <p style="font-size:0.75rem;color:var(--text-muted);margin-top:0.6rem">
+        Each centre shown as a coloured line (ensemble median P50) with
+        shaded envelope (P10 - P90). Pool: all ensemble members × all
+        country grid cells, per centre, per lead month.
+      </p>
+    </div>
+
+    <div class="card" style="margin-top:1rem">
+      <h2>About</h2>
+      <p>
+        Each contributing centre's ensemble mean is computed on its native grid and
+        regridded to a common 1°×1° mesh. Centres are combined with <strong>equal
+        weight</strong> (one centre = one vote), following our
+        <a href="https://example.internal/docs/methods_variance_decomposition">
+        multi-model aggregation convention</a>. The per-cell value shown is the
+        cross-centre median of the selected variable at the chosen lead.
+      </p>
+      <p>
+        Maps for the current forecast only; past inits are not stored as maps (they're
+        available as time-series on the <a href="hindcast_explorer.html">Hindcasts</a>
+        tab). XRO is excluded from maps - it's an index-only model.
+      </p>
+    </div>
+  </main>
+
+  <script src="static/lib/d3.min.js?v=20260624g"></script>
+  <!-- d3-geo-projection provides geoRobinson; vanilla d3 already has equalEarth + naturalEarth1 -->
+  <script src="static/lib/d3-geo-projection.min.js?v=20260624g"></script>
+  <script src="static/lib/chart.umd.min.js?v=20260624g"></script>
+  <script src="static/js/forecast_maps.js?v=20260827d"></script>
+  <script src="static/js/site.js?v=20260827d"></script>
+</body>
+</html>

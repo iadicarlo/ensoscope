@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Methodology - ENSOscope</title>
+  <meta name="description" content="Methodology and open data sources behind the ENSOscope ENSO forecasts, skill verification and teleconnection composites, with DOIs.">
+  <link rel="canonical" href="https://iadicarlo.org/ensoscope/methodology.html">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="stylesheet" href="static/css/style.css?v=20260624g">
+  <link rel="icon" type="image/png" href="favicon.png?v=20260624g">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body data-page="methodology">
+
+  <header>
+    <div class="header-inner">
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20260624g" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <nav>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
+          <div class="nav-dropdown-menu">
+            <a href="index.html" data-nav-item="forecast_enso">ENSO</a>
+            <a href="forecast_maps.html" data-nav-item="forecast_maps">Maps</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="map_explorer">Teleconnections</span>
+          <div class="nav-dropdown-menu">
+            <a href="map_explorer.html" data-nav-item="telecon_maps">Maps</a>
+            <a href="event_replay.html" data-nav-item="telecon_replay">Event replay</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="hindcasts">Hindcasts</span>
+          <div class="nav-dropdown-menu">
+            <a href="hindcast_explorer.html" data-nav-item="hindcast_enso">ENSO</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="skill">Skill</span>
+          <div class="nav-dropdown-menu">
+            <a href="hindcast_skill.html" data-nav-item="skill_enso">ENSO</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="page-title">Methodology</h1>
+    <p class="page-subtitle">
+      How the forecasts, the ENSO classification, the skill verification, and the teleconnection
+      composites are produced.
+    </p>
+
+    <div class="card">
+      <h2>ENSO index &amp; 7-class classification</h2>
+      <div class="prose">
+        <p>
+          For each ensemble member we compute area-weighted NINO sea-surface-temperature indices
+          (NINO3.4, NINO3, NINO4) and the NINO3 precipitation anomaly. Each index is
+          <strong>detrended for global warming</strong> by regression on a Berkeley Earth global
+          warming index (GWI), so the classification reflects internal tropical-Pacific variability
+          rather than the forced warming trend.
+        </p>
+        <p>The standardized NINO3.4 index <em>z</em> is mapped to seven classes:</p>
+        <ul>
+          <li><strong>Neutral</strong> - |z| &lt; 0.5</li>
+          <li><strong>Moderate</strong> El Niño / La Niña - |z| ≥ 0.5</li>
+          <li><strong>Strong</strong> - NINO3 (El Niño) / NINO4 (La Niña) |z| ≥ 1.25</li>
+          <li><strong>Extreme</strong> - |z| ≥ 1.75 <em>and</em>, for El Niño, a
+              <strong>NINO3 precipitation anomaly ≥ 5 mm/day</strong></li>
+        </ul>
+        <p>
+          The precipitation requirement is deliberate: a truly <em>extreme</em> El Niño is
+          distinguished not by SST alone but by the eastward shift of deep convection into the
+          eastern Pacific, captured by the NINO3 rainfall response.
+        </p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Bias &amp; amplitude correction - no statistical calibration</h2>
+      <div class="prose">
+        <p>
+          Each member's index is corrected to the <strong>1993-2016 common hindcast period</strong>
+          with a variance-rescaling bias correction (after <strong>Merryfield &amp; Lee</strong>): the
+          hindcast mean is removed and the variance is rescaled to match observations,
+        </p>
+        <p style="text-align:center;font-size:1.05rem">
+          <em>z = (anomaly − μ<sub>hindcast</sub>) / σ<sub>hindcast</sub></em>
+          &nbsp;for each start month and lead time.
+        </p>
+        <p>
+          This removes both the mean bias and the model's ENSO <em>amplitude</em> bias - seasonal
+          models typically over-amplify ENSO by ~40% (the cold-tongue bias). Probabilities are then
+          the <strong>raw fraction of ensemble members</strong> in each class. <em>No</em> Platt or
+          isotonic calibration is applied: the spread of the bias-corrected ensemble <em>is</em> the
+          probability.
+        </p>
+        <p>
+          On the 1993-2016 hindcast this reproduces observed extreme-event frequencies
+          (extreme El Niño 1.7% modelled vs 2.1% observed; extreme La Niña 10.5% vs 7.6%), which a
+          calibration layer would otherwise obscure.
+        </p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Skill verification</h2>
+      <div class="prose">
+        <p>
+          Skill is shown directly as the <strong>temporal correlation</strong> between the hindcast
+          <em>ensemble-mean</em> NINO index and observations, as a function of start month and lead
+          time, for each NINO region including NINO3 precipitation - the standard anomaly-correlation
+          metric used in seasonal-forecast verification. Correlation falls at longer leads and across
+          the boreal-spring predictability barrier. See the <a href="hindcast_skill.html">Skill tab</a>.
+        </p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Teleconnection composites</h2>
+      <div class="prose">
+        <p>
+          The Teleconnections maps composite climate-impact indicators (heat: Tmax, UTCI, WBGT, and
+          daytime, nighttime and compound heatwave days; precipitation extremes: Rx10day, consecutive
+          dry days) by ENSO phase, from ERA5/CHIRPS observations and a CESM2 large ensemble.
+          The <strong>ENSO indices</strong> used to classify each event are detrended for global
+          warming, deseasonalised with a 30-year rolling window, and standardised by the
+          <strong>ENSO standard deviation over 1980-2014</strong> where the threshold is expressed
+          in standard deviations. The <strong>composited fields themselves are not detrended</strong>:
+          the global-warming correction belongs to the classification, so a composite shows the
+          conditions actually observed or simulated during those events. Anomalies are shown
+          relative to the neutral composite.
+        </p>
+        <p>
+          <strong>How the heatwave days are defined.</strong> Following the daytime, nighttime and
+          compound framing of Zhang et al. (2025), a <em>daytime</em> heatwave day is one whose daily
+          maximum temperature exceeds the local calendar-day 90th percentile (TX90p); a
+          <em>nighttime</em> heatwave day is one whose daily minimum exceeds the 90th percentile (TN90p);
+          and a <em>compound</em> heatwave day is hot by both measures at once. The percentiles use a
+          recent multi-decade baseline (1981-2020 for the observations, 1980-2014 for the CESM2 historical
+          ensemble) with a 5-day calendar-window smoother, so a heatwave day is defined relative
+          to what is locally and seasonally normal rather than a fixed temperature. Counts are summed over
+          each event window and then composited by ENSO phase.
+        </p>
+        <p>
+          Because the teleconnection composites use a long observational/ensemble baseline, they use a
+          different normalization from the forecasts (which are constrained to the 1993-2016 hindcast
+          period).
+        </p>
+      </div>
+    </div>
+
+    <div class="card" id="heat-thresholds">
+      <h2>Absolute heat-stress thresholds</h2>
+      <div class="prose">
+        <p>
+          Alongside the percentile-based heatwave days, the heat indicators are also counted
+          against <strong>fixed temperature thresholds that carry a direct health meaning</strong>,
+          so a number can be read as "days in the 32 to 38 C band" rather than "days above
+          the local 90th percentile". These were added at the request of the humanitarian teams.
+        </p>
+        <ul>
+          <li><strong>UTCI</strong> - days at or above <strong>32 °C</strong> (strong heat stress),
+              <strong>38 °C</strong> (very strong) and <strong>46 °C</strong> (extreme), following the
+              standard UTCI thermal-stress scale.</li>
+          <li><strong>WBGT</strong> - days at or above <strong>29 °C</strong>, <strong>31 °C</strong>
+              and <strong>32 °C</strong>, approximately the US National Weather Service category
+              edges (29.4, 31.1 and 32.2 °C).</li>
+          <li><strong>Nighttime heat</strong> - nights whose minimum stays at or above
+              <strong>20 °C</strong> (tropical night), <strong>25 °C</strong> (equatorial night) and
+              <strong>30 °C</strong> (torrid night).</li>
+        </ul>
+        <p>
+          <strong>These are shown from the observations only, and that is deliberate.</strong> A
+          percentile threshold is defined from the field's own distribution, so a uniform warm or
+          cold bias cancels out: a model running 2 °C warm still has the same number of days above
+          its own 90th percentile. An absolute threshold has no such protection, because it reads
+          the actual value. Measured on ERA5, a 1 °C warm bias adds roughly 6 days per season over
+          the Horn of Africa, 7 over South Asia and 10 over Southeast Asia, which is as large as
+          the El Niño signal itself. The percentile-based layers are therefore the ones to use for
+          the model ensemble; the fixed thresholds are reported from the reanalysis.
+        </p>
+        <p>
+          One further caution on WBGT. It is computed here with a simplified formula that uses
+          temperature and humidity only, assuming light winds and fairly sunny conditions, and so
+          cannot respond to the actual radiation or wind. A seasonal mean tolerates that
+          approximation well; a count of threshold crossings tolerates it less well, because a
+          count is a step function at the cut-off. UTCI, computed with the full Bröde polynomial
+          using actual radiation and wind, is the more reliable of the two for this purpose.
+        </p>
+      </div>
+    </div>
+
+    <div class="card" id="event-replay">
+      <h2>Event replay</h2>
+      <div class="prose">
+        <p>
+          The teleconnection maps answer "what does an El Niño typically do", by averaging every
+          past event of a class into one seasonal composite. The
+          <a href="event_replay.html">Event replay</a> page answers the opposite question, for one
+          named event, and nothing on it is averaged into seasons.
+        </p>
+        <p>
+          <strong>The window.</strong> Each event is replayed from <strong>January of the year it
+          began through December of the year it ended</strong>. That places the peak near the middle
+          and shows the build-up and the decay either side: the 1997-98 El Niño runs January 1997 to
+          December 1998. It also handles multi-year events without special-casing, so the 2020-2023
+          triple-dip La Niña is one 48-month window rather than three clipped pieces. Events shorter
+          than 24 months are padded by extending the end, never the start, which would push the onset
+          off the edge.
+        </p>
+        <p>
+          <strong>The comparison.</strong> The faint lines behind each panel are the other observed
+          events of the same type, aligned so that <strong>month 0 is January of each one's own first
+          year</strong>. Without a common origin, events beginning in different calendar months could
+          not be read on one axis.
+        </p>
+        <p>
+          <strong>The country series.</strong> Monthly, area-weighted over the country at native
+          0.25°, from CHIRPS rainfall and ERA5 heat. Only fixed thresholds are used here: a
+          percentile index would need a 0.25° percentile climatology, and dropping to 1° would leave
+          small countries with two or three grid cells. Note that the seasonal maps show the longest
+          dry <em>run</em> (CDD), while this page counts <em>days</em> below 1 mm, because a longest
+          run inside one calendar month is ambiguous when spells cross month boundaries. They are
+          different quantities and are labelled differently.
+        </p>
+        <p>
+          <strong>The neutral reference.</strong> The dashed green line on each panel is what an
+          <em>ordinary</em> year looks like in that country: the average of the catalogued neutral
+          years for the same calendar month, between 11 and 16 years per month. Comparing an event
+          only against other events answers "was this El Niño worse than the last one"; it cannot
+          answer "was it worse than a normal year", which is the question that decides whether to
+          pre-position anything. The same reference defines every anomaly on the page. A conventional
+          thirty-year normal is deliberately <em>not</em> used: such a window contains El Niños and
+          La Niñas, so an event measured against one is partly measured against itself. Months
+          belonging to no catalogued period at all are ENSO transitions and count as neither.
+        </p>
+        <p>
+          <strong>The most recent months are not counted as neutral.</strong> Classification needs
+          five months of persistence, so a run that has not yet lasted that long belongs to no
+          event and would otherwise be recorded as neutral by default. In the middle of the record
+          that is safe, because we can see what followed. At the end of the record it is not: the
+          record simply stops, and the run may still be building. Treating those months as neutral
+          would state that conditions are normal when what we actually have is no classification
+          yet, and it would fold them into the very definition of an ordinary year. So the trailing
+          unclassified period is excluded from the reference and is not labelled anywhere on the
+          site. As of August 2026 that period is February to June 2026, which contains a June at
+          +2.17 standard deviations: unambiguously not an ordinary month, and exactly the kind of
+          value that must not be allowed to define what ordinary means.
+        </p>
+        <p>
+          <strong>Thresholds.</strong> Heat stress and warm nights each carry all three health
+          bands, selectable above the panel: UTCI 32-38, 38-46 and 46 °C and above, and nights of
+          20-25, 25-30 and 30 °C and above. The bands are <em>disjoint</em>: each day falls in
+          exactly one, so the three add up rather than nesting. They were cumulative until
+          2026-08-25, which meant a day at UTCI 47 was counted in all three and the series could
+          not be compared or summed. The extreme end is a different question from the mild end
+          rather than a scaled version of it, since a country can gain a fortnight of UTCI 32-38
+          days in an El Niño year and not a single day above 46. Where a country never reaches a cut-off
+          anywhere in the 1981-2025 record the button says so, because "never happens here" is
+          information and a blank panel is not. The map underneath follows the selected cut-off when
+          it is already showing that family.
+        </p>
+        <p>
+          <strong>Comparing two events in space.</strong> Below the world map, the selected country
+          is drawn twice side by side: the chosen event on the left, any other event of the same
+          family on the right, on <em>one shared colour scale</em>. Independent scales would show
+          the same anomaly in different colours and quietly invert the comparison the panels exist
+          to make. A month slider steps both panels together through the same offset from each
+          event's own January, so "November of year 0" is November of 1997 on one side and November
+          of 2023 on the other. This matters because the difference between two seasons is often
+          not how much fell but <em>when</em>: a window average cannot separate a season that
+          started early from one that caught up late. Values are clipped to the country and its
+          border drawn heavy, with neighbours outlined for orientation only. The colour range is
+          set from the two months on screen rather than from the whole record, because on an
+          extreme month a fixed range saturates both panels into identical blocks and destroys the
+          comparison; the bar under each panel carries the numbers, and rescales with the slider.
+        </p>
+        <p>
+          <strong>The axis.</strong> Months are named, on two lines, with the relative year under
+          each January. The year is relative rather than absolute because the comparison lines are
+          different events from different decades sharing one axis; the selected event's real years
+          are in the axis title and in every tooltip. Labels are never rotated: a rotated tick label
+          is anchored at its own centre, so it drifts away from the tick it belongs to, and on a
+          48-month axis that drift is larger than the spacing between months.
+        </p>
+        <p>
+          <strong>Resolution.</strong> The country time series are computed at the source
+          resolution, 0.25°, from CHIRPS and ERA5. The maps are 1°. That is a hosting limit, not a
+          scientific one, and it costs nothing where it applies: the world map is about two pixels
+          per degree, so a 0.25° cell there would be half a pixel. It does cost something on the
+          country zoom, where a 1° cell is a visible block, and a 0.25° version of that layer is
+          built and waiting on somewhere large enough to serve it. Note the distinction: the
+          gridded 0.25° <em>map</em> is not yet served, but the sub-national numbers below are
+          computed from that same 0.25° store, so the regional figures already carry the full
+          source resolution even while the picture above them is drawn at 1°.
+        </p>
+        <p>
+          <strong>Sub-national regions.</strong> Clicking a province on either country panel swaps
+          every chart below it to that province. The regional figures are the mean of the 0.25°
+          cells whose centre falls inside the admin-1 boundary, taken from the same store the maps
+          are drawn from, so the table and the map above it can never disagree. Charts are shown in
+          absolute units against the same neutral-year reference the country view uses: the store
+          holds anomalies, and the neutral mean per calendar month is carried alongside them so the
+          absolute value can be recovered exactly rather than approximated. A region with fewer
+          than three grid cells is left out, because an average over one or two pixels is noise
+          rather than a measurement; that drops a few very small units, Nairobi among them.
+        </p>
+        <p>
+          <strong>The ± beside a regional figure is a spread, not an error bar.</strong> It is the
+          standard deviation of the cells inside that region for that month, so it answers whether
+          the region moved as one, and it is <em>not</em> an uncertainty on the mean. The two imply
+          opposite things about confidence and are easily confused. Where the spread is larger than
+          the mean, part of the region went the other way and the average is hiding a split rather
+          than summarising a signal.
+        </p>
+        <p>
+          <strong>Boundaries</strong> are Natural Earth admin-1. For some countries these are the
+          older administrative divisions: DR Congo appears as its eleven pre-2015 provinces rather
+          than the current 26, and Kenya as its former provinces rather than its 47 counties. This
+          is adequate for regional comparison and inadequate for matching a specific current
+          administrative unit; where that matters the OCHA Common Operational Datasets are the
+          right source, and are what humanitarian reporting aligns to.
+        </p>
+        <p>
+          <strong>The map.</strong> Each event's map is its own, not a phase composite: the field is
+          aggregated over the replay window and expressed against the <strong>neutral-year</strong> normal
+          <strong>for the same calendar months</strong>. Matching the months matters, because a
+          24-month window contains two of every month and a 36-month one does not, so comparing
+          against an annual mean would alias the seasonal cycle into the anomaly and make long events
+          look wet or dry for no physical reason.
+        </p>
+        <p>
+          <strong>What is deliberately absent.</strong> An event still running also carries the live
+          ECMWF sea-surface-temperature forecast, shown dashed. The rainfall and heat panels stop at
+          the observed record: there is no calibrated forecast of country rainfall or heat behind
+          this site, and deriving one from the SST forecast would be a considerably larger claim than
+          that forecast supports.
+        </p>
+      </div>
+    </div>
+
+    <div class="card" id="data-sources">
+      <h2>Data sources and references</h2>
+      <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:0.8rem">
+        Every dataset used here is open and freely available. Please cite the original sources below if you reuse this material.
+      </p>
+      <div class="prose">
+        <ul style="font-size:0.9rem">
+          <li><strong>ECMWF SEAS5</strong> (System 51) - seasonal forecasts and hindcasts.
+              Johnson et al. (2019), <em>Geosci. Model Dev.</em> 12, 1087-1117.
+              <a href="https://doi.org/10.5194/gmd-12-1087-2019" target="_blank" rel="noopener">doi:10.5194/gmd-12-1087-2019</a>.
+              Accessed via the <a href="https://cds.climate.copernicus.eu" target="_blank" rel="noopener">Copernicus Climate Data Store (C3S)</a>.</li>
+          <li><strong>Météo-France System 9</strong> - seasonal forecasts and hindcasts, via the
+              <a href="https://cds.climate.copernicus.eu" target="_blank" rel="noopener">Copernicus C3S multi-system seasonal service</a>.</li>
+          <li><strong>ERA5 reanalysis</strong> - basis for the heat-stress indices (WBGT, UTCI).
+              Hersbach et al. (2020), <em>Q. J. R. Meteorol. Soc.</em> 146, 1999-2049.
+              <a href="https://doi.org/10.1002/qj.3803" target="_blank" rel="noopener">doi:10.1002/qj.3803</a>.</li>
+          <li><strong>CHIRPS v2.0</strong> - daily precipitation (1981-present) for the rainfall teleconnection composites.
+              Funk et al. (2015), <em>Sci. Data</em> 2, 150066.
+              <a href="https://doi.org/10.1038/sdata.2015.66" target="_blank" rel="noopener">doi:10.1038/sdata.2015.66</a>.</li>
+          <li><strong>CESM2 Large Ensemble (LENS2)</strong> - ~50 members for the model teleconnection composites.
+              Rodgers et al. (2021), <em>Earth Syst. Dynam.</em> 12, 1393-1411.
+              <a href="https://doi.org/10.5194/esd-12-1393-2021" target="_blank" rel="noopener">doi:10.5194/esd-12-1393-2021</a>.</li>
+          <li><strong>COBE-SST 2</strong> - observed SST for the ENSO indices.
+              Hirahara et al. (2014), <em>J. Climate</em> 27, 57-75.
+              <a href="https://doi.org/10.1175/JCLI-D-12-00837.1" target="_blank" rel="noopener">doi:10.1175/JCLI-D-12-00837.1</a>.
+              Data provided by the NOAA PSL, Boulder, Colorado, USA, from
+              <a href="https://psl.noaa.gov" target="_blank" rel="noopener">psl.noaa.gov</a>.</li>
+          <li><strong>GPCP</strong> (Global Precipitation Climatology Project, Monthly Analysis Product) - observed precipitation for the ENSO precipitation index.
+              Adler et al. (2003), <em>J. Hydrometeorol.</em> 4, 1147-1167.
+              <a href="https://doi.org/10.1175/1525-7541(2003)004%3C1147:TVGPCP%3E2.0.CO;2" target="_blank" rel="noopener">doi:10.1175/1525-7541(2003)004&lt;1147:TVGPCP&gt;2.0.CO;2</a>.
+              Data provided by the NOAA PSL, Boulder, Colorado, USA, from
+              <a href="https://psl.noaa.gov" target="_blank" rel="noopener">psl.noaa.gov</a>.</li>
+          <li><strong>Berkeley Earth</strong> - global-warming index used to detrend the composites.
+              Rohde &amp; Hausfather (2020), <em>Earth Syst. Sci. Data</em> 12, 3469-3479.
+              <a href="https://doi.org/10.5194/essd-12-3469-2020" target="_blank" rel="noopener">doi:10.5194/essd-12-3469-2020</a>.</li>
+          <li><strong>UTCI</strong> heat-stress index - Bröde et al. (2012), <em>Int. J. Biometeorol.</em> 56, 481-494.
+              <a href="https://doi.org/10.1007/s00484-011-0454-1" target="_blank" rel="noopener">doi:10.1007/s00484-011-0454-1</a>.</li>
+          <li><strong>Heatwave-day framework</strong> (daytime / nighttime / compound) - Zhang et al. (2025), <em>J. Geophys. Res. Atmos.</em>
+              <a href="https://doi.org/10.1029/2024JD042446" target="_blank" rel="noopener">doi:10.1029/2024JD042446</a>.</li>
+          <li><strong>UTCI heat-stress thresholds</strong> (32 / 38 / 46 °C) applied to population exposure -
+              Emerton et al. (2026), <em>Global heat stress intensification and its expanding footprint on the
+              human population</em>, <em>Nature Climate Change</em>.
+              <a href="https://doi.org/10.1038/s41558-026-02670-5" target="_blank" rel="noopener">doi:10.1038/s41558-026-02670-5</a>.</li>
+          <li><strong>WBGT heat-stress categories</strong> -
+              <a href="https://www.weather.gov/tsa/wbgt" target="_blank" rel="noopener">US National Weather Service</a>,
+              and the <a href="https://www.arcgis.com/home/item.html?id=46b9e553197a4e7681f23c2e2bdd68cc" target="_blank" rel="noopener">ArcGIS Living Atlas</a> WBGT layer.</li>
+          <li><strong>Simplified WBGT formula</strong> - Australian Bureau of Meteorology approximation,
+              <a href="http://www.bom.gov.au/info/thermal_stress/" target="_blank" rel="noopener">bom.gov.au/info/thermal_stress</a>.</li>
+          <li><strong>Tropical / equatorial / torrid nights</strong> (20 / 25 / 30 °C) - Correa et al. (2024),
+              <em>Int. J. Climatology</em>.
+              <a href="https://doi.org/10.1002/joc.8510" target="_blank" rel="noopener">doi:10.1002/joc.8510</a>.</li>
+          <li><strong>Country and coastline boundaries</strong> -
+              <a href="https://www.naturalearthdata.com" target="_blank" rel="noopener">Natural Earth</a> (public domain).</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <script src="static/js/site.js?v=20260827d"></script>
+</body>
+</html>

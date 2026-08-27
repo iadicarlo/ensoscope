@@ -1,0 +1,193 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:06.240
+ENSOscope is a free, open website that turns the seasonal El Niño forecast into something
+
+00:00:06.240 --> 00:00:10.800
+you can act on, what it means for your region and how far ahead.
+
+00:00:10.800 --> 00:00:14.680
+Let me walk through it as if I were a health team in Kenya.
+
+00:00:14.680 --> 00:00:17.360
+I start here on the Forecast tab.
+
+00:00:17.360 --> 00:00:20.180
+This tells me in plain words what is coming.
+
+00:00:20.180 --> 00:00:24.720
+Right now, a strong El Niño, strengthening over the next few months.
+
+00:00:24.720 --> 00:00:27.720
+The bars show how confident the models are.
+
+00:00:27.720 --> 00:00:31.180
+No need to know the exact numbers, the message is clear.
+
+00:00:31.180 --> 00:00:35.300
+A big event is likely, so it is worth preparing now.
+
+00:00:35.300 --> 00:00:39.200
+My next question is, what does that actually mean for us?
+
+00:00:39.200 --> 00:00:41.360
+I open Teleconnections.
+
+00:00:41.360 --> 00:00:47.800
+This is the world map of how a strong El Niño reshapes rainfall everywhere at once.
+
+00:00:47.800 --> 00:00:53.360
+I leave the source on its default, which says observed rainfall, CHIRPS.
+
+00:00:53.360 --> 00:00:59.760
+This shows simply a map built from real observed rainfall, not a model.
+
+00:00:59.760 --> 00:01:02.520
+And I want you to look at eastern Africa.
+
+00:01:02.520 --> 00:01:08.320
+That whole region, including Kenya, is where I'm going to focus.
+
+00:01:08.320 --> 00:01:14.160
+First, rain. I keep Wet selected and switch to the short-rains season, September to November.
+
+00:01:14.160 --> 00:01:17.360
+On this map, blue means wetter than usual.
+
+00:01:17.360 --> 00:01:21.680
+East Africa turns blue, so let me zoom into Kenya to see it properly.
+
+00:01:21.680 --> 00:01:25.320
+I click and the map drills down to just my country.
+
+00:01:25.320 --> 00:01:26.400
+Now it is clear.
+
+00:01:26.400 --> 00:01:32.000
+In a strong El Niño, Kenya's short rains usually run wetter, sometimes a lot wetter.
+
+00:01:32.000 --> 00:01:37.120
+For a health team, that points to a real risk of flooding and the disease risks that
+
+00:01:37.120 --> 00:01:38.400
+can follow it.
+
+00:01:38.400 --> 00:01:44.960
+That is exactly the kind of thing that I want to see coming months ahead.
+
+00:01:44.960 --> 00:01:47.520
+Now I want to double check that.
+
+00:01:47.520 --> 00:01:52.640
+Up here, I switch the source from real observations to a climate model.
+
+00:01:52.640 --> 00:01:55.160
+One that has been run 50 times.
+
+00:01:55.160 --> 00:01:58.640
+You will see that the pattern over Kenya barely changes.
+
+00:01:58.640 --> 00:02:02.320
+Still wetter than usual, which is reassuring.
+
+00:02:02.320 --> 00:02:05.520
+And now these little dots appear.
+
+00:02:05.520 --> 00:02:07.760
+Think of the dots as a confidence check.
+
+00:02:07.760 --> 00:02:13.440
+The dots show where the many events do not agree on the sign of the change.
+
+00:02:13.440 --> 00:02:19.160
+With real observations, we only have a handful of past strong El Niño events, far too few
+
+00:02:19.160 --> 00:02:21.200
+to measure that kind of agreement.
+
+00:02:21.200 --> 00:02:27.160
+The model gives us more events, so it can show me where the wetter signal is solid
+
+00:02:27.160 --> 00:02:29.600
+or not, and where it is shakier.
+
+00:02:29.600 --> 00:02:34.520
+When the observations and the model tell the same story, I trust it more.
+
+00:02:34.520 --> 00:02:39.520
+I can also flip to Drought. This shows the longest run of dry days, still zoomed in on
+
+00:02:39.520 --> 00:02:40.520
+Kenya.
+
+00:02:40.520 --> 00:02:45.120
+It is worth a look, because a different season or a phase like La Niña can bring the opposite
+
+00:02:45.120 --> 00:02:49.800
+problem, not too much water but too little.
+
+00:02:49.800 --> 00:02:50.800
+Next, heat.
+
+00:02:50.800 --> 00:02:55.800
+For this one, I switch back to the observed data because the heat measure isn't in
+
+00:02:55.800 --> 00:02:56.800
+the model yet.
+
+00:02:56.800 --> 00:02:58.580
+I choose Heat stress.
+
+00:02:58.580 --> 00:03:05.440
+It uses a number called WBGT, wet bulb globe temperature, which is basically a feels-like
+
+00:03:05.440 --> 00:03:08.840
+value that combines temperature and humidity.
+
+00:03:08.840 --> 00:03:13.120
+Redder means more dangerous heat for the body.
+
+00:03:13.120 --> 00:03:16.080
+Before I act, I ask, can I trust this?
+
+00:03:16.080 --> 00:03:17.760
+I open the Skill tab.
+
+00:03:17.760 --> 00:03:19.840
+This is the model's track record.
+
+00:03:19.840 --> 00:03:24.840
+The orange line is the forecast, the black line is what actually happened, and you can
+
+00:03:24.840 --> 00:03:31.240
+see they move together, almost on top of each other, and these bars show something important.
+
+00:03:31.240 --> 00:03:35.600
+The model tells strong events apart from ordinary ones.
+
+00:03:35.600 --> 00:03:43.080
+At the few-months lead I care about, it is reliable, so I can act with some confidence.
+
+00:03:43.080 --> 00:03:45.080
+So here is the payoff.
+
+00:03:45.080 --> 00:03:49.880
+Months ahead, I already know that the wetter short rains and a flood risk are likely
+
+00:03:49.880 --> 00:03:51.520
+for Kenya.
+
+00:03:51.520 --> 00:03:54.800
+That early warning is the whole point.
+
+00:03:54.800 --> 00:04:00.360
+Now, that is ENSOscope, from forecast, to your region, to action.
+
+00:04:00.360 --> 00:04:07.040
+It is free and open, and there is a Guide tab, which is the one that is open right now,
+
+00:04:07.040 --> 00:04:11.400
+that walks anyone through the same steps in plain language.
+
+00:04:11.400 --> 00:04:12.200
+Thanks for watching.

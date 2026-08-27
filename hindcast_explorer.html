@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hindcasts - ENSOscope</title>
+  <meta name="description" content="Explore the ENSO hindcast archive (1993-2026): past forecasts and observed phases by month and year.">
+  <link rel="canonical" href="https://iadicarlo.org/ensoscope/hindcast_explorer.html">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="stylesheet" href="static/css/style.css?v=20260624g">
+  <script src="static/lib/chart.umd.min.js?v=20260624g"></script>
+  <link rel="icon" type="image/png" href="favicon.png?v=20260624g">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body data-page="hindcast_explorer">
+
+  <header>
+    <div class="header-inner">
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20260624g" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <nav>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
+          <div class="nav-dropdown-menu">
+            <a href="index.html" data-nav-item="forecast_enso">ENSO</a>
+            <a href="forecast_maps.html" data-nav-item="forecast_maps">Maps</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="map_explorer">Teleconnections</span>
+          <div class="nav-dropdown-menu">
+            <a href="map_explorer.html" data-nav-item="telecon_maps">Maps</a>
+            <a href="event_replay.html" data-nav-item="telecon_replay">Event replay</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle active" data-nav="hindcasts">Hindcasts</span>
+          <div class="nav-dropdown-menu">
+            <a href="hindcast_explorer.html" class="active" data-nav-item="hindcast_enso">ENSO</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="skill">Skill</span>
+          <div class="nav-dropdown-menu">
+            <a href="hindcast_skill.html" data-nav-item="skill_enso">ENSO</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="page-title">Hindcasts</h1>
+    <p class="page-subtitle">
+      Browse individual ensemble member Niño index forecasts for any available year/month in the hindcast archive.
+      Each spaghetti line is one member; the thick line is the ensemble median; the dotted black line is the observed value.
+      Observed overlays use detrended observational indices (SST standardized to a fixed 1980-2014 baseline; Niño-3 precipitation shown as anomaly in mm/day).
+    </p>
+
+    <!-- Multi-centre phase probability overlay -->
+    <div class="card" id="enso-hx-selector-card">
+      <div style="font-weight:600;margin-bottom:0.5rem">Centres (check to overlay on phase-probability plot):</div>
+      <div id="enso-hx-selector-body">Loading centres…</div>
+    </div>
+
+    <div class="card" style="padding:1rem 1.5rem">
+      <div style="display:flex;flex-wrap:wrap;gap:1.5rem;align-items:flex-end">
+        <div>
+          <label class="ctrl-label" for="enso-hx-year">Hindcast Year</label>
+          <select id="enso-hx-year" class="ctrl-select"></select>
+        </div>
+        <div>
+          <label class="ctrl-label" for="enso-hx-month">Start Month</label>
+          <select id="enso-hx-month" class="ctrl-select">
+            <option value="1">January</option><option value="2">February</option>
+            <option value="3">March</option><option value="4">April</option>
+            <option value="5">May</option><option value="6">June</option>
+            <option value="7">July</option><option value="8">August</option>
+            <option value="9">September</option><option value="10">October</option>
+            <option value="11">November</option><option value="12">December</option>
+          </select>
+        </div>
+        <div>
+          <label class="ctrl-label" for="enso-hx-variable">Variable</label>
+          <select id="enso-hx-variable" class="ctrl-select">
+            <option value="_en_total" selected>P(El Niño - any intensity)</option>
+            <option value="_ln_total">P(La Niña - any intensity)</option>
+            <option value="prob_extreme_el_nino">P(Extreme El Niño)</option>
+            <option value="prob_strong_el_nino">P(Strong El Niño)</option>
+            <option value="prob_moderate_el_nino">P(Moderate El Niño)</option>
+            <option value="prob_neutral">P(Neutral)</option>
+            <option value="prob_moderate_la_nina">P(Moderate La Niña)</option>
+            <option value="prob_strong_la_nina">P(Strong La Niña)</option>
+            <option value="prob_extreme_la_nina">P(Extreme La Niña)</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="updateEnsoHindcastChart()">Update</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 id="enso-hx-chart-title">Multi-centre ENSO phase probability by lead</h2>
+      <div style="position:relative;height:420px">
+        <canvas id="enso-hx-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Multi-centre member plumes -->
+    <h2 style="margin-top:2rem;margin-bottom:0.3rem">Multi-centre member plumes</h2>
+    <p class="page-subtitle" style="margin-top:0">
+      Individual ensemble member trajectories for the selected (year, start month),
+      per centre. Each thin line is one member; thick line is the centre's ensemble
+      median. Select which centres to overlay via the checkboxes above.
+    </p>
+
+    <div class="card" style="padding:1rem 1.5rem">
+      <div style="display:flex;flex-wrap:wrap;gap:1.5rem;align-items:flex-end">
+        <div>
+          <label class="ctrl-label" for="hxp-variable">Variable</label>
+          <select id="hxp-variable" class="ctrl-select">
+            <option value="nino34_std" selected>Niño 3.4 SST (σ)</option>
+            <option value="nino3_std">Niño 3 SST (σ)</option>
+            <option value="nino4_std">Niño 4 SST (σ)</option>
+            <option value="nino3_pr_anom">Niño 3 Precip Anomaly (mm/day)</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="updateEnsoHindcastPlume()">Update plumes</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 id="hxp-chart-title">Multi-centre member plumes</h2>
+      <div style="position:relative;height:460px">
+        <canvas id="hxp-chart"></canvas>
+      </div>
+      <div class="threshold-legend" id="hxp-phase-legend"></div>
+    </div>
+  </main>
+
+  <script src="static/js/data_base.js?v=20260827d"></script>
+
+  <script src="static/js/app.js?v=20260827d"></script>
+  <script src="static/js/site.js?v=20260827d"></script>
+</body>
+</html>

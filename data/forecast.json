@@ -1,0 +1,88 @@
+{
+  "vintage": "2026-08",
+  "model": "SEAS5 (ECMWF, System 51)",
+  "hindcast_period": "1993-2016",
+  "operational_hindcast_through": "2026-07",
+  "build_month_utc": "2026-08",
+  "stale_months_lag": 0,
+  "is_stale": false,
+  "method": "raw_ensemble_fraction",
+  "notes": "Probabilities are the raw fraction of ensemble members in each ENSO class. Each member's NINO index is bias- and amplitude-corrected to the 1993-2016 hindcast: z = (anomaly - \u03bc_hindcast)/\u03c3_hindcast (ECCC/Merryfield variance matching); extreme El Ni\u00f1o additionally requires a NINO3 precipitation anomaly >= 5 mm/day. No statistical calibration is applied. Vintage 2026-08 (source: seas5_forecast_202608_ensemble_probs.csv). Operational rollover rule: the latest available forecast vintage stays as forecast, while hindcast coverage extends through 2026-07.",
+  "classes_ordered": [
+    "extreme_la_nina",
+    "strong_la_nina",
+    "moderate_la_nina",
+    "neutral",
+    "moderate_el_nino",
+    "strong_el_nino",
+    "extreme_el_nino"
+  ],
+  "leads": [
+    {
+      "lead": 1,
+      "valid_time": "2026-08",
+      "extreme_la_nina": 0.0,
+      "strong_la_nina": 0.0,
+      "moderate_la_nina": 0.0,
+      "neutral": 0.0,
+      "moderate_el_nino": 0.0,
+      "strong_el_nino": 0.2549,
+      "extreme_el_nino": 0.7451
+    },
+    {
+      "lead": 2,
+      "valid_time": "2026-09",
+      "extreme_la_nina": 0.0,
+      "strong_la_nina": 0.0,
+      "moderate_la_nina": 0.0,
+      "neutral": 0.0,
+      "moderate_el_nino": 0.0,
+      "strong_el_nino": 0.1961,
+      "extreme_el_nino": 0.8039
+    },
+    {
+      "lead": 3,
+      "valid_time": "2026-10",
+      "extreme_la_nina": 0.0,
+      "strong_la_nina": 0.0,
+      "moderate_la_nina": 0.0,
+      "neutral": 0.0,
+      "moderate_el_nino": 0.0,
+      "strong_el_nino": 0.2745,
+      "extreme_el_nino": 0.7255
+    },
+    {
+      "lead": 4,
+      "valid_time": "2026-11",
+      "extreme_la_nina": 0.0,
+      "strong_la_nina": 0.0,
+      "moderate_la_nina": 0.0,
+      "neutral": 0.0,
+      "moderate_el_nino": 0.0,
+      "strong_el_nino": 0.3529,
+      "extreme_el_nino": 0.6471
+    },
+    {
+      "lead": 5,
+      "valid_time": "2026-12",
+      "extreme_la_nina": 0.0,
+      "strong_la_nina": 0.0,
+      "moderate_la_nina": 0.0,
+      "neutral": 0.0,
+      "moderate_el_nino": 0.0,
+      "strong_el_nino": 0.549,
+      "extreme_el_nino": 0.451
+    },
+    {
+      "lead": 6,
+      "valid_time": "2027-01",
+      "extreme_la_nina": 0.0,
+      "strong_la_nina": 0.0,
+      "moderate_la_nina": 0.0,
+      "neutral": 0.0,
+      "moderate_el_nino": 0.0,
+      "strong_el_nino": 0.7647,
+      "extreme_el_nino": 0.2353
+    }
+  ]
+}
