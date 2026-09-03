@@ -27,4 +27,4 @@ window.ENSOSCOPE_DATA_BASE = "https://tiles.iadicarlo.org";
  * actually costs money. This version string is what makes hard caching safe:
  * a rebuild changes the URL, so nobody is served a stale tile.
  */
-window.ENSOSCOPE_DATA_VERSION = "20260827d";
+window.ENSOSCOPE_DATA_VERSION = "20260827f";

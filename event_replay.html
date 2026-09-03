@@ -249,7 +249,17 @@
     .rp-imp-where{color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;
       white-space:nowrap}
     .rp-imp-where.none{font-style:italic;color:#94A3AF}
+    /* The empty-state sentence explains why a theme is blank, so unlike a
+       location it must wrap rather than be clipped to one line. */
+    .rp-imp-empty{color:var(--text-muted);line-height:1.5;white-space:normal;
+      display:block;padding:.15rem .1rem}
     .rp-imp-foot{margin:.45rem 0 0;font-size:.75rem}
+    /* Set apart from the footnote above it, which counts what IS here. This
+       one is about what is not, and a reader who skims has to still catch it. */
+    .rp-imp-caveat{display:block;margin:.6rem 0 .1rem;padding:.55rem .7rem;
+      border-left:3px solid #C9A227;background:#FDFBF3;border-radius:0 4px 4px 0;
+      font-size:.76rem;line-height:1.5;color:var(--text)}
+    .rp-imp-caveat strong{color:#0B2138}
     .rp-empty strong{display:block;font-size:1.05rem;color:var(--text);margin-bottom:.35rem}
     /* Enlarge. The panels are small so eight fit on one screen; reading one
        closely is a different job from comparing all eight. */
@@ -683,6 +693,24 @@
         </figure>
         <ul class="rp-imp-list" id="rp-imp-list"></ul>
         <p class="rp-sub rp-imp-foot" id="rp-imp-foot"></p>
+        <!-- Jake Levi, 2026-08-27, reviewing the first version: the panel needed
+             to say plainly what it is not. Two things a reader will otherwise
+             assume, both wrong. That an empty stretch means nothing happened,
+             when EM-DAT holds only what was reported and met a threshold. And
+             that a marker inside an El Nino window is evidence the event caused
+             it, when the panel has only put two records on one axis. -->
+        <aside class="rp-imp-caveat">
+          <strong>What this cannot tell you.</strong>
+          EM-DAT holds only events that were reported and met its entry
+          threshold, so most floods, droughts and outbreaks are missing from it
+          entirely. How much is missing differs from country to country and has
+          changed over the decades, which means a thin stretch here is at least
+          as likely to be thin reporting as a quiet period.
+          A marker falling inside an El Ni&ntilde;o or La Ni&ntilde;a window
+          shows only that both were recorded in the same months. This is a
+          timeline placed on a shared axis: it is not evidence of cause, and it
+          is not a measurement of correlation.
+        </aside>
       </div>
         <div class="rp-panel">
           <h3>Heaviest 10-day rainfall <span class="code">(Rx10day)</span></h3>
@@ -765,9 +793,9 @@
   <script src="static/lib/d3.min.js?v=20260624g"></script>
   <script src="static/lib/d3-geo-projection.min.js?v=20260624g"></script>
   <script src="static/lib/chart.umd.min.js?v=20260624g"></script>
-  <script src="static/js/data_base.js?v=20260827d"></script>
-  <script src="static/js/index_names.js?v=20260827d"></script>
-  <script src="static/js/site.js?v=20260827d"></script>
-  <script src="static/js/event_replay.js?v=20260827d"></script>
+  <script src="static/js/data_base.js?v=20260827f"></script>
+  <script src="static/js/index_names.js?v=20260827f"></script>
+  <script src="static/js/site.js?v=20260827f"></script>
+  <script src="static/js/event_replay.js?v=20260827f"></script>
 </body>
 </html>

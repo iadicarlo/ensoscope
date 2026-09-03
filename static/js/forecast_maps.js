@@ -12,7 +12,7 @@ const DATA_BASE = "data/forecast_maps/";
 // forecast vintage is never masked by a stale browser/CDN copy. Kept in sync
 // with app.js DATA_VERSION. Static basemaps (ne_*.geojson) never change and are
 // left unversioned, matching the app.js / map_explorer.js convention.
-const DATA_VERSION = "20260827d";
+const DATA_VERSION = "20260827f";
 function _dv(url) {
   return url + (url.indexOf("?") === -1 ? "?" : "&") + "v=" + DATA_VERSION;
 }

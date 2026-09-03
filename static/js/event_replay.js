@@ -1110,8 +1110,43 @@ function _renderImpacts(sel, nMonths) {
     + `not how large it was.`;
 
   if (!inWindow.length) {
-    list.innerHTML = `<li><span class="rp-imp-where none">No ${label[RPIMP.theme]} `
-                   + `recorded here in this window.</span></li>`;
+    // "No extreme heat recorded" reads as "no extreme heat happened", which is
+    // the false impression Jake flagged on 2026-08-27 after finding the theme
+    // empty across all ten countries for three different El Ninos.
+    //
+    // It is not that EM-DAT ignores heat. The same export holds 324 heat waves
+    // across 73 countries, but 26 of them are India, 20 the USA, 17 Japan, and
+    // two are in the ten countries here. That is a reporting gradient, not a
+    // climate one, and saying so is more useful than a blank line. Heat is also
+    // the one hazard on this site that does not depend on anyone filing a
+    // report: the panels below measure it from ERA5.
+    // Counted by the builder, not written here, so the sentence stays true
+    // after the next EM-DAT export instead of drifting from the data it cites.
+    const hc = d.heat_context;
+    const heatWhy = hc && hc.top && hc.top.length
+      ? `EM-DAT records no heat wave here. Across the whole database it holds `
+        + `${hc.total} of them, but in only ${hc.countries_with_any} of the `
+        + `${hc.countries_total} countries on this site, and `
+        + hc.top.map(t => `${_impTitle(t.country.replace(/_/g, " "))} accounts for ${t.n}`)
+              .join(", ") + ". "
+        + "Read a blank panel as a gap in reporting rather than an absence of "
+        + "dangerous heat. The heat panels below are measured from ERA5 and do "
+        + "not depend on an event being reported at all."
+      : "EM-DAT records no heat wave here. Read that as a gap in reporting "
+        + "rather than an absence of dangerous heat: the heat panels below are "
+        + "measured from ERA5 and do not depend on a report being filed.";
+    const why = {
+      heat: heatWhy,
+      water: "No flood or drought was recorded here in this window. EM-DAT "
+           + "holds only what was reported and met its threshold, so this may "
+           + "be a quiet window or a poorly reported one.",
+      disease: "No outbreak was recorded here in this window. EM-DAT holds "
+             + "only what was reported and met its threshold, so this may be a "
+             + "quiet window or a poorly reported one.",
+    };
+    list.innerHTML = `<li><span class="rp-imp-empty">`
+                   + `${_impEsc(why[RPIMP.theme] || `No ${label[RPIMP.theme]} recorded here in this window.`)}`
+                   + `</span></li>`;
   }
 
   const unplaced = inWindow.filter(e => !e.regions.length).length;

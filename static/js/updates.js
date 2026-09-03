@@ -15,6 +15,16 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-08-27",
+    tag: "New data",
+    title: "Reported disasters and outbreaks now cover all 83 countries",
+    items: [
+      "The impacts panel on the event replay tab went from ten countries to every country the tab supports: 6,257 recorded floods, droughts, heat waves and outbreaks, of which 72% name a place precise enough to put on a map.",
+      "A plainer note now sits under the figure. EM-DAT holds only events that were reported and met its entry threshold, so most floods, droughts and outbreaks are missing from it, and how much is missing differs by country and has changed over the decades. A marker falling inside an El Nino or La Nina window shows only that both were recorded in the same months: it is a timeline, not evidence of cause.",
+      "The extreme heat theme is often empty, and it now says why instead of leaving a blank. EM-DAT holds 181 heat waves but in only 31 of these 83 countries, with India, the United States and Japan accounting for a large share. That is a gap in reporting rather than an absence of dangerous heat, and the heat panels on the same page are measured from ERA5 and do not depend on a report being filed."
+    ]
+  },
+  {
     date: "2026-08-26",
     tag: "New data",
     title: "Observations now run through July 2026",
