@@ -6,7 +6,7 @@
       "centre": "ECMWF",
       "system": "51",
       "kind": "dynamical_c3s",
-      "latest_vintage": "2026-08",
+      "latest_vintage": "2026-09",
       "calibrated": false,
       "forecast_json": "forecast.json",
       "members_json": "forecast_members.json"
@@ -17,7 +17,7 @@
       "centre": "Meteo-France",
       "system": "9",
       "kind": "dynamical_c3s",
-      "latest_vintage": "2026-08",
+      "latest_vintage": "2026-09",
       "calibrated": false,
       "forecast_json": "forecast_mf9.json",
       "members_json": "forecast_members_mf9.json"

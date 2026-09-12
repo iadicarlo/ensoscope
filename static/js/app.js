@@ -878,6 +878,11 @@ function renderOutlookBanner(forecasts, sources) {
     moderate_la_nina: "moderate", strong_la_nina: "strong", extreme_la_nina: "extreme", neutral: "neutral",
   };
   const FAMLABEL = { en: "El Niño", ln: "La Niña", neu: "ENSO-neutral conditions" };
+  // "a extreme El Nino" shipped on the front page the day the September
+  // forecast moved the peak class from strong to extreme. The article was
+  // hardcoded, so it only read correctly for the classes starting with a
+  // consonant, which is every class except this one.
+  const _artcl = w => (/^[aeiou]/i.test(w) ? "an" : "a");
   const ACCENT = { en: "#C0392B", ln: "#1565C0", neu: "#546E7A" };
   const TINT = { en: "#FBEEEB", ln: "#EAF1FB", neu: "#ECEFF1" };
   const FRIENDLY = { seas5: "SEAS5", mf9: "Météo-France", ncep2: "NCEP" };
@@ -930,9 +935,9 @@ function renderOutlookBanner(forecasts, sources) {
   if (dom === "neu") {
     headline = `Current outlook: ENSO-neutral conditions are favoured through ${lastMonth}.`;
   } else if (rankOf(peakInt) > rankOf(nearInt)) {
-    headline = `Current outlook: a ${INTLABEL[nearInt]} ${FAMLABEL[dom]} now, strengthening toward ${INTLABEL[peakInt]} by ${whenStr}.`;
+    headline = `Current outlook: ${_artcl(INTLABEL[nearInt])} ${INTLABEL[nearInt]} ${FAMLABEL[dom]} now, strengthening toward ${INTLABEL[peakInt]} by ${whenStr}.`;
   } else {
-    headline = `Current outlook: a ${INTLABEL[peakInt]} ${FAMLABEL[dom]} is favoured through ${lastMonth}.`;
+    headline = `Current outlook: ${_artcl(INTLABEL[peakInt])} ${INTLABEL[peakInt]} ${FAMLABEL[dom]} is favoured through ${lastMonth}.`;
   }
 
   const ctaPhase = dom === "en" ? "strong_el_nino" : dom === "ln" ? "strong_la_nina" : "neutral";

@@ -251,6 +251,18 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
             d.borderColor = k === next ? "#5A6B7A" : RP_COLOR.other;
             d.borderWidth = k === next ? 2 : 1;
           });
+          // Rebuild the tooltip, or it names the line you started on and keeps
+          // naming it. Chart.js caches the tooltip's items and only rebuilds
+          // them when the set of ACTIVE elements changes. Under mode "index"
+          // that set is every dataset at one x, so it is identical all the way
+          // up a column: moving from one grey line to the next moved the
+          // highlight and left the tooltip on the first line, until you crossed
+          // into a different month. Rebuilding re-runs the filter below against
+          // the _rpNear we just set. Before the chart update, so the redraw it
+          // triggers paints the new text.
+          if (chart.tooltip && chart.tooltip.getActiveElements().length) {
+            chart.tooltip.update(true);
+          }
           chart.update("none");
         }
       },
