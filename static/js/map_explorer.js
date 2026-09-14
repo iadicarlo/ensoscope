@@ -59,6 +59,18 @@ const CMAPS = {
     [0.9,  [214,96,77]],
     [1,    [178,24,43]],
   ],
+
+  // Rainfall is brown and green, matching the Event replay tab. Red reads as
+  // hot, which is the wrong instinct for a rainfall deficit.
+  // BrBG: green = more rain. BrBG_r: brown = more dry.
+  BrBG: [
+    [0, [140, 81, 10]], [0.25, [216, 179, 101]], [0.5, [245, 245, 245]],
+    [0.75, [90, 180, 172]], [1, [1, 102, 94]],
+  ],
+  BrBG_r: [
+    [0, [1, 102, 94]], [0.25, [90, 180, 172]], [0.5, [245, 245, 245]],
+    [0.75, [216, 179, 101]], [1, [140, 81, 10]],
+  ],
   Blues: [
     [0,    [247,251,255]],
     [0.25, [198,219,239]],

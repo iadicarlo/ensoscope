@@ -1542,13 +1542,22 @@ function _renderMeta(sel, nOthers) {
 const RPMAP = { geo: null, byName: null, svg: null, path: null, proj: null,
                 drawn: false, index: null, tileCache: {} };
 
-// Two diverging ramps, matching the Teleconnections map so the same colour
-// means the same thing across the site. RdBu: blue = more. RdBu_r: red = more.
+// Diverging ramps, matching the Teleconnections map so the same colour means
+// the same thing across the site. RdBu: blue = more. RdBu_r: red = more.
+// Rainfall uses BrBG instead, on both tabs, for the reason below.
 const RP_CMAPS = {
   RdBu:   [[0,[178,24,43]],[0.25,[244,165,130]],[0.5,[247,247,247]],
            [0.75,[146,197,222]],[1,[33,102,172]]],
   RdBu_r: [[0,[33,102,172]],[0.25,[146,197,222]],[0.5,[247,247,247]],
            [0.75,[244,165,130]],[1,[178,24,43]]],
+  // Rainfall is brown and green, not red and blue. Red reads as hot, which is
+  // the wrong instinct for a rainfall deficit, and brown-dry green-wet is the
+  // long-standing convention for precipitation.
+  // BrBG: green = more rain. BrBG_r: brown = more dry.
+  BrBG:   [[0,[140,81,10]],[0.25,[216,179,101]],[0.5,[245,245,245]],
+           [0.75,[90,180,172]],[1,[1,102,94]]],
+  BrBG_r: [[0,[1,102,94]],[0.25,[90,180,172]],[0.5,[245,245,245]],
+           [0.75,[216,179,101]],[1,[140,81,10]]],
 };
 
 function _rampColor(name, t) {
