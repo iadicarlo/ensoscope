@@ -59,23 +59,77 @@
       <div class="prose">
         <p>
           For each ensemble member we compute area-weighted NINO sea-surface-temperature indices
-          (NINO3.4, NINO3, NINO4) and the NINO3 precipitation anomaly. Each index is
-          <strong>detrended for global warming</strong> by regression on a Berkeley Earth global
-          warming index (GWI), so the classification reflects internal tropical-Pacific variability
-          rather than the forced warming trend.
+          (NINO3.4, NINO3, NINO4) and the NINO3 precipitation anomaly. Each SST index is a
+          <strong>relative index</strong>: from the box mean we subtract the tropical mean over
+          20°S to 20°N in the <em>same</em> month. That is the index of
+          L'Heureux et al. (2024), which NOAA CPC publishes as the Relative Niño
+          index (RONI). A warm world lifts the whole tropical ocean together, so removing the
+          tropical mean leaves the east-to-west contrast that actually drives the
+          teleconnections and removes the background warming with it, without fitting anything.
         </p>
-        <p>The standardized NINO3.4 index <em>z</em> is mapped to seven classes:</p>
+        <p>
+          Each index is then deseasonalised against a 30-year rolling climatology and
+          standardised per calendar month over <strong>1980-2014</strong>, every dataset and
+          every model by its own spread. Until 14 September 2026 the warming was instead removed
+          by regressing each index on a global mean temperature curve. That estimator drifts:
+          measured against the relative index it runs about 0.2 standard deviations low in the
+          early 1980s and 0.3 high in the 2020s, in four independent SST products alike, so
+          recent events read too strong and old ones too weak. It has been withdrawn.
+        </p>
+        <p>
+          <strong>When an event starts and ends.</strong> Detection follows NOAA CPC's own
+          episode rule, written in standardised units. We take the centred three-month running
+          mean of the standardised relative NINO3.4 index, which is the same overlapping
+          "season" CPC tabulates. An episode is <strong>at least five consecutive overlapping
+          seasons</strong> at or beyond a threshold that depends on the calendar month,
+          <em>t</em>(m) = 0.5 °C divided by the month's ONI spread: from 0.44 standard
+          deviations in December to 0.94 in May. That is NOAA's 0.5 °C test and its variance
+          adjustment, rewritten in standard deviations rather than re-tuned; the twelve numbers
+          are computed once on COBE-SST 2 and shared by every dataset and model, so a product
+          with weaker variance is never handed an easier test. There is no seasonal
+          phase-locking requirement and no bridging of gaps inside the rule.
+        </p>
+        <p>
+          <strong>Multi-year events.</strong> Two episodes of the same sign are treated as one
+          event when the gap between them is <strong>three months or less</strong> and no month
+          in that gap reaches 0.25 standard deviations on the opposite side. The inner
+          boundaries are kept as <strong>sub-episodes</strong>, so the 1998-2001 and 2020-2023
+          La Niñas are single multi-year objects that still carry the two pieces NOAA
+          lists, and a genuine swing to the other phase always ends the event however short the
+          gap.
+        </p>
+        <p><strong>How strong an event is</strong> is read on the monthly standardised index
+          inside the event window, with three consecutive months required at each level. The
+          tiers are <em>at or above</em>, so the highest tier reached wins:</p>
         <ul>
-          <li><strong>Neutral</strong> - |z| &lt; 0.5</li>
-          <li><strong>Moderate</strong> El Niño / La Niña - |z| ≥ 0.5</li>
-          <li><strong>Strong</strong> - NINO3 (El Niño) / NINO4 (La Niña) |z| ≥ 1.25</li>
-          <li><strong>Extreme</strong> - |z| ≥ 1.75 <em>and</em>, for El Niño, a
+          <li><strong>Extreme</strong> - NINO3 (El Niño) or NINO4 (La Niña) at or
+              beyond <strong>1.75</strong>, and for El Niño also a
               <strong>NINO3 precipitation anomaly ≥ 5 mm/day</strong></li>
+          <li><strong>Strong</strong> - otherwise, at or beyond <strong>1.25</strong>, with no
+              upper bound</li>
+          <li><strong>Moderate</strong> - an event that clears detection but not the strong tier</li>
+          <li><strong>Neutral</strong> - every month in no event window</li>
         </ul>
+        <p>
+          The tiers were disjoint bands until 14 September 2026, and a single month past 1.75
+          could break the run of three and drop a genuinely strong event to moderate. Cumulative
+          tiers cannot do that.
+        </p>
         <p>
           The precipitation requirement is deliberate: a truly <em>extreme</em> El Niño is
           distinguished not by SST alone but by the eastward shift of deep convection into the
           eastern Pacific, captured by the NINO3 rainfall response.
+        </p>
+        <p>
+          <strong>Where the observed record stops.</strong> The relative index needs nothing but
+          sea surface temperature, so the observed NINO indices now run to the
+          <strong>latest month of SST</strong> on file. The NINO3 rainfall anomaly is only read
+          inside an event window, and every rainfall-based product on the site (the maps, the
+          country series, the extreme El Niño gate) stops at the end of its own input,
+          which is usually earlier. The two ends are therefore different on purpose, and each
+          panel is labelled with the month it actually reaches. Classification itself stops one
+          month before the SST does, because the centred three-month season of the last month
+          needs a month that does not exist yet.
         </p>
       </div>
     </div>
@@ -127,12 +181,13 @@
           The Teleconnections maps composite climate-impact indicators (heat: Tmax, UTCI, WBGT, and
           daytime, nighttime and compound heatwave days; precipitation extremes: Rx10day, consecutive
           dry days) by ENSO phase, from ERA5/CHIRPS observations and a CESM2 large ensemble.
-          The <strong>ENSO indices</strong> used to classify each event are detrended for global
-          warming, deseasonalised with a 30-year rolling window, and standardised by the
-          <strong>ENSO standard deviation over 1980-2014</strong> where the threshold is expressed
-          in standard deviations. The <strong>composited fields themselves are not detrended</strong>:
-          the global-warming correction belongs to the classification, so a composite shows the
-          conditions actually observed or simulated during those events. Anomalies are shown
+          The <strong>ENSO indices</strong> used to classify each event are relative indices
+          (the box mean minus the concurrent 20°S to 20°N tropical mean), deseasonalised with a
+          30-year rolling window and standardised by the <strong>ENSO standard deviation over
+          1980-2014</strong>, where the threshold is expressed in standard deviations. The
+          <strong>composited fields themselves are left alone</strong>: taking the tropical mean
+          out belongs to the classification, so a composite shows the conditions actually
+          observed or simulated during those events, warming included. Anomalies are shown
           relative to the neutral composite.
         </p>
         <p>
@@ -241,15 +296,15 @@
         </p>
         <p>
           <strong>The most recent months are not counted as neutral.</strong> Classification needs
-          five months of persistence, so a run that has not yet lasted that long belongs to no
+          five consecutive seasons, so a run that has not yet lasted that long belongs to no
           event and would otherwise be recorded as neutral by default. In the middle of the record
           that is safe, because we can see what followed. At the end of the record it is not: the
           record simply stops, and the run may still be building. Treating those months as neutral
           would state that conditions are normal when what we actually have is no classification
           yet, and it would fold them into the very definition of an ordinary year. So the trailing
           unclassified period is excluded from the reference and is not labelled anywhere on the
-          site. As of August 2026 that period is February to June 2026, which contains a June at
-          +2.17 standard deviations: unambiguously not an ordinary month, and exactly the kind of
+          site. As of August 2026 that period is March to August 2026, which contains an August at
+          +2.4 standard deviations: unambiguously not an ordinary month, and exactly the kind of
           value that must not be allowed to define what ordinary means.
         </p>
         <p>
@@ -376,7 +431,14 @@
               <a href="https://doi.org/10.1175/1525-7541(2003)004%3C1147:TVGPCP%3E2.0.CO;2" target="_blank" rel="noopener">doi:10.1175/1525-7541(2003)004&lt;1147:TVGPCP&gt;2.0.CO;2</a>.
               Data provided by the NOAA PSL, Boulder, Colorado, USA, from
               <a href="https://psl.noaa.gov" target="_blank" rel="noopener">psl.noaa.gov</a>.</li>
-          <li><strong>Berkeley Earth</strong> - global-warming index used to detrend the composites.
+          <li><strong>Relative Niño index</strong> - the definition used to classify every event here.
+              L'Heureux et al. (2024), <em>A relative sea surface temperature index for classifying
+              ENSO events in a changing climate</em>, <em>J. Climate</em> 37, 1197-1211.
+              See also NOAA CPC's
+              <a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/" target="_blank" rel="noopener">RONI page</a>,
+              from which the episode rule and its 0.5 °C variance-adjusted threshold are taken.</li>
+          <li><strong>Berkeley Earth</strong> - global mean temperature. No longer used to classify
+              events; kept for the archived runs that predate 14 September 2026.
               Rohde &amp; Hausfather (2020), <em>Earth Syst. Sci. Data</em> 12, 3469-3479.
               <a href="https://doi.org/10.5194/essd-12-3469-2020" target="_blank" rel="noopener">doi:10.5194/essd-12-3469-2020</a>.</li>
           <li><strong>UTCI</strong> heat-stress index - Bröde et al. (2012), <em>Int. J. Biometeorol.</em> 56, 481-494.
@@ -402,6 +464,6 @@
     </div>
   </main>
 
-  <script src="static/js/site.js?v=20260914a"></script>
+  <script src="static/js/site.js?v=20260914b"></script>
 </body>
 </html>

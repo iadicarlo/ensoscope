@@ -15,6 +15,18 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-09-14",
+    tag: "Fix",
+    title: "ENSO classification moved to the relative index and NOAA's episode rule",
+    items: [
+      "Every ENSO index on the site is now a relative index: the Pacific box minus the tropical mean of the same month, the index NOAA and WMO use. The previous method removed global warming with a fitted curve, and by 2026 that curve ran about a third of a standard deviation too warm, which is why the site briefly said August 2026 had passed the 1997-98 peak. It had not. On the relative index August 2026 reads +2.4, level with the biggest events on record, against +2.65 at the 1997-98 peak.",
+      "Events are now found with NOAA's own episode rule, written in standard deviations so that observations and models stay comparable, and multi-year La Ninas such as 1998-2001 and 2020-2023 are single events that keep their pieces. The catalogue holds 25 events since 1980: the 2016 La Nina is back, and two marginal La Ninas that last four seasons on our SST product instead of five are gone. Every change was checked against NOAA's published episode list.",
+      "The observed Nino index now runs to the latest month of sea surface temperature, August 2026. Rainfall products still stop at their own end, June 2026, and each panel says which.",
+      "Meteo-France forecasts are rescaled with their own hindcast statistics instead of ECMWF's. Its Nino3.4 plume barely moves, but its extreme El Nino probability at five and six months drops sharply, because its own rainfall spread is larger and the rainfall gate for an extreme El Nino is strict.",
+      "The CESM2 rainfall composites were rebuilt with the same rule, and a defect that filed every model February under January was found and fixed on the way. The methodology page describes the new classification in full.",
+    ]
+  },
+  {
     date: "2026-08-27",
     tag: "New data",
     title: "Reported disasters and outbreaks now cover all 83 countries",

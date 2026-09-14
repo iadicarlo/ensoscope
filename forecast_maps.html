@@ -102,9 +102,10 @@
     <h1 class="page-title">Multi-model Forecast Maps</h1>
     <p class="page-subtitle">
       Multi-model median (ECMWF SEAS5 + Météo-France) forecast SST at leads L1-L6 for the latest init.
-      The field is the <strong>variance-adjusted SST anomaly</strong> - detrended for global warming
-      and standardized by the local observed SST standard deviation (σ units), so it shows how
-      anomalous each region is relative to its own variability. Precipitation indicators
+      The field is the <strong>variance-adjusted SST anomaly</strong> - the concurrent 20°S to
+      20°N tropical mean is removed and the remainder is standardized by the local observed SST
+      standard deviation (σ units), so it shows how anomalous each region is relative to its own
+      variability rather than how warm the tropics are as a whole. Precipitation indicators
       (total, extremes, drought) will be added once the daily forecast fields are processed.
     </p>
 
@@ -219,7 +220,7 @@
   <!-- d3-geo-projection provides geoRobinson; vanilla d3 already has equalEarth + naturalEarth1 -->
   <script src="static/lib/d3-geo-projection.min.js?v=20260624g"></script>
   <script src="static/lib/chart.umd.min.js?v=20260624g"></script>
-  <script src="static/js/forecast_maps.js?v=20260914a"></script>
-  <script src="static/js/site.js?v=20260914a"></script>
+  <script src="static/js/forecast_maps.js?v=20260914b"></script>
+  <script src="static/js/site.js?v=20260914b"></script>
 </body>
 </html>

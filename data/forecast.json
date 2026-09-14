@@ -48,8 +48,8 @@
       "moderate_la_nina": 0.0,
       "neutral": 0.0,
       "moderate_el_nino": 0.0,
-      "strong_el_nino": 0.1176,
-      "extreme_el_nino": 0.8824
+      "strong_el_nino": 0.098,
+      "extreme_el_nino": 0.902
     },
     {
       "lead": 4,

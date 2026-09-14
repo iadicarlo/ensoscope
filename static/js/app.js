@@ -908,10 +908,16 @@ function renderOutlookBanner(forecasts, sources) {
       const c = modalIntAt(l), r = INT.indexOf(c);
       if (r > peakRank) { peakRank = r; peakInt = c; peakMonth = l.valid_time; }
     }
+    // The last lead at which the peak intensity is still the modal class. The
+    // month an intensity is "favoured through" must stop where the members
+    // stop favouring it, not at the end of the horizon: for the September 2026
+    // SEAS5 issue extreme is modal to January 2027 and strong from February.
+    let peakLastMonth = peakMonth;
+    for (const l of leads) if (modalIntAt(l) === peakInt) peakLastMonth = l.valid_time;
     const sp = dom === "en" ? ["strong_el_nino", "extreme_el_nino"]
              : dom === "ln" ? ["strong_la_nina", "extreme_la_nina"] : ["neutral"];
     const meanSP = sig.reduce((s, l) => s + sp.reduce((a, c) => a + (l[c] || 0), 0), 0) / sig.length;
-    return { dom, INT, nearInt, peakInt, peakMonth, meanSP, vintage: f.vintage, lastMonth: leads[leads.length - 1].valid_time };
+    return { dom, INT, nearInt, peakInt, peakMonth, peakLastMonth, meanSP, vintage: f.vintage, lastMonth: leads[leads.length - 1].valid_time };
   }
 
   const A = srcs.map(s => Object.assign({ src: s }, analyse(forecasts[s])));
@@ -929,6 +935,12 @@ function renderOutlookBanner(forecasts, sources) {
     peakWhenMonth = reaching[reaching.length - 1] || primary.peakMonth;
   }
 
+  let throughMonth = primary.peakLastMonth;
+  if (agree) {
+    const still = A.filter(a => a.peakInt === peakInt).map(a => a.peakLastMonth).sort();
+    throughMonth = still[still.length - 1] || primary.peakLastMonth;
+  }
+
   const lastMonth = _formatValidMonth(primary.lastMonth);
   const whenStr = A.length === 1 ? _formatValidMonth(peakWhenMonth) : coarseWhen(peakWhenMonth);
   let headline;
@@ -937,7 +949,7 @@ function renderOutlookBanner(forecasts, sources) {
   } else if (rankOf(peakInt) > rankOf(nearInt)) {
     headline = `Current outlook: ${_artcl(INTLABEL[nearInt])} ${INTLABEL[nearInt]} ${FAMLABEL[dom]} now, strengthening toward ${INTLABEL[peakInt]} by ${whenStr}.`;
   } else {
-    headline = `Current outlook: ${_artcl(INTLABEL[peakInt])} ${INTLABEL[peakInt]} ${FAMLABEL[dom]} is favoured through ${lastMonth}.`;
+    headline = `Current outlook: ${_artcl(INTLABEL[peakInt])} ${INTLABEL[peakInt]} ${FAMLABEL[dom]} is favoured through ${_formatValidMonth(throughMonth)}.`;
   }
 
   const ctaPhase = dom === "en" ? "strong_el_nino" : dom === "ln" ? "strong_la_nina" : "neutral";

@@ -331,8 +331,12 @@
           falling in each ENSO intensity class. Each member's NINO index is first bias- and
           amplitude-corrected to the 1993-2016 hindcast
           (<em>z = (anomaly − μ<sub>hindcast</sub>) / σ<sub>hindcast</sub></em>, matching observed
-          variance per the ECCC/Merryfield method); extreme El Niño additionally requires a
-          NINO3 precipitation anomaly ≥ 5 mm/day. No statistical calibration is applied.
+          variance per the ECCC/Merryfield method). The NINO indices are relative: the
+          20°S to 20°N tropical mean of the same month is subtracted from each box, so a class
+          means the same thing in a warm decade as in a cool one. Extreme El Niño additionally
+          requires a NINO3 precipitation anomaly ≥ 5 mm/day for three consecutive months, and the
+          intensity tiers are cumulative, so the strongest tier an event reaches is the one it
+          gets. No statistical calibration is applied.
         </p>
         <p>
           The <strong>hierarchical decision rule</strong> determines the most likely
@@ -350,10 +354,10 @@
     </div>
   </main>
 
-  <script src="static/js/data_base.js?v=20260914a"></script>
+  <script src="static/js/data_base.js?v=20260914b"></script>
 
-  <script src="static/js/app.js?v=20260914a"></script>
-  <script src="static/js/updates.js?v=20260914a"></script>
-  <script src="static/js/site.js?v=20260914a"></script>
+  <script src="static/js/app.js?v=20260914b"></script>
+  <script src="static/js/updates.js?v=20260914b"></script>
+  <script src="static/js/site.js?v=20260914b"></script>
 </body>
 </html>
