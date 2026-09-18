@@ -12,7 +12,7 @@ const DATA_BASE = "data/forecast_maps/";
 // forecast vintage is never masked by a stale browser/CDN copy. Kept in sync
 // with app.js DATA_VERSION. Static basemaps (ne_*.geojson) never change and are
 // left unversioned, matching the app.js / map_explorer.js convention.
-const DATA_VERSION = "20260914a";
+const DATA_VERSION = "20260918a";
 function _dv(url) {
   return url + (url.indexOf("?") === -1 ? "?" : "&") + "v=" + DATA_VERSION;
 }
@@ -730,12 +730,53 @@ async function _loadRegionSeries() {
   return _regionSeries;
 }
 
+
+/** Force d3-geo ring winding on a FeatureCollection, in place.
+ *
+ *  d3-geo is spherical: the interior is the region to the LEFT of the ring, so
+ *  an exterior ring must run clockwise in lon/lat. GeoJSON RFC 7946 says the
+ *  opposite and d3 does not rewind for you, so a counter-clockwise exterior
+ *  ring is drawn as the whole sphere minus that ring: invisible against the
+ *  background, but its hit area covers the entire panel and it swallows every
+ *  click. Natural Earth ships twelve such rings, all tiny four-point islands.
+ *  Florida's took every click on the USA panel until 2026-09-18; clicking
+ *  California selected Florida, and China and Japan had the same trap.
+ *
+ *  The builder normalises on write (scripts/analysis/finance/_geojson_winding.py)
+ *  and an invariant fails if a bad ring reaches website/data. This is the third
+ *  line: the served files can come from a bucket, and a click trap must never
+ *  be one stale upload away.
+ */
+function _rewindForD3ForecastMaps(gj) {
+  if (!gj || !gj.features) return gj;
+  const area = ring => {
+    let a = 0;
+    for (let i = 0; i < ring.length; i++) {
+      const p = ring[i], q = ring[(i + 1) % ring.length];
+      a += p[0] * q[1] - q[0] * p[1];
+    }
+    return a / 2;
+  };
+  const fix = rings => rings.map((r, i) => {
+    if (r.length < 4) return r;
+    const wantNegative = i === 0;                 // exterior clockwise, holes the other way
+    return ((area(r) < 0) !== wantNegative) ? r.slice().reverse() : r;
+  });
+  for (const f of gj.features) {
+    const g = f && f.geometry;
+    if (!g) continue;
+    if (g.type === "Polygon") g.coordinates = fix(g.coordinates);
+    else if (g.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  }
+  return gj;
+}
+
 async function _loadRegionsGeoJSON() {
   if (_regionsGeoJSON) return _regionsGeoJSON;
   try {
     const r = await fetch("data/maps/ne_10m_admin_1_states_provinces.geojson", {cache:"no-cache"});
     if (!r.ok) throw new Error("HTTP " + r.status);
-    _regionsGeoJSON = await r.json();
+    _regionsGeoJSON = _rewindForD3ForecastMaps(await r.json());
   } catch (e) {
     console.warn("forecast_maps: no admin-1 geojson", e);
     _regionsGeoJSON = {features: []};
