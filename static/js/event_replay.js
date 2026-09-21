@@ -1117,7 +1117,7 @@ function _renderImpacts(sel, nMonths) {
 
   const label = {water: "floods and droughts", heat: "extreme heat", disease: "disease outbreaks"};
   document.getElementById("rp-imp-sub").textContent =
-    `Events recorded by EM-DAT in ${RP.country.label || "this country"} during this window, `
+    `Events recorded in ${RP.country.label || "this country"} during this window, `
     + `positioned by the month they began. Markers show that something was recorded and when, `
     + `not how large it was.`;
 
@@ -1152,9 +1152,9 @@ function _renderImpacts(sel, nMonths) {
       water: "No flood or drought was recorded here in this window. EM-DAT "
            + "holds only what was reported and met its threshold, so this may "
            + "be a quiet window or a poorly reported one.",
-      disease: "No outbreak was recorded here in this window. EM-DAT holds "
-             + "only what was reported and met its threshold, so this may be a "
-             + "quiet window or a poorly reported one.",
+      disease: "No outbreak was recorded here in this window. The sources named "
+             + "below hold only what was reported, so this may be a quiet window "
+             + "or a poorly reported one.",
     };
     list.innerHTML = `<li><span class="rp-imp-empty">`
                    + `${_impEsc(why[RPIMP.theme] || `No ${label[RPIMP.theme]} recorded here in this window.`)}`
@@ -1244,7 +1244,7 @@ function _renderImpacts(sel, nMonths) {
       ? _impWhere(e.regions, 3)
       : {short: e.location_text ? _impClip(e.location_text, 58) : "location not recorded",
          full: e.location_text || "location not recorded"};
-    bar.title = `${_impTitle(_impLabel(e))} - ${_impWhen(e)}\n${where.full}`
+    bar.title = `${_impTitle(_impLabel(e))} - ${_impWhen(e)}\n${where.full}\n${_impBy(e)}`
               + (g.overruns ? "\ncontinues past the end of this window" : "");
     bar.dataset.id = e.id;
     bar.addEventListener("click", () => _selectImpact(e, sel, nMonths));
@@ -1256,7 +1256,7 @@ function _renderImpacts(sel, nMonths) {
       + `${_impEsc(_impTitle(_impLabel(e)))}</span>`
       + `<span class="rp-imp-where${e.regions.length ? "" : " none"}">`
       + `${_impEsc(where.short)}</span>`;
-    li.title = where.full;
+    li.title = `${where.full}\n${_impBy(e)}`;
     li.addEventListener("click", () => _selectImpact(e, sel, nMonths));
     li.dataset.id = e.id;
     list.appendChild(li);
@@ -1289,7 +1289,7 @@ function _renderImpacts(sel, nMonths) {
 
   document.getElementById("rp-imp-foot").textContent =
     `${inWindow.length} recorded in this window. `
-    + (unplaced ? `${unplaced} of them name a place we hold no boundary for, drawn as `
+    + (unplaced ? `${unplaced} of them have no place we can draw, so they are shown as `
                 + `hollow rings and listed but never put on a map. ` : "")
     + `Across the whole record this country has ${d.n_mapped} of ${d.n_events} events we can `
     + `place, using the ${d.admin1_units_held} admin-1 units we hold. `
@@ -1321,13 +1321,23 @@ function _impEsc(s) {
     c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 }
 
+// Who reported one event. An outbreak two sources both hold is ONE event,
+// the EM-DAT record, carrying the other source in also_reported_by, so a
+// reader sees it once and still sees that it was corroborated.
+function _impBy(e) {
+  const all = [e.source, ...(e.also_reported_by || [])].filter(Boolean);
+  return all.length ? `reported by ${all.join(" and ")}` : "";
+}
+
 // Sources are read off the events rather than named here, so adding a second
 // one is a change to the builder alone. EM-DAT is the first, not the only one:
 // BEACON, ProMED and EIOS are the ones being asked for.
 function _impSources(d) {
   const seen = [];
   for (const e of (d.events || [])) {
-    if (e.source && !seen.includes(e.source)) seen.push(e.source);
+    for (const s of [e.source, ...(e.also_reported_by || [])]) {
+      if (s && !seen.includes(s)) seen.push(s);
+    }
   }
   if (!seen.length) return "";
   return seen.length === 1

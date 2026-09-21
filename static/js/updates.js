@@ -15,6 +15,35 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-09-21",
+    tag: "New data",
+    title: "Cholera outbreaks from a second source on the event replay tab",
+    items: [
+      "The outbreak panel now draws on a second source for cholera: the compilation behind Perez-Saez et al. (2022), which holds cholera month by month for sub-Saharan Africa from ministries of health, WHO, MSF, ProMED and ReliefWeb. It marks the months when cholera ran above its usual local level, and adds 118 outbreaks that EM-DAT does not hold, across 22 countries.",
+      "An outbreak both sources hold is shown once: 160 EM-DAT events now say they were reported by both. The added outbreaks sit on the timeline but not on the map, because the compilation names districts we do not hold boundaries for.",
+      "It runs from 1980 to 2021, most of it 2000 to 2020. Fifteen of its countries, most of them in West Africa, are not on the tab yet."
+    ]
+  },
+  {
+    date: "2026-09-21",
+    tag: "Fix",
+    title: "Every teleconnection map now picks its past seasons the same way",
+    items: [
+      "The four layers behind the Teleconnections maps, observed rainfall, observed heat, and the CESM2 model's rainfall and heat, each had their own way of deciding which season a past event contributes. They now share one rule: the event, or the neutral period, must span every month of the season, it contributes one season even when it lasted several years, and that season must have at least 90 per cent of its days in the record.",
+      "The observed rainfall maps change most. Every event had been cut at the first day of its last month, so 10 of the 110 event-seasons were missing most of a month, among them the moderate El Ninos of 1994-95 and 2002-03 in December to February and the extreme El Nino of 1982-83 in March to May. The heaviest rain and the longest dry spell are both measured over the season, so a season with a month missing understates both. Those events now count in full. The 2025-26 La Nina, which the December to February rainfall maps held on December 2025 alone, is left out until its whole season is in the record, as the heat maps already did. The December to February strong and extreme El Nino rainfall maps do not move: none of those events, and none of the neutral years they are compared with, ended inside that season.",
+      "In the CESM2 model, neutral years are now chosen exactly like events (the rainfall layer used to require them to last five months), and the heat layer uses one season per event, as the rainfall layer always did. A defect that dated the heat layer's ENSO classification one month late was fixed on the way."
+    ]
+  },
+  {
+    date: "2026-09-18",
+    tag: "Fix",
+    title: "Clicking a region on the event replay map picked the wrong one",
+    items: [
+      "Clicking California on the event replay map selected Florida, and a few other regions did the same. A tiny island outline in the map data was drawn inside out, which left it invisible but gave it an area covering the whole map, so it caught every click. Every outline is now checked for this before it is served.",
+      "For four days after the 14 September switch, the observed rainfall maps on the Teleconnections tab were still built on the old classification while the heat maps beside them had moved: a December to February strong El Nino map was built from 3 events where the catalogue has 4. They were rebuilt on 18 September, and the rebuild now includes them so it cannot happen again."
+    ]
+  },
+  {
     date: "2026-09-14",
     tag: "Fix",
     title: "ENSO classification moved to the relative index and NOAA's episode rule",

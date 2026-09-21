@@ -199,7 +199,16 @@
           recent multi-decade baseline (1981-2020 for the observations, 1980-2014 for the CESM2 historical
           ensemble) with a 5-day calendar-window smoother, so a heatwave day is defined relative
           to what is locally and seasonally normal rather than a fixed temperature. Counts are summed over
-          each event window and then composited by ENSO phase.
+          the season each event contributes and then composited by ENSO phase.
+        </p>
+        <p>
+          <strong>Which season each event contributes.</strong> One rule, applied to the observations and
+          to CESM2, to heat and to rainfall alike. An event, or a neutral period, enters a seasonal
+          composite only if it spans every month of that season, from the first day of its first month to
+          the last day of its last. It contributes one season even when it lasted several years. And that
+          season must have at least 90 per cent of its days in the data record, which is why the 2025-26
+          La Niña is not yet in the December to February maps: the observed record used here ends in
+          December 2025.
         </p>
         <p>
           Because the teleconnection composites use a long observational/ensemble baseline, they use a
@@ -464,6 +473,6 @@
     </div>
   </main>
 
-  <script src="static/js/site.js?v=20260918a"></script>
+  <script src="static/js/site.js?v=20260921a"></script>
 </body>
 </html>
