@@ -17,6 +17,16 @@ window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-09-28",
     tag: "New data",
+    title: "Chikungunya epidemic waves in Brazil on the event replay tab",
+    items: [
+      "Brazil's timeline now shows its chikungunya epidemics, from InfoDengue (Fiocruz and FGV, with the Ministry of Health), which tracks every one of Brazil's 5,570 municipalities week by week. EM-DAT holds none of them.",
+      "A month counts when municipalities above their own epidemic threshold hold at least 3 per cent of Brazil's population, about six million people. That gives ten waves from 2016 to 2026, each two to six months long, among them the 2016 epidemic across the Northeast and the 2024 wave through Minas Gerais and Espirito Santo.",
+      "Unlike the other added outbreaks, each wave names its places: the states where at least a tenth of the population lived in municipalities above the threshold, listed with the wave on the timeline."
+    ]
+  },
+  {
+    date: "2026-09-28",
+    tag: "New data",
     title: "Meningitis outbreaks from the WHO weekly bulletins on the event replay tab",
     items: [
       "The outbreak panel now reads the WHO West Africa weekly meningitis bulletins, 2014 to mid-2022, 280 of them, which report every week how many districts in each country crossed the WHO epidemic threshold. Meningitis returns every dry season across the African meningitis belt, so a month is marked as an outbreak only when at least one district crossed that threshold, the point at which WHO triggers a response.",

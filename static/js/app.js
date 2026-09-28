@@ -17,7 +17,7 @@ const DATA_BASE = "data/";
 // Monthly data-build cache-buster. Bump whenever the served data/*.json are
 // regenerated (forecast, members, hindcast). Appended to every data fetch so a
 // fresh forecast vintage is never masked by a stale browser/CDN copy.
-const DATA_VERSION = "20260928a";
+const DATA_VERSION = "20260928b";
 function _dv(url) {
   return url + (url.indexOf("?") === -1 ? "?" : "&") + "v=" + DATA_VERSION;
 }
