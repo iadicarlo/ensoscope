@@ -15,6 +15,16 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-09-28",
+    tag: "New data",
+    title: "Meningitis outbreaks from the WHO weekly bulletins on the event replay tab",
+    items: [
+      "The outbreak panel now reads the WHO West Africa weekly meningitis bulletins, 2014 to mid-2022, 280 of them, which report every week how many districts in each country crossed the WHO epidemic threshold. Meningitis returns every dry season across the African meningitis belt, so a month is marked as an outbreak only when at least one district crossed that threshold, the point at which WHO triggers a response.",
+      "That adds 31 meningitis outbreaks EM-DAT does not hold, in 9 of the tab's countries, among them Niger, Nigeria, Chad, Burkina Faso and Ghana. Five outbreaks both sources hold, among them Niger 2015 and Nigeria 2017, are shown once and now say they were reported by both. Like the cholera outbreaks, they sit on the timeline but not on the map.",
+      "The bulletins are published as PDFs only. Every table was read out of them and checked against the bulletin's own printed total; one bulletin whose rows and total disagree was left out rather than guessed at."
+    ]
+  },
+  {
     date: "2026-09-21",
     tag: "New data",
     title: "Cholera outbreaks from a second source on the event replay tab",
