@@ -29,9 +29,9 @@ window.ENSOSCOPE_UPDATES = [
     tag: "New data",
     title: "Meningitis outbreaks from the WHO weekly bulletins on the event replay tab",
     items: [
-      "The outbreak panel now reads the WHO West Africa weekly meningitis bulletins, 2014 to mid-2022, 280 of them, which report every week how many districts in each country crossed the WHO epidemic threshold. Meningitis returns every dry season across the African meningitis belt, so a month is marked as an outbreak only when at least one district crossed that threshold, the point at which WHO triggers a response.",
-      "That adds 31 meningitis outbreaks EM-DAT does not hold, in 9 of the tab's countries, among them Niger, Nigeria, Chad, Burkina Faso and Ghana. Five outbreaks both sources hold, among them Niger 2015 and Nigeria 2017, are shown once and now say they were reported by both. Like the cholera outbreaks, they sit on the timeline but not on the map.",
-      "The bulletins are published as PDFs only. Every table was read out of them and checked against the bulletin's own printed total; one bulletin whose rows and total disagree was left out rather than guessed at."
+      "The outbreak panel now reads the WHO West Africa weekly meningitis bulletins, 350 of them from 2014 to 2026, which report every week how many districts in each country crossed the WHO epidemic threshold. Meningitis returns every dry season across the African meningitis belt, so a month is marked as an outbreak only when at least one district crossed that threshold, the point at which WHO triggers a response.",
+      "That adds 51 meningitis outbreaks EM-DAT does not hold, in 11 of the tab's countries, among them Niger, Nigeria, Chad, Burkina Faso and Ghana. Five outbreaks both sources hold, among them Niger 2015 and Nigeria 2017, are shown once and now say they were reported by both. Like the cholera outbreaks, they sit on the timeline but not on the map.",
+      "The bulletins are published as PDFs only. Every table was read out of them and checked against the bulletin's own printed total; four bulletins that do not add up to their own printed total, or print none, were left out rather than guessed at. From 2023 the bulletins could not all be found: 8 of the 26 season weeks of 2023 and 14 of 2024 are held, so an outbreak in a missing week may not show."
     ]
   },
   {
