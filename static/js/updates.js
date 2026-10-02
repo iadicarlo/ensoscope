@@ -17,6 +17,16 @@ window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-02",
     tag: "New data",
+    title: "Leptospirosis, leishmaniasis and hantavirus in Brazil, from DATASUS",
+    items: [
+      "Brazil's outbreak timeline now also reads DATASUS, the national notification system (SINAN): every notified case of leptospirosis since 2000, visceral and cutaneous leishmaniasis, and hantavirus, by state and month.",
+      "These diseases are present every year, so a month is marked as an outbreak when a state's cases exceed the usual level for that calendar month by four standard deviations, a strict version of the control diagram Brazil's surveillance uses. That gives 140 state outbreaks since 2000, and it picks out the leptospirosis that followed the floods in Rio Grande do Sul in May 2024, Santa Catarina in November 2008 and Pernambuco in June 2022.",
+      "Malaria is left out of this source: outside the Amazon it is mostly caught elsewhere, and the Amazon reports to a separate system."
+    ]
+  },
+  {
+    date: "2026-10-02",
+    tag: "New data",
     title: "WHO outbreak reports worldwide, and dengue and Zika in Brazil, on the event replay tab",
     items: [
       "The outbreak panel now includes WHO's Disease Outbreak News from 1996 to August 2026, as compiled by Torres Munguia et al. (2022), for the climate-sensitive diseases the panel tracks: cholera, dengue, yellow fever, meningitis, chikungunya, Zika, Rift Valley fever, plague, Ebola, Marburg, Lassa fever, hepatitis E, hantavirus and malaria. That adds 430 outbreaks, and 235 already shown from another source now say WHO reported them too. Each is placed in the month of WHO's first report, usually some weeks after the outbreak began.",

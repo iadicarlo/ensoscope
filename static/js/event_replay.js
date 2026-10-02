@@ -891,7 +891,8 @@ const RP_IMP_COLOUR = {
   "dengue": "#C0392B", "ebola": "#5B2C6F", "lassa fever": "#8A5A2B",
   "hepatitis": "#4B8B3B", "rift valley fever": "#B03A82",
   "leishmaniasis": "#7A8B2B", "marburg": "#7B241C", "plague": "#3B3B3B",
-  "chikungunya": "#D4649B",
+  "chikungunya": "#D4649B", "zika": "#7E5BA6", "malaria": "#2F7D5B",
+  "leptospirosis": "#3C6E91", "hantavirus": "#9C6B4F",
   // EM-DAT records 95 disease events with no pathogen named at all
   "Epidemic": "#8A97A3",
 };
