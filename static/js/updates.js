@@ -15,6 +15,16 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-10-02",
+    tag: "New data",
+    title: "WHO outbreak reports worldwide, and dengue and Zika in Brazil, on the event replay tab",
+    items: [
+      "The outbreak panel now includes WHO's Disease Outbreak News from 1996 to August 2026, as compiled by Torres Munguia et al. (2022), for the climate-sensitive diseases the panel tracks: cholera, dengue, yellow fever, meningitis, chikungunya, Zika, Rift Valley fever, plague, Ebola, Marburg, Lassa fever, hepatitis E, hantavirus and malaria. That adds 430 outbreaks, and 235 already shown from another source now say WHO reported them too. Each is placed in the month of WHO's first report, usually some weeks after the outbreak began.",
+      "Reports about a case picked up abroad or about an overseas territory are left out when WHO's title says so: France's 2026 Ebola entry, a doctor evacuated from the DR Congo, and its yellow fever reports from French Guiana. A few imported cases with plain titles remain, such as Ebola in Spain and the United States in 2014.",
+      "Brazil's timeline adds dengue (2010 to 2026) and Zika (2015 to 2024) from InfoDengue. Chikungunya and Zika now show one marker per state rather than one per wave, so the 2016 epidemics show which states were hit. Dengue reaches nearly every state every summer, so it keeps one marker per wave, listing the states where most of the population lived above the epidemic threshold."
+    ]
+  },
+  {
     date: "2026-09-28",
     tag: "New data",
     title: "Chikungunya epidemic waves in Brazil on the event replay tab",
