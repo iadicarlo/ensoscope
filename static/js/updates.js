@@ -16,6 +16,15 @@
 window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-13",
+    tag: "New data",
+    title: "Dengue outbreaks worldwide, from WHO's global dengue surveillance",
+    items: [
+      "The outbreak timeline on the replay tab now shows dengue outside Brazil, from WHO's national surveillance data (from 2007 in Asia, 2014 in the Americas).",
+      "A month counts as an outbreak when a country's cases are far above its usual level for that month, the same strict rule used for Brazil's leptospirosis. An outbreak already on the timeline from another source is shown once.",
+    ],
+  },
+  {
+    date: "2026-10-13",
     tag: "Forecast update",
     title: "October 2026 forecast",
     items: [
