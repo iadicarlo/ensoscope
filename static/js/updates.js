@@ -15,6 +15,15 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-10-13",
+    tag: "Forecast update",
+    title: "October 2026 forecast",
+    items: [
+      "ECMWF SEAS5 and Météo-France updated to the October 2026 start, with refreshed sea surface temperature maps.",
+      "Both models keep El Niño at 100% through March 2027. SEAS5 has it at extreme strength through November and strong after that; Météo-France keeps it extreme through January.",
+    ],
+  },
+  {
     date: "2026-10-02",
     tag: "New data",
     title: "Leptospirosis, leishmaniasis and hantavirus in Brazil, from DATASUS",
