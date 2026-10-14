@@ -15,6 +15,14 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-10-14",
+    tag: "New data",
+    title: "Yellow fever outbreaks from ProMED, 2007 to 2016",
+    items: [
+      "The outbreak timeline now adds yellow fever reports from ProMED behind the Shearer et al. (2018) dataset, which its authors shared with the source of each record. Each report is placed in the month it was posted: 22 new outbreaks on the timeline, and 3 that another source already showed now list ProMED too.",
+    ],
+  },
+  {
     date: "2026-10-13",
     tag: "New data",
     title: "Dengue outbreaks worldwide, from WHO's global dengue surveillance",
