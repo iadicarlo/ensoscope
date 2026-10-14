@@ -1,5 +1,7 @@
 # ENSOscope
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23366523.svg)](https://doi.org/10.5281/zenodo.23366523)
+
 ENSOscope shows what El Niño and La Niña are likely to do next, and what they have done before, for 83 countries most exposed to them. It is built for humanitarian teams who need to plan ahead.
 
 Website: https://iadicarlo.org/ensoscope/
@@ -21,7 +23,9 @@ The site is updated every month when the new forecasts come out. Each update is 
 
 ## How to cite
 
-Abdelkader Di Carlo, I. (2026). ENSOscope: seasonal El Niño and La Niña forecasts and impacts for humanitarian anticipatory action. https://iadicarlo.org/ensoscope/
+Abdelkader Di Carlo, I. (2026). ENSOscope: seasonal El Niño and La Niña forecasts and impacts for humanitarian anticipatory action. Zenodo. https://doi.org/10.5281/zenodo.23366523
+
+This DOI always points to the latest version. Each monthly version also has its own DOI, listed on the Zenodo page.
 
 Please also cite the datasets ENSOscope builds on. They are listed, with their own licences and references, on the methodology page: https://iadicarlo.org/ensoscope/methodology.html#data-sources
 

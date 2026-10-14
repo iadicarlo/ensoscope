@@ -7,6 +7,7 @@ authors:
     given-names: "Isma"
     affiliation: "Utrecht University"
     orcid: "https://orcid.org/0000-0002-8982-8343"
+doi: 10.5281/zenodo.23366523
 url: "https://iadicarlo.org/ensoscope/"
 repository-code: "https://github.com/iadicarlo/ensoscope"
 license: CC-BY-4.0

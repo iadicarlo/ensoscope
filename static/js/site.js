@@ -115,7 +115,8 @@
             '<a href="https://iadicarlo.org" target="_blank" rel="noopener">iadicarlo.org</a>' +
             '<a href="https://github.com/iadicarlo" target="_blank" rel="noopener">github.com/iadicarlo</a>' +
             '<a href="about.html">Full contact details</a>' +
-            '<p class="footer-muted">All input datasets are open and cited on the Methodology page.</p>' +
+            '<a href="https://doi.org/10.5281/zenodo.23366523" target="_blank" rel="noopener" title="Cite ENSOscope (all versions)"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.23366523.svg" alt="DOI 10.5281/zenodo.23366523" style="margin-top:0.3rem"></a>' +
+            '<p class="footer-muted">The datasets ENSOscope uses, their licences and how to cite them are on the Methodology page.</p>' +
           '</div>' +
         '</div>' +
         '<div class="footer-bottom">For research and humanitarian decision-support. Seasonal forecasts carry real uncertainty; read the Skill and Methodology pages before acting on them.' +

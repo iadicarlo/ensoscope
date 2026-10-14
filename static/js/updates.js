@@ -16,6 +16,14 @@
 window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-14",
+    tag: "New feature",
+    title: "ENSOscope can now be cited with a DOI",
+    items: [
+      "Each monthly update is now archived on Zenodo with its own DOI, so a report can cite the exact version it used. The DOI 10.5281/zenodo.23366523 always points to the latest version and is linked at the bottom of every page.",
+    ],
+  },
+  {
+    date: "2026-10-14",
     tag: "New data",
     title: "Observed sea temperatures now run to September 2026",
     items: [
