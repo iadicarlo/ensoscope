@@ -36,3 +36,6 @@ requirements - see the Methodology page for full sources and DOIs:
 
 The CC BY 4.0 license above applies to original ENSOscope content, not to the
 underlying third-party data, which you must attribute separately.
+
+The outbreak records in data/archive/ come from sources that allow them to be
+passed on; data/archive/README.txt says how to credit each one.

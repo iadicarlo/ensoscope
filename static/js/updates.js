@@ -17,6 +17,17 @@ window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-14",
     tag: "New feature",
+    title: "Event replay gets its own tab, and the guide is refreshed",
+    items: [
+      "Event replay now has its own tab next to Forecast, and the front page leads to it: pick a past El Niño or La Niña and a country, and see what it did month by month, with the floods, droughts, heat waves and outbreaks recorded at the time.",
+      "The address of the event replay page now keeps the event and country you chose, so you can send someone straight to the same view.",
+      "The guide now covers the event replay and the country packs. The walkthrough video is gone, because it showed an older version of the site.",
+      "Outbreak records from sources that allow it (WHO Disease Outbreak News, and DATASUS for Brazil) will be part of the archived version on Zenodo from the next release.",
+    ],
+  },
+  {
+    date: "2026-10-14",
+    tag: "New feature",
     title: "A country pack for every country, as PDF and Excel",
     items: [
       "On the event replay page, each country now has a downloadable pack: what the coming 3 and 6 months may bring, in plain words, with maps of rain and heat by region, charts of the forecast and of this season against every past year, and the outbreak record by disease.",

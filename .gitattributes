@@ -2,4 +2,5 @@
 # The outbreak and disaster records mix sources whose terms do not yet allow a
 # permanent public archive (EM-DAT, WHO dengue, meningitis bulletins, InfoDengue,
 # cholera compilation). See docs/outreach/data_licence_check_2026-10-14.md in the code repo.
+# The records whose sources allow it are archived separately, in data/archive/.
 data/replay/impacts/** export-ignore

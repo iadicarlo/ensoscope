@@ -1976,6 +1976,19 @@ async function init() {
   cSel.innerHTML = cs.map(c => `<option value="${c.id}">${c.label}</option>`).join("");
   cSel.value = cs.some(c => c.id === "kenya") ? "kenya" : cs[0].id;
 
+  // A link can open a chosen event and country (?event=...&country=...), so the
+  // front page and the guide can point at a worked example and a reader can
+  // share what they are looking at. Unknown ids are ignored, never guessed.
+  const q = new URLSearchParams(location.search);
+  if (ordered.some(e => e.id === q.get("event"))) evSel.value = q.get("event");
+  if (cs.some(c => c.id === q.get("country"))) cSel.value = q.get("country");
+  const syncUrl = () => {
+    const p = new URLSearchParams();
+    if (evSel.value) p.set("event", evSel.value);
+    p.set("country", cSel.value);
+    history.replaceState(null, "", "?" + p.toString() + location.hash);
+  };
+
   RP.packs = await _getJSON("data/packs_index.json").then(d => new Set(d.countries)).catch(() => null);
   await _loadCountry(cSel.value);
   await _loadImpacts(cSel.value);
@@ -1992,10 +2005,11 @@ async function init() {
   });
 
   evSel.addEventListener("change", () => {
-    render(); _drawEventLayer().catch(() => {}); _drawZoom().catch(() => {});
+    syncUrl(); render(); _drawEventLayer().catch(() => {}); _drawZoom().catch(() => {});
   });
   document.getElementById("rp-compare").addEventListener("change", render);
   cSel.addEventListener("change", async () => {
+    syncUrl();
     await _loadCountry(cSel.value);
     await _loadImpacts(cSel.value);
     _highlightSelected();

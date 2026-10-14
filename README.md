@@ -13,8 +13,10 @@ This repository holds the published website and the data it shows:
 - seasonal El Niño and La Niña forecasts from ECMWF (SEAS5) and Météo-France (System 9), updated every month
 - how well those forecasts have done in the past
 - maps of how past El Niño and La Niña years changed rainfall and heat, by country and region
-- a timeline of past floods, droughts, heat waves and disease outbreaks for each country
+- an event replay: any past El Niño or La Niña, month by month, for each country, with a timeline of the floods, droughts, heat waves and disease outbreaks recorded at the time
 - a country pack for each country (PDF and Excel): the outlook for the next 3 and 6 months in plain words, maps, charts and the tables behind them
+
+The outbreak records from sources that allow it are in data/archive/, with a note on how to credit each source. The rest of the outbreak and disaster records are shown on the site but kept out of the archived releases until their owners agree.
 
 The data processing code is kept in a separate repository.
 

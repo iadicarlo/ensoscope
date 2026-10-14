@@ -28,10 +28,6 @@
     .schem-wrap { margin: 0.2rem 0 0.6rem; overflow-x: auto; }
     .schem-wrap svg { display: block; margin: 0 auto; height: auto; }
     .schem-note { font-size: 0.82rem; color: var(--text-muted); margin: 0 0 0.4rem; }
-    .video-wrap { margin: 0.2rem 0; }
-    .video-wrap video { width: 100%; height: auto; display: block; border-radius: 12px; background: #000; }
-    video::cue { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: rgba(11,33,56,0.80); color: #fff; line-height: 1.35; }
   </style>
   <link rel="icon" type="image/png" href="favicon.png?v=20260624g">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -49,11 +45,11 @@
             <a href="forecast_maps.html" data-nav-item="forecast_maps">Maps</a>
           </div>
         </div>
+        <a href="event_replay.html" data-nav="event_replay">Event replay</a>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="map_explorer">Teleconnections</span>
           <div class="nav-dropdown-menu">
             <a href="map_explorer.html" data-nav-item="telecon_maps">Maps</a>
-            <a href="event_replay.html" data-nav-item="telecon_replay">Event replay</a>
           </div>
         </div>
         <div class="nav-dropdown">
@@ -78,29 +74,13 @@
       A short walkthrough, from "what is this" to "what do I do with it." No background needed.
     </p>
 
-    <!-- Walkthrough video -->
-    <section class="card" id="watch" style="scroll-margin-top:80px">
-      <h2>Watch: a 4-minute walkthrough</h2>
-      <p class="schem-note">The whole platform end to end, narrated as if you were a health team in Kenya. Captions are on by default; use the CC button in the player to turn them off.</p>
-      <div class="video-wrap">
-        <video controls preload="metadata" playsinline
-               poster="static/media/ensoscope_guide_poster.jpg"
-               aria-label="ENSOscope walkthrough, four minutes, with English captions">
-          <source src="static/media/ensoscope_guide_walkthrough.mp4?v=20260709" type="video/mp4">
-          <track kind="captions" src="static/media/ensoscope_guide_walkthrough.vtt?v=20260709" srclang="en" label="English" default>
-          <p style="padding:1rem;color:var(--text-muted)">Your browser can't play this video.
-            <a href="static/media/ensoscope_guide_walkthrough.mp4?v=20260709">Download the walkthrough (MP4, 8 MB)</a>.</p>
-        </video>
-      </div>
-    </section>
-
     <!-- Overview schematic -->
     <section class="card">
       <h2>ENSOscope in one picture</h2>
-      <p class="schem-note">The platform follows one chain: forecast the ENSO state, map where it shifts rainfall and heat, see your region's impacts, and act on the lead time.</p>
+      <p class="schem-note">The platform follows one chain: forecast the ENSO state, map where it shifts rainfall and heat, see what past events did in your country, and act on the lead time.</p>
       <div class="schem-wrap">
         <svg viewBox="0 0 1040 172" width="100%" style="max-width:1040px;min-width:640px" role="img"
-             aria-label="How ENSOscope works: 1 the forecast, 2 teleconnections, 3 your region's impacts, 4 act on the lead time.">
+             aria-label="How ENSOscope works: 1 the forecast, 2 teleconnections, 3 what past events did in your region, 4 act on the lead time.">
           <rect x="6"   y="14" width="230" height="124" rx="12" fill="#E8F4F6" stroke="#BCE0E6"/>
           <rect x="264" y="14" width="230" height="124" rx="12" fill="#EAF1FB" stroke="#D3E0EC"/>
           <rect x="522" y="14" width="230" height="124" rx="12" fill="#FCEFEA" stroke="#F6D2C2"/>
@@ -128,7 +108,7 @@
           <text text-anchor="middle" font-size="12.5" fill="#5E7488">
             <tspan x="121" y="111">how strong,</tspan><tspan x="121" y="127">months ahead</tspan>
             <tspan x="379" y="111">where it shifts</tspan><tspan x="379" y="127">rain and heat far away</tspan>
-            <tspan x="637" y="111">rain, drought</tspan><tspan x="637" y="127">and heat</tspan>
+            <tspan x="637" y="111">what past events</tspan><tspan x="637" y="127">did there</tspan>
             <tspan x="895" y="111">prepare before</tspan><tspan x="895" y="127">the season</tspan>
           </text>
         </svg>
@@ -137,7 +117,7 @@
 
     <!-- Four steps -->
     <section class="card">
-      <h2>Using it in four steps</h2>
+      <h2>Using it in five steps</h2>
       <ol class="guide-steps">
         <li>
           <h3>See what's coming</h3>
@@ -150,20 +130,25 @@
           <a href="map_explorer.html">Open Teleconnections &rarr;</a>
         </li>
         <li>
+          <h3>See what past events did</h3>
+          <p>Replay a past El Niño or La Niña month by month for your country, with the floods, droughts, heat waves and outbreaks recorded at the time, and download the country pack.</p>
+          <a href="event_replay.html">Open Event replay &rarr;</a>
+        </li>
+        <li>
           <h3>Weigh the confidence</h3>
           <p>See how reliable the forecast is at that lead and season, verified against the observed record.</p>
           <a href="hindcast_skill.html">Open Skill &rarr;</a>
         </li>
         <li class="act">
           <h3>Act on the lead time</h3>
-          <p>Pre-position supplies, brief teams and trigger anticipatory-action plans in the months of warning.</p>
+          <p>Pre-position supplies, brief teams and trigger anticipatory-action plans in the months of warning. The country pack puts the outlook in plain words to share with your team.</p>
         </li>
       </ol>
     </section>
 
     <!-- Concrete persona walkthrough -->
     <section class="card">
-      <h2>The four steps, made real: an example, a health team in Kenya (see video)</h2>
+      <h2>The steps, made real: an example, a health team in Kenya</h2>
       <p class="schem-note">Imagine you are a health team in Kenya and you hear a strong El Niño is forecast. Here is exactly what to do, in about five minutes, and why each step matters.</p>
       <ol class="guide-steps">
         <li>
@@ -191,6 +176,14 @@
           <p>Switch the hazard to <em>Heat stress</em>. This map uses WBGT, which is simply a "feels-like" heat number that combines temperature and humidity. A high value means dangerous heat for the body, which matters most for patients, the elderly and young children.</p>
         </li>
         <li>
+          <h3>Replay a real El Niño</h3>
+          <p>The maps show what an El Niño usually does. Now see what one actually did: open <a href="event_replay.html?event=extreme_el_nino_199705&amp;country=kenya">Event replay for Kenya in the 1997-98 El Niño</a>. Kenya's rainfall climbs far above normal through the short rains of late 1997. The timeline underneath shows a flood on the coast in September 1997 and, under <em>Disease</em>, cholera through 1997 and Rift Valley fever from December 1997, each linked to its source. Move the month slider to follow the season, and compare it with the 2023-24 El Niño side by side. <strong>Why it matters:</strong> a real event shows when the rain came and what followed, which an average cannot.</p>
+        </li>
+        <li>
+          <h3>Take the country pack</h3>
+          <p>On the same page, download the Kenya <strong>country pack</strong> (PDF or Excel). It gives the outlook for the next three and six months in plain words, with maps, charts and what the published research says about El Niño and disease, ready to share with colleagues who will never open the site.</p>
+        </li>
+        <li>
           <h3>Ask: can I trust it?</h3>
           <p>Open the <a href="hindcast_skill.html">Skill</a> tab. The grid grades how well the model predicted ENSO in the past: greener and closer to 1.0 means more reliable. If your lead time sits in the reliable part, you can act with confidence.</p>
         </li>
@@ -200,8 +193,81 @@
         </li>
       </ol>
       <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.6rem">
-        Swap "Kenya" and "short rains" for your own context: the same six clicks work for any country, season and hazard.
+        Swap "Kenya" and "short rains" for your own context: the same clicks work for any country, season and hazard.
       </p>
+    </section>
+
+    <!-- Event replay, a main part of the site -->
+    <section class="card" id="replay" style="scroll-margin-top:80px">
+      <h2>Replaying a past event</h2>
+      <div class="prose">
+        <p>
+          The teleconnection maps answer <em>what does an El Niño usually do</em>. The
+          <a href="event_replay.html">Event replay</a> page answers a different question, and often
+          the more useful one before a season: <em>what did one particular El Niño actually do
+          here, month by month</em>.
+        </p>
+        <p>
+          Pick an event and a country. You get the sea surface temperature that defined the event,
+          and underneath it rainfall, the heaviest ten-day downpour, the longest dry spell, dry
+          days, maximum temperature, heat stress and warm nights, each as a map and as a line
+          through time.
+        </p>
+        <p><strong>Three things are drawn on every chart, and they answer three different questions:</strong></p>
+        <ul>
+          <li><strong>The coloured line</strong> is the event you chose.</li>
+          <li><strong>The grey lines</strong> are every other event of the same kind, lined up on
+            January of their own first year. If the coloured line sits outside the grey band, this
+            event was doing something the others did not. Point at a grey line to see which year
+            it is.</li>
+          <li><strong>The dashed green line</strong> is an ordinary year: the average of the years
+            with no El Niño and no La Niña. Comparing an El Niño only with other El Niños tells you
+            whether it was worse than the last one. It cannot tell you whether it was worse than
+            normal, which is usually what decides whether to act.</li>
+        </ul>
+        <p>
+          <strong>The month slider moves everything at once.</strong> The world map, both country
+          panels and the marker on every chart step together, so you can follow a season as it
+          develops rather than reading one average for the whole event. That matters because two
+          seasons often differ less in how much rain fell than in <em>when</em> it fell: rain that
+          arrives early and rain that arrives late produce the same total and very different
+          consequences.
+        </p>
+        <p>
+          The two country panels sit side by side on one shared colour scale, so you can put your
+          event next to any other and see the difference directly. Point anywhere on a map to read
+          the exact value at that spot. <strong>Save as PDF</strong> produces a one-page sheet of
+          whatever you are looking at.
+        </p>
+        <p>
+          <strong>Reported disasters and outbreaks.</strong> Under the charts, a timeline puts the
+          floods, droughts, heat waves and disease outbreaks recorded in that country on the same
+          months, below the rainfall curve, with a link to the source of each record. Read it with
+          two cautions, which the page also spells out: an empty stretch is often missing reports
+          rather than a quiet year, and a marker inside an El Niño shows that the two happened at the
+          same time, not that one caused the other.
+        </p>
+        <p>
+          <strong>By region.</strong> A table under the maps gives the value for each province or
+          region, the number a planner writes down.
+        </p>
+        <p>
+          <strong>Country pack.</strong> The PDF and Excel buttons next to the country give a pack
+          for that country: the outlook for the next three and six months in plain words, maps of
+          the country, charts, and what peer-reviewed research says about El Niño and disease
+          there. Every chart comes with a line on how to read it.
+        </p>
+        <p>
+          <strong>Share what you see.</strong> The page address keeps the event and the country you
+          chose, so you can send someone straight to the same view.
+        </p>
+        <p class="schem-note">
+          Everything here is observed, from CHIRPS rainfall and ERA5 heat. The one exception is
+          drawn dashed and labelled: where an event is still running, the sea-surface-temperature
+          panel also carries the live forecast. There is no forecast of country rainfall or heat
+          behind this site, so those panels stop where the observations do.
+        </p>
+      </div>
     </section>
 
     <!-- Reading the forecast -->
@@ -278,57 +344,6 @@
           average level during that phase. Click a country to drill all the way
           down to it. Behind the maps, observations are combined with a large climate-model ensemble so the patterns
           are robust even though few strong events sit in the observed record.
-        </p>
-      </div>
-    </section>
-
-    <!-- Event replay: the Guide covered every tab except this one -->
-    <section class="card">
-      <h2>Replaying a past event</h2>
-      <div class="prose">
-        <p>
-          The teleconnection maps answer <em>what does an El Niño usually do</em>. The
-          <a href="event_replay.html">Event replay</a> page answers a different question, and often
-          the more useful one before a season: <em>what did one particular El Niño actually do
-          here, month by month</em>.
-        </p>
-        <p>
-          Pick an event and a country. You get the sea surface temperature that defined the event,
-          and underneath it rainfall, the heaviest ten-day downpour, the longest dry spell, dry
-          days, maximum temperature, heat stress and warm nights, each as a map and as a line
-          through time.
-        </p>
-        <p><strong>Three things are drawn on every chart, and they answer three different questions:</strong></p>
-        <ul>
-          <li><strong>The coloured line</strong> is the event you chose.</li>
-          <li><strong>The grey lines</strong> are every other event of the same kind, lined up on
-            January of their own first year. If the coloured line sits outside the grey band, this
-            event was doing something the others did not. Point at a grey line to see which year
-            it is.</li>
-          <li><strong>The dashed green line</strong> is an ordinary year: the average of the years
-            with no El Niño and no La Niña. Comparing an El Niño only with other El Niños tells you
-            whether it was worse than the last one. It cannot tell you whether it was worse than
-            normal, which is usually what decides whether to act.</li>
-        </ul>
-        <p>
-          <strong>The month slider moves everything at once.</strong> The world map, both country
-          panels and the marker on every chart step together, so you can follow a season as it
-          develops rather than reading one average for the whole event. That matters because two
-          seasons often differ less in how much rain fell than in <em>when</em> it fell: rain that
-          arrives early and rain that arrives late produce the same total and very different
-          consequences.
-        </p>
-        <p>
-          The two country panels sit side by side on one shared colour scale, so you can put your
-          event next to any other and see the difference directly. Point anywhere on a map to read
-          the exact value at that spot. <strong>Save as PDF</strong> produces a one-page sheet of
-          whatever you are looking at.
-        </p>
-        <p class="schem-note">
-          Everything here is observed, from CHIRPS rainfall and ERA5 heat. The one exception is
-          drawn dashed and labelled: where an event is still running, the sea-surface-temperature
-          panel also carries the live forecast. There is no forecast of country rainfall or heat
-          behind this site, so those panels stop where the observations do.
         </p>
       </div>
     </section>
@@ -416,6 +431,6 @@
     </section>
   </main>
 
-  <script src="static/js/site.js?v=20261014g"></script>
+  <script src="static/js/site.js?v=20261014h"></script>
 </body>
 </html>

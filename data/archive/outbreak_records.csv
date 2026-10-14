@@ -1,0 +1,806 @@
+source,country,iso3,disease,start,end,where,link
+WHO Disease Outbreak News,afghanistan,AFG,cholera,1998-08,1998-09,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,afghanistan,AFG,cholera,1999-06,1999-09,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,afghanistan,AFG,cholera,2000-09,2000-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,afghanistan,AFG,cholera,2001-07,2001-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,afghanistan,AFG,cholera,2005-06,2005-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,afghanistan,AFG,dengue,2019-12,2019-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,afghanistan,AFG,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,afghanistan,AFG,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,afghanistan,AFG,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,afghanistan,AFG,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,angola,AGO,meningitis,1999-10,1999-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,angola,AGO,meningitis,2001-08,2001-10,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,angola,AGO,cholera,2006-05,2006-06,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,angola,AGO,yellow fever,2016-02,2016-06,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,angola,AGO,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,angola,AGO,cholera,2025-03,2025-08,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,angola,AGO,yellow fever,2026-06,2026-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,argentina,ARG,cholera,1996-02,1996-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,argentina,ARG,chikungunya,2016-03,2016-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,argentina,ARG,hantavirus,2019-01,2019-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,argentina,ARG,chikungunya,2023-03,2023-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,argentina,ARG,dengue,2023-07,2023-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,argentina,ARG,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,australia,AUS,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,australia,AUS,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bangladesh,BGD,dengue,2022-08,2022-11,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bangladesh,BGD,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bangladesh,BGD,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bangladesh,BGD,dengue,2023-08,2023-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bangladesh,BGD,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bangladesh,BGD,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bangladesh,BGD,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,belize,BLZ,cholera,1998-12,1998-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,belize,BLZ,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,belize,BLZ,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,belize,BLZ,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bolivia,BOL,cholera,1997-01,1997-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bolivia,BOL,yellow fever,1997-03,1997-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bolivia,BOL,cholera,1998-03,1998-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bolivia,BOL,yellow fever,1999-02,1999-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bolivia,BOL,zika,2016-01,2016-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bolivia,BOL,chikungunya,2023-03,2023-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bolivia,BOL,dengue,2023-03,2023-12,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bolivia,BOL,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bolivia,BOL,yellow fever,2025-05,2025-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bolivia,BOL,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,bolivia,BOL,yellow fever,2026-06,2026-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,brazil,BRA,dengue,1998-06,1998-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,brazil,BRA,yellow fever,1998-08,1998-10,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,brazil,BRA,cholera,1998-11,1998-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,brazil,BRA,yellow fever,1999-03,1999-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,brazil,BRA,cholera,1999-04,1999-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2000-01,2000-08,"Pernambuco, 1,472 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2000-01,2000-01,"Sergipe, 39 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,yellow fever,2000-01,2000-01,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2000-03,2001-01,"Alagoas, 623 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2000-06,2000-08,"Espírito Santo, 123 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2000-07,2000-07,"Amapá, 63 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2000-08,2000-08,"Pernambuco, 698 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2000-08,2000-09,"Alagoas, 286 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2000-11,2000-11,"Bahia, 569 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2000-12,2001-01,"Espírito Santo, 120 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2001-01,2001-01,"Amapá, 78 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,yellow fever,2001-02,2001-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2001-03,2001-03,"Goiás, 93 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2001-03,2001-04,"Rio Grande do Sul, 1,342 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2001-04,2001-05,"Maranhão, 1,081 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2001-05,2001-05,"Paraíba, 31 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2001-06,2001-06,"Rio de Janeiro, 105 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2001-08,2001-08,"Rio Grande do Sul, 482 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2001-10,2001-11,"Ceará, 1,246 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2002-09,2002-11,"Paraná, 349 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2002-11,2002-11,"Mato Grosso, 28 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2002-12,2003-02,"São Paulo, 417 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2002-12,2002-12,"Rio Grande do Sul, 379 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,yellow fever,2003-01,2003-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2003-02,2003-02,"Paraná, 84 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2003-04,2003-09,"Amazonas, 2,066 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2003-09,2003-10,"São Paulo, 287 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2003-12,2003-12,"Rondônia, 270 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2004-02,2004-02,"Paraíba, 28 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2004-02,2004-02,"Pernambuco, 308 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2004-03,2004-03,"Acre, 245 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2004-03,2004-04,"Amapá, 463 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2004-07,2004-07,"Paraíba, 53 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2004-12,2004-12,"Ceará, 429 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2005-03,2005-03,"Santa Catarina, 512 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2005-09,2005-09,"Piauí, 69 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2005-09,2005-09,"Rio de Janeiro, 35 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2005-10,2005-10,"Santa Catarina, 34 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2005-11,2005-11,"Maranhão, 17 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2005-12,2006-01,"Rio de Janeiro, 106 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2006-03,2006-03,"Mato Grosso do Sul, 21 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2006-08,2006-08,"Santa Catarina, 18 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2006-11,2006-11,"Santa Catarina, 27 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2006-12,2006-12,"Pernambuco, 128 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2007-03,2007-03,"Sergipe, 20 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,yellow fever,2008-02,2008-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,leptospirosis,2008-08,2008-08,"Sergipe, 27 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2008-09,2008-09,"Santa Catarina, 19 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2008-11,2008-12,"Santa Catarina, 2,806 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2009-05,2009-07,"Ceará, 417 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2009-06,2009-06,"Rio Grande do Norte, 31 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2009-07,2009-07,"Rio Grande do Sul, 15 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2009-08,2009-08,"Minas Gerais, 26 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2009-08,2009-09,"Goiás, 100 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2009-12,2010-01,"Mato Grosso, 66 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2009-12,2010-02,"Roraima, 320 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2009-12,2010-02,"São Paulo, 2,581 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2010-04,2010-04,"Sergipe, 44 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2010-06,2010-06,"Goiás, 42 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2010-06,2010-08,"Espírito Santo, 544 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2010-07,2010-07,"Goiás, 74 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2010-08,2010-08,"Distrito Federal, 27 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2011-01,2011-01,"São Paulo, 1,274 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2011-02,2011-02,"Paraná, 560 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2011-02,2011-02,"Santa Catarina, 500 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2011-06,2011-06,"Tocantins, 10 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2011-07,2011-08,"Maranhão, 77 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2011-09,2011-09,"Santa Catarina, 770 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2011-10,2011-10,"Distrito Federal, 19 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2011-10,2011-10,"Distrito Federal, 28 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2012-03,2012-03,"Mato Grosso do Sul, 10 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2012-07,2012-07,"Bahia, 689 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2012-09,2012-09,"Paraná, 65 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2013-05,2013-05,"Tocantins, 37 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2013-05,2013-05,"Tocantins, 60 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2013-06,2013-10,"Rondônia, 45 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2013-06,2013-06,"Rondônia, 186 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2013-07,2013-07,"Goiás, 41 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2013-09,2013-09,"Mato Grosso, 33 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2014-01,2014-01,"Espírito Santo, 955 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2014-03,2014-03,"Amazonas, 58 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2014-04,2014-04,"Rondônia, 10 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2014-04,2014-05,"Rondônia, 257 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2014-05,2014-10,"Acre, 1,830 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2014-06,2014-06,"Paraná, 297 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2014-09,2014-09,"Pará, 15 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2015-01,2015-03,"Acre, 2,204 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2015-06,2015-06,"Mato Grosso, 39 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2015-07,2015-07,"Paraná, 232 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,zika,2015-10,2015-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,hantavirus,2015-11,2016-02,"Paraná, 155 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2016-03,2016-03,"Pará, 13 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2016-03,2016-03,"Distrito Federal, 18 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2016-11,2016-11,"Amapá, 150 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2016-11,2016-11,"Rondônia, 89 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,yellow fever,2017-01,2017-11,"7 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,leptospirosis,2017-03,2017-03,"Mato Grosso, 24 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2017-06,2017-06,"Alagoas, 122 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2017-07,2017-07,"Rio Grande do Sul, 11 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2017-09,2017-09,"Amapá, 56 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,yellow fever,2018-01,2018-03,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,leptospirosis,2018-04,2018-04,"Mato Grosso, 28 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2018-07,2018-07,"Mato Grosso, 16 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2018-12,2018-12,"Sergipe, 37 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2019-02,2019-02,"Mato Grosso, 19 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,yellow fever,2019-02,2019-04,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2019-05,2019-05,"Sergipe, 59 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2019-09,2019-09,"Sergipe, 109 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2019-10,2019-10,"Tocantins, 53 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2020-01,2020-01,"Paraíba, 49 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2020-02,2020-02,"Minas Gerais, 266 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2020-05,2020-05,"Piauí, 31 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2021-12,2021-12,"Maranhão, 32 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2021-12,2022-01,"Bahia, 450 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2022-01,2022-01,"Pará, 11 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2022-04,2022-04,"Rio de Janeiro, 434 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2022-06,2022-06,"Pernambuco, 804 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2022-07,2022-07,"Alagoas, 113 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2022-08,2022-08,"Pará, 20 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,hantavirus,2022-09,2022-09,"Santa Catarina, 63 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2023-03,2023-03,"Rio Grande do Norte, 24 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,chikungunya,2023-03,2023-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,hantavirus,2023-05,2023-05,"Mato Grosso, 37 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2023-07,2023-09,"Tocantins, 75 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,dengue,2023-07,2023-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2023-08,2023-08,"Rio Grande do Sul, 14 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2023-08,2023-08,"Pará, 128 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2023-09,2023-09,"Rio Grande do Sul, 467 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2023-10,2023-10,"Rio de Janeiro, 110 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2023-10,2023-11,"Paraná, 634 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2023-10,2023-10,"Santa Catarina, 331 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2023-11,2023-11,"Pará, 126 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2024-02,2024-04,"Pará, 1,194 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2024-02,2024-02,"Rio Grande do Norte, 16 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2024-04,2025-04,"Rio Grande do Norte, 886 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2024-04,2024-04,"Espírito Santo, 386 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2024-04,2024-04,"Mato Grosso do Sul, 23 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2024-05,2024-06,"Rio Grande do Sul, 5,877 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,leptospirosis,2024-07,2024-07,"Pará, 126 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leishmaniasis,2024-08,2024-08,"Paraíba, 64 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2024-09,2024-11,"Mato Grosso do Sul, 34 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2024-11,2024-12,"Ceará, 96 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2024-11,2024-11,"Rio Grande do Norte, 13 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2025-02,2025-02,"Mato Grosso do Sul, 16 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2025-04,2025-05,"Paraíba, 124 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2025-05,2025-05,"Roraima, 12 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,yellow fever,2025-05,2025-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+DATASUS (SINAN),brazil,BRA,leptospirosis,2025-10,2025-10,"Roraima, 17 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2025-12,2025-12,"Paraíba, 14 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2026-03,2026-03,"Minas Gerais, 553 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+DATASUS (SINAN),brazil,BRA,leptospirosis,2026-05,2026-05,"Bahia, 128 notified cases",https://datasus.saude.gov.br/informacoes-de-saude-tabnet/
+WHO Disease Outbreak News,brazil,BRA,yellow fever,2026-06,2026-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,cholera,1996-02,1996-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,yellow fever,1998-12,1998-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,meningitis,2001-03,2001-06,"6 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,cholera,2001-09,2001-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,meningitis,2002-03,2002-08,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,meningitis,2003-02,2003-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,yellow fever,2003-10,2003-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,meningitis,2004-03,2004-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,yellow fever,2004-11,2004-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,cholera,2005-08,2005-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,meningitis,2006-03,2006-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,meningitis,2007-03,2007-04,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,meningitis,2008-02,2008-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,yellow fever,2008-11,2008-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,meningitis,2012-03,2012-05,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,meningitis,2013-06,2013-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,dengue,2016-11,2016-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,lassa fever,2017-03,2017-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,dengue,2017-11,2017-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,hepatitis,2020-11,2020-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,yellow fever,2024-03,2024-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burkina_faso,BFA,yellow fever,2026-06,2026-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burundi,BDI,cholera,1996-01,1996-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burundi,BDI,cholera,1997-01,1997-01,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burundi,BDI,cholera,1999-06,1999-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burundi,BDI,malaria,1999-06,1999-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burundi,BDI,cholera,2002-08,2002-08,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burundi,BDI,cholera,2004-02,2004-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burundi,BDI,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burundi,BDI,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,burundi,BDI,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,cambodia,KHM,dengue,1998-06,1998-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,cambodia,KHM,cholera,1998-07,1998-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,cambodia,KHM,cholera,1999-05,1999-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,cambodia,KHM,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,car,CAF,cholera,1997-07,1997-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,car,CAF,meningitis,2001-04,2001-06,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,car,CAF,meningitis,2004-04,2004-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,car,CAF,meningitis,2008-02,2008-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,car,CAF,yellow fever,2008-05,2008-10,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,car,CAF,yellow fever,2009-12,2009-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,car,CAF,meningitis,2012-05,2012-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,car,CAF,yellow fever,2021-12,2021-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,car,CAF,yellow fever,2022-09,2022-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,car,CAF,yellow fever,2023-01,2023-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,car,CAF,yellow fever,2024-03,2024-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,car,CAF,yellow fever,2026-06,2026-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,cholera,1996-07,1996-07,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,meningitis,2001-02,2001-04,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,cholera,2001-07,2001-08,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,cholera,2004-01,2004-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,meningitis,2004-04,2004-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,hepatitis,2004-08,2004-09,"5 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,meningitis,2005-01,2005-03,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,meningitis,2009-04,2009-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,meningitis,2010-04,2010-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,cholera,2010-10,2010-10,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,meningitis,2011-03,2011-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,meningitis,2012-03,2012-05,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,yellow fever,2013-02,2013-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,hepatitis,2017-01,2017-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,chikungunya,2020-09,2020-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,yellow fever,2021-12,2021-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,hepatitis,2022-01,2022-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,yellow fever,2022-09,2022-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,yellow fever,2023-01,2023-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,dengue,2023-10,2023-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,yellow fever,2024-03,2024-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,hepatitis,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chad,TCD,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chile,CHL,cholera,1998-01,1998-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chile,CHL,zika,2016-04,2016-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chile,CHL,dengue,2020-02,2020-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chile,CHL,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,chile,CHL,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,china,CHN,yellow fever,2016-03,2016-04,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,china,CHN,rift valley fever,2016-08,2016-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,china,CHN,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,china,CHN,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,china,CHN,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,colombia,COL,dengue,1998-06,1998-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,colombia,COL,zika,2015-10,2015-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,colombia,COL,dengue,2023-07,2023-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,colombia,COL,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,colombia,COL,yellow fever,2025-05,2025-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,colombia,COL,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,colombia,COL,yellow fever,2026-06,2026-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,costa_rica,CRI,zika,2016-02,2016-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,costa_rica,CRI,dengue,2023-07,2023-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,costa_rica,CRI,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,costa_rica,CRI,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,cuba,CUB,dengue,1997-06,1997-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,cuba,CUB,zika,2016-03,2016-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,cuba,CUB,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dominican_republic,DOM,zika,2016-01,2016-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dominican_republic,DOM,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dominican_republic,DOM,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dominican_republic,DOM,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,1996-04,1996-12,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,1997-04,1997-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,1998-01,1998-10,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,marburg,1999-05,1999-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,1999-12,1999-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,marburg,2000-03,2000-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,meningitis,2001-10,2001-10,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,meningitis,2002-02,2002-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,2002-03,2002-11,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,2003-06,2003-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,plague,2005-02,2005-03,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,plague,2006-06,2006-11,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,meningitis,2007-02,2007-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,meningitis,2008-02,2008-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,ebola,2009-02,2009-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,yellow fever,2010-07,2010-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,2011-07,2011-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,2012-07,2012-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,ebola,2012-08,2012-10,"8 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,yellow fever,2013-06,2013-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,yellow fever,2014-04,2014-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,ebola,2014-08,2014-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,2015-12,2015-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,yellow fever,2016-04,2016-06,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,ebola,2017-05,2017-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,2018-03,2018-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,ebola,2018-05,2018-12,"36 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,ebola,2019-01,2019-12,"51 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,ebola,2020-01,2020-11,"29 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,plague,2020-07,2020-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,ebola,2021-02,2021-12,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,yellow fever,2021-12,2021-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,ebola,2022-04,2022-09,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,yellow fever,2022-09,2022-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,yellow fever,2023-01,2023-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,2023-02,2023-02,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,yellow fever,2024-03,2024-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,ebola,2025-09,2025-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,dr_congo,COD,ebola,2026-05,2026-08,"10 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ecuador,ECU,cholera,1996-02,1996-02,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ecuador,ECU,cholera,1998-03,1998-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ecuador,ECU,zika,2016-01,2016-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ecuador,ECU,dengue,2023-07,2023-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ecuador,ECU,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ecuador,ECU,yellow fever,2025-05,2025-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ecuador,ECU,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ecuador,ECU,yellow fever,2026-06,2026-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,el_salvador,SLV,dengue,1998-11,1998-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,el_salvador,SLV,cholera,1998-12,1998-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,el_salvador,SLV,zika,2015-11,2015-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,el_salvador,SLV,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,el_salvador,SLV,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,meningitis,1999-03,1999-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,meningitis,2000-03,2000-08,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,meningitis,2001-02,2001-04,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,meningitis,2002-03,2002-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,meningitis,2008-02,2008-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,yellow fever,2020-04,2020-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,marburg,2025-11,2025-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ethiopia,ETH,marburg,2026-01,2026-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,france,FRA,meningitis,2000-04,2000-04,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,france,FRA,meningitis,2001-04,2001-07,"12 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,france,FRA,chikungunya,2014-10,2014-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,france,FRA,zika,2016-01,2016-03,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,france,FRA,chikungunya,2017-08,2017-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,france,FRA,rift valley fever,2019-05,2019-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,france,FRA,zika,2019-11,2019-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,france,FRA,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,france,FRA,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,germany,DEU,lassa fever,2000-01,2000-04,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,germany,DEU,lassa fever,2016-03,2016-04,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,malaria,1996-08,1996-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,yellow fever,1996-12,1996-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,lassa fever,1997-10,1997-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,cholera,1999-09,1999-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,meningitis,2008-02,2008-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,yellow fever,2012-02,2012-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,meningitis,2012-03,2012-05,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,yellow fever,2021-12,2021-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,marburg,2022-07,2022-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,yellow fever,2022-09,2022-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,yellow fever,2023-01,2023-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,ghana,GHA,yellow fever,2026-06,2026-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,guatemala,GTM,dengue,1998-11,1998-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,guatemala,GTM,malaria,1998-11,1998-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,guatemala,GTM,cholera,1998-12,1998-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,guatemala,GTM,zika,2015-11,2015-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,guatemala,GTM,dengue,2023-07,2023-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,guatemala,GTM,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,haiti,HTI,cholera,2010-10,2010-11,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,haiti,HTI,zika,2016-01,2016-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,haiti,HTI,cholera,2022-10,2022-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,haiti,HTI,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,haiti,HTI,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,haiti,HTI,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,honduras,HND,cholera,1998-03,1998-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,honduras,HND,dengue,1998-11,1998-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,honduras,HND,malaria,1998-11,1998-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,honduras,HND,cholera,1999-06,1999-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,honduras,HND,zika,2015-12,2015-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,honduras,HND,dengue,2023-07,2023-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,honduras,HND,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,cholera,1998-09,1998-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,cholera,2001-08,2001-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,plague,2002-02,2002-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,dengue,2003-10,2003-11,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,meningitis,2005-05,2005-05,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,chikungunya,2006-03,2006-10,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,dengue,2006-03,2006-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,zika,2017-05,2017-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,zika,2021-10,2021-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,zika,2025-01,2025-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,india,IND,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,indonesia,IDN,dengue,1998-06,1998-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,indonesia,IDN,dengue,2004-02,2004-05,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,indonesia,IDN,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,iran,IRN,cholera,1996-01,1996-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,iran,IRN,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,iran,IRN,dengue,2024-07,2024-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,iraq,IRQ,cholera,1996-01,1996-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,iraq,IRQ,cholera,1998-10,1998-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,iraq,IRQ,cholera,2003-05,2003-06,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,iraq,IRQ,cholera,2007-09,2007-10,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,iraq,IRQ,cholera,2008-09,2008-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,iraq,IRQ,cholera,2015-09,2015-11,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,iraq,IRQ,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,italy,ITA,ebola,2015-05,2015-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,italy,ITA,chikungunya,2017-09,2017-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,italy,ITA,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,jamaica,JAM,malaria,2007-02,2007-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,jamaica,JAM,zika,2016-02,2016-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,jamaica,JAM,dengue,2019-02,2019-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,jamaica,JAM,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,jamaica,JAM,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,japan,JPN,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,cholera,1997-09,1997-10,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,rift valley fever,1998-01,1998-01,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,cholera,1999-01,1999-02,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,malaria,1999-07,1999-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,meningitis,2006-03,2006-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,rift valley fever,2006-12,2006-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,rift valley fever,2007-01,2007-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,yellow fever,2016-04,2016-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,chikungunya,2016-08,2016-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,cholera,2017-07,2017-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,chikungunya,2018-02,2018-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,rift valley fever,2018-06,2018-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,rift valley fever,2021-02,2021-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,yellow fever,2022-03,2022-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,yellow fever,2023-01,2023-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kenya,KEN,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,laos,LAO,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,madagascar,MDG,cholera,1999-04,1999-08,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,madagascar,MDG,cholera,2000-03,2000-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,madagascar,MDG,rift valley fever,2008-04,2008-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,madagascar,MDG,plague,2014-11,2014-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,madagascar,MDG,plague,2015-09,2015-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,madagascar,MDG,plague,2017-01,2017-11,"6 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,madagascar,MDG,plague,2021-10,2021-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,malawi,MWI,plague,1997-10,1997-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,malawi,MWI,plague,1999-07,1999-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,malawi,MWI,cholera,2002-03,2002-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,malawi,MWI,plague,2002-06,2002-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,malawi,MWI,cholera,2022-04,2022-12,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,malawi,MWI,cholera,2023-02,2023-02,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,malawi,MWI,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,malaysia,MYS,cholera,1996-05,1996-06,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,malaysia,MYS,dengue,1997-07,1997-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,malaysia,MYS,dengue,1998-04,1998-06,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,malaysia,MYS,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,malaysia,MYS,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mali,MLI,cholera,1996-02,1996-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mali,MLI,cholera,2003-12,2003-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mali,MLI,cholera,2004-02,2004-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mali,MLI,cholera,2005-08,2005-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mali,MLI,yellow fever,2005-11,2005-11,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mali,MLI,meningitis,2006-03,2006-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mali,MLI,meningitis,2008-02,2008-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mali,MLI,meningitis,2012-05,2012-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mali,MLI,ebola,2014-04,2014-10,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mali,MLI,yellow fever,2019-12,2019-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mali,MLI,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mexico,MEX,cholera,1996-03,1996-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mexico,MEX,cholera,2013-10,2013-11,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mexico,MEX,zika,2015-12,2015-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mexico,MEX,dengue,2023-07,2023-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mexico,MEX,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mozambique,MOZ,plague,1997-08,1997-11,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mozambique,MOZ,cholera,1997-09,1997-11,"5 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mozambique,MOZ,cholera,1998-02,1998-08,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mozambique,MOZ,cholera,1999-02,1999-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mozambique,MOZ,cholera,2003-06,2003-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mozambique,MOZ,cholera,2004-01,2004-03,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mozambique,MOZ,cholera,2018-02,2018-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mozambique,MOZ,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mozambique,MOZ,cholera,2023-02,2023-02,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mozambique,MOZ,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,myanmar,MMR,dengue,1998-06,1998-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,myanmar,MMR,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,myanmar,MMR,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nepal,NPL,dengue,2022-10,2022-10,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nepal,NPL,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nepal,NPL,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nepal,NPL,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nepal,NPL,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nicaragua,NIC,cholera,1998-03,1998-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nicaragua,NIC,dengue,1998-11,1998-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nicaragua,NIC,malaria,1998-11,1998-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nicaragua,NIC,cholera,1999-06,1999-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nicaragua,NIC,zika,2016-02,2016-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nicaragua,NIC,dengue,2023-07,2023-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nicaragua,NIC,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,cholera,1996-03,1996-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,cholera,1999-08,1999-08,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,meningitis,2001-03,2001-06,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,meningitis,2002-05,2002-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,cholera,2002-07,2002-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,meningitis,2003-03,2003-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,cholera,2005-07,2005-09,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,meningitis,2006-03,2006-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,meningitis,2008-02,2008-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,meningitis,2009-03,2009-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,cholera,2010-10,2010-10,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,meningitis,2015-04,2015-07,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,rift valley fever,2016-09,2016-11,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,hepatitis,2017-05,2017-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,cholera,2018-10,2018-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,yellow fever,2021-12,2021-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,yellow fever,2022-09,2022-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,yellow fever,2023-01,2023-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,yellow fever,2024-03,2024-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,niger,NER,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,cholera,1996-03,1996-07,"6 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,yellow fever,2000-05,2000-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,cholera,2001-11,2001-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,meningitis,2004-03,2004-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,cholera,2004-12,2004-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,meningitis,2008-02,2008-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,meningitis,2009-02,2009-03,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,cholera,2010-10,2010-10,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,lassa fever,2012-04,2012-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,meningitis,2012-05,2012-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,meningitis,2013-06,2013-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,ebola,2014-08,2014-09,"11 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,meningitis,2015-03,2015-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,lassa fever,2016-01,2016-05,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,meningitis,2017-03,2017-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,lassa fever,2017-06,2017-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,cholera,2017-07,2017-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,hepatitis,2017-07,2017-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,yellow fever,2017-12,2017-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,lassa fever,2018-03,2018-04,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,yellow fever,2019-01,2019-12,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,lassa fever,2019-02,2019-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,lassa fever,2020-02,2020-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,yellow fever,2020-11,2020-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,yellow fever,2021-10,2021-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,lassa fever,2022-02,2022-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,yellow fever,2022-09,2022-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,yellow fever,2023-01,2023-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,lassa fever,2023-05,2023-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,yellow fever,2024-03,2024-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,nigeria,NGA,yellow fever,2026-06,2026-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,pakistan,PAK,cholera,2010-10,2010-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,pakistan,PAK,dengue,2019-11,2019-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,pakistan,PAK,dengue,2021-12,2021-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,pakistan,PAK,cholera,2022-06,2022-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,pakistan,PAK,dengue,2022-10,2022-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,pakistan,PAK,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,pakistan,PAK,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,pakistan,PAK,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,pakistan,PAK,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,pakistan,PAK,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,panama,PAN,hantavirus,2000-03,2000-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,panama,PAN,zika,2015-12,2015-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,panama,PAN,hantavirus,2019-01,2019-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,panama,PAN,dengue,2023-07,2023-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,panama,PAN,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,panama,PAN,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,papua_new_guinea,PNG,zika,2016-04,2016-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,paraguay,PRY,yellow fever,2008-02,2008-03,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,paraguay,PRY,zika,2015-12,2015-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,paraguay,PRY,chikungunya,2023-03,2023-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,paraguay,PRY,dengue,2023-03,2023-12,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,paraguay,PRY,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,paraguay,PRY,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,peru,PER,cholera,1998-02,1998-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,peru,PER,yellow fever,2001-06,2001-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,peru,PER,plague,2010-08,2010-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,peru,PER,zika,2016-04,2016-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,peru,PER,chikungunya,2023-03,2023-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,peru,PER,dengue,2023-03,2023-12,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,peru,PER,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,peru,PER,yellow fever,2025-05,2025-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,peru,PER,yellow fever,2026-06,2026-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,philippines,PHL,ebola,1996-04,1996-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,philippines,PHL,cholera,1996-06,1996-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,philippines,PHL,dengue,1998-06,1998-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,philippines,PHL,meningitis,2005-01,2005-01,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,philippines,PHL,ebola,2009-02,2009-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,philippines,PHL,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,philippines,PHL,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,philippines,PHL,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,portugal,PRT,dengue,2012-10,2012-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,puerto_rico,PRI,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,puerto_rico,PRI,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,rwanda,RWA,cholera,1996-11,1996-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,rwanda,RWA,cholera,1997-01,1997-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,rwanda,RWA,cholera,1998-05,1998-10,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,rwanda,RWA,cholera,1999-11,1999-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,rwanda,RWA,meningitis,2002-08,2002-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,rwanda,RWA,marburg,2024-09,2024-12,"7 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,rwanda,RWA,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,saudi_arabia,SAU,rift valley fever,2000-09,2000-10,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,saudi_arabia,SAU,meningitis,2001-04,2001-06,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,saudi_arabia,SAU,meningitis,2025-04,2025-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,cholera,1996-01,1996-10,"5 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,meningitis,1999-03,1999-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,yellow fever,2002-01,2002-11,"7 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,cholera,2004-11,2004-11,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,cholera,2005-03,2005-09,"7 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,yellow fever,2010-10,2010-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,yellow fever,2011-12,2011-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,ebola,2014-08,2014-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,chikungunya,2015-09,2015-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,yellow fever,2020-12,2020-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,senegal,SEN,rift valley fever,2025-11,2025-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,cholera,1996-03,1996-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,cholera,1997-04,1997-06,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,rift valley fever,1998-01,1998-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,cholera,1998-10,1998-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,cholera,1999-02,1999-09,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,cholera,2000-05,2000-11,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,meningitis,2001-12,2001-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,meningitis,2002-01,2002-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,cholera,2018-03,2018-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,cholera,2022-07,2022-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,somalia,SOM,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_africa,ZAF,rift valley fever,1999-02,1999-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_africa,ZAF,cholera,2000-10,2000-12,"9 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_africa,ZAF,cholera,2001-01,2001-04,"9 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_africa,ZAF,cholera,2003-05,2003-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_africa,ZAF,cholera,2004-02,2004-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_africa,ZAF,rift valley fever,2010-03,2010-05,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_korea,KOR,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_sudan,SSD,meningitis,2013-06,2013-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_sudan,SSD,yellow fever,2020-04,2020-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_sudan,SSD,hepatitis,2021-12,2021-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_sudan,SSD,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_sudan,SSD,hepatitis,2023-05,2023-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_sudan,SSD,yellow fever,2024-03,2024-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,south_sudan,SSD,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,spain,ESP,meningitis,1996-05,1996-06,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,spain,ESP,meningitis,1997-02,1997-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,spain,ESP,ebola,2014-10,2014-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,spain,ESP,chikungunya,2015-08,2015-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,spain,ESP,dengue,2019-11,2019-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sri_lanka,LKA,dengue,2017-07,2017-07,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sri_lanka,LKA,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sri_lanka,LKA,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sri_lanka,LKA,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,meningitis,1999-03,1999-05,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,meningitis,2000-04,2000-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,ebola,2004-08,2004-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,hepatitis,2004-08,2004-09,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,meningitis,2005-02,2005-04,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,yellow fever,2005-11,2005-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,cholera,2006-02,2006-06,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,meningitis,2006-02,2006-11,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,meningitis,2007-02,2007-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,rift valley fever,2007-11,2007-12,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,rift valley fever,2008-01,2008-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,meningitis,2012-05,2012-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,yellow fever,2012-11,2012-12,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,yellow fever,2013-12,2013-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,chikungunya,2018-10,2018-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,cholera,2019-10,2019-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,dengue,2019-11,2019-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,rift valley fever,2019-11,2019-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,sudan,SDN,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,syria,SYR,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,syria,SYR,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,cholera,1996-12,1996-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,cholera,1997-05,1997-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,cholera,1998-01,1998-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,malaria,1998-05,1998-05,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,cholera,1999-02,1999-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,meningitis,2002-09,2002-10,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,rift valley fever,2007-03,2007-05,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,cholera,2015-09,2015-11,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,cholera,2018-01,2018-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,ebola,2019-09,2019-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,marburg,2023-03,2023-06,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,marburg,2025-01,2025-03,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,tanzania,TZA,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,thailand,THA,dengue,1998-06,1998-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,thailand,THA,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,thailand,THA,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,thailand,THA,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,thailand,THA,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,trinidad,TTO,zika,2016-02,2016-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,trinidad,TTO,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,trinidad,TTO,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,trinidad,TTO,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,cholera,1998-04,1998-09,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,plague,1998-11,1998-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,cholera,1999-02,1999-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,ebola,2000-11,2000-11,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,meningitis,2006-02,2006-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,meningitis,2007-01,2007-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,marburg,2007-08,2007-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,ebola,2008-02,2008-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,yellow fever,2011-01,2011-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,ebola,2011-05,2011-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,ebola,2012-07,2012-11,"9 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,marburg,2014-10,2014-11,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,yellow fever,2016-05,2016-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,marburg,2017-10,2017-11,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,ebola,2019-06,2019-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,yellow fever,2020-02,2020-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,yellow fever,2022-04,2022-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,ebola,2022-09,2022-12,"5 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,ebola,2023-01,2023-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,yellow fever,2023-01,2023-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,yellow fever,2024-03,2024-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uganda,UGA,ebola,2026-05,2026-07,"7 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uk,GBR,lassa fever,2000-03,2000-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uk,GBR,meningitis,2000-04,2000-04,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uk,GBR,meningitis,2001-04,2001-06,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uk,GBR,ebola,2014-12,2014-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uk,GBR,lassa fever,2022-02,2022-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uruguay,URY,dengue,2016-02,2016-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uruguay,URY,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,uruguay,URY,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,usa,USA,ebola,1996-04,1996-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,usa,USA,yellow fever,1999-11,1999-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,usa,USA,meningitis,2000-04,2000-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,usa,USA,hantavirus,2012-09,2012-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,usa,USA,ebola,2014-10,2014-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,usa,USA,lassa fever,2015-05,2015-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,usa,USA,zika,2016-01,2016-02,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,usa,USA,chikungunya,2016-06,2016-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,usa,USA,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,usa,USA,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,venezuela,VEN,dengue,1998-06,1998-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,venezuela,VEN,yellow fever,1998-11,1998-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,venezuela,VEN,yellow fever,2004-09,2004-09,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,venezuela,VEN,zika,2015-12,2015-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,venezuela,VEN,yellow fever,2019-11,2019-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,venezuela,VEN,yellow fever,2021-10,2021-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,venezuela,VEN,dengue,2023-07,2023-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,venezuela,VEN,yellow fever,2026-06,2026-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,vietnam,VNM,dengue,1998-06,1998-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,vietnam,VNM,cholera,2008-04,2008-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,vietnam,VNM,zika,2016-04,2016-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,vietnam,VNM,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,yemen,YEM,rift valley fever,2000-10,2000-10,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,yemen,YEM,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,yemen,YEM,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zambia,ZMB,cholera,1999-01,1999-10,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zambia,ZMB,plague,2001-03,2001-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zambia,ZMB,cholera,2004-01,2004-02,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zambia,ZMB,cholera,2017-12,2017-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zambia,ZMB,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zambia,ZMB,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zambia,ZMB,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zimbabwe,ZWE,cholera,1998-04,1998-04,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zimbabwe,ZWE,cholera,1999-02,1999-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zimbabwe,ZWE,cholera,2008-12,2008-12,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zimbabwe,ZWE,cholera,2009-02,2009-06,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zimbabwe,ZWE,cholera,2018-09,2018-10,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zimbabwe,ZWE,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,zimbabwe,ZWE,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
