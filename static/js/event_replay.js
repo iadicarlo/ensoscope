@@ -1256,8 +1256,15 @@ function _renderImpacts(sel, nMonths) {
       + `<span class="rp-imp-what"><i class="rp-imp-dot" style="--c:${_impColour(_impLabel(e))}"></i>`
       + `${_impEsc(_impTitle(_impLabel(e)))}</span>`
       + `<span class="rp-imp-where${e.regions.length ? "" : " none"}">`
-      + `${_impEsc(where.short)}</span>`;
+      + `${_impEsc(where.short)}</span>`
+      // The report or dataset behind the event, where the source gives one.
+      + (/^https?:\/\//.test(e.source_url || "")
+          ? `<a class="rp-imp-src" href="${_impEsc(e.source_url)}" target="_blank" rel="noopener"`
+            + ` title="${_impEsc(e.source)}">source</a>`
+          : "");
     li.title = `${where.full}\n${_impBy(e)}`;
+    const src = li.querySelector(".rp-imp-src");
+    if (src) src.addEventListener("click", ev => ev.stopPropagation());
     li.addEventListener("click", () => _selectImpact(e, sel, nMonths));
     li.dataset.id = e.id;
     list.appendChild(li);

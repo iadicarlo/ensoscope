@@ -20,6 +20,7 @@ window.ENSOSCOPE_UPDATES = [
     title: "More yellow fever outbreaks, dated from WHO, PAHO and published reports",
     items: [
       "We traced the original reports behind the yellow fever records of Shearer et al. (2018) and kept a month only where a report states it or two sources agree. That adds 91 yellow fever outbreaks to the timeline, and 15 outbreaks already shown now list these reports too.",
+      "Outbreaks in the timeline list now link to their source where one exists: the report itself for these yellow fever outbreaks, and the dataset for the other outbreak sources.",
     ],
   },
   {
