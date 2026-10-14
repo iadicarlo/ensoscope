@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use ENSOscope, please cite it as below, and cite the datasets it builds on (see the methodology page)."
+title: "ENSOscope: seasonal El Niño and La Niña forecasts and impacts for humanitarian anticipatory action"
+type: dataset
+authors:
+  - family-names: "Abdelkader Di Carlo"
+    given-names: "Isma"
+    affiliation: "Utrecht University"
+    orcid: "https://orcid.org/0000-0002-8982-8343"
+url: "https://iadicarlo.org/ensoscope/"
+repository-code: "https://github.com/iadicarlo/ensoscope"
+license: CC-BY-4.0
+keywords:
+  - El Niño
+  - La Niña
+  - ENSO
+  - seasonal forecast
+  - climate impacts
+  - anticipatory action

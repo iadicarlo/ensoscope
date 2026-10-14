@@ -1341,6 +1341,9 @@ function _impSources(d) {
     }
   }
   if (!seen.length) return "";
+  // EM-DAT's terms ask for this exact credit wherever its data is shown.
+  const credit = {"EM-DAT": "EM-DAT (CRED / UCLouvain, Brussels, Belgium, www.emdat.be)"};
+  for (let i = 0; i < seen.length; i++) seen[i] = credit[seen[i]] || seen[i];
   return seen.length === 1
     ? `Source: ${seen[0]}.`
     : `Sources: ${seen.slice(0, -1).join(", ")} and ${seen[seen.length - 1]}.`;

@@ -411,7 +411,7 @@
     <div class="card" id="data-sources">
       <h2>Data sources and references</h2>
       <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:0.8rem">
-        Every dataset used here is open and freely available. Please cite the original sources below if you reuse this material.
+        ENSOscope builds on the datasets below. Each keeps its own licence and terms. Please cite the original sources if you reuse this material.
       </p>
       <div class="prose">
         <ul style="font-size:0.9rem">
@@ -434,12 +434,15 @@
               Hirahara et al. (2014), <em>J. Climate</em> 27, 57-75.
               <a href="https://doi.org/10.1175/JCLI-D-12-00837.1" target="_blank" rel="noopener">doi:10.1175/JCLI-D-12-00837.1</a>.
               Data provided by the NOAA PSL, Boulder, Colorado, USA, from
-              <a href="https://psl.noaa.gov" target="_blank" rel="noopener">psl.noaa.gov</a>.</li>
+              <a href="https://psl.noaa.gov" target="_blank" rel="noopener">psl.noaa.gov</a>; months from November 2025
+              come directly from its producer, the Japan Meteorological Agency
+              (<a href="https://www.data.jma.go.jp/goos/data/pub/JMA-product/cobe2_sst_glb_M/" target="_blank" rel="noopener">JMA</a>).</li>
           <li><strong>GPCP</strong> (Global Precipitation Climatology Project, Monthly Analysis Product) - observed precipitation for the ENSO precipitation index.
               Adler et al. (2003), <em>J. Hydrometeorol.</em> 4, 1147-1167.
               <a href="https://doi.org/10.1175/1525-7541(2003)004%3C1147:TVGPCP%3E2.0.CO;2" target="_blank" rel="noopener">doi:10.1175/1525-7541(2003)004&lt;1147:TVGPCP&gt;2.0.CO;2</a>.
               Data provided by the NOAA PSL, Boulder, Colorado, USA, from
-              <a href="https://psl.noaa.gov" target="_blank" rel="noopener">psl.noaa.gov</a>.</li>
+              <a href="https://psl.noaa.gov" target="_blank" rel="noopener">psl.noaa.gov</a>; months from January 2026
+              come from <a href="https://www.ncei.noaa.gov/data/global-precipitation-climatology-project-gpcp-monthly/" target="_blank" rel="noopener">NOAA NCEI</a> (GPCP version 2.3).</li>
           <li><strong>Relative Niño index</strong> - the definition used to classify every event here.
               L'Heureux et al. (2024), <em>A relative sea surface temperature index for classifying
               ENSO events in a changing climate</em>, <em>J. Climate</em> 37, 1197-1211.
@@ -467,12 +470,41 @@
               <em>Int. J. Climatology</em>.
               <a href="https://doi.org/10.1002/joc.8510" target="_blank" rel="noopener">doi:10.1002/joc.8510</a>.</li>
           <li><strong>Country and coastline boundaries</strong> -
-              <a href="https://www.naturalearthdata.com" target="_blank" rel="noopener">Natural Earth</a> (public domain).</li>
+              <a href="https://www.naturalearthdata.com" target="_blank" rel="noopener">Natural Earth</a> (public domain).
+              Made with Natural Earth. Free vector and raster map data @ naturalearthdata.com.</li>
         </ul>
+        <h3 style="font-size:1rem;margin-top:1.2rem">Disasters and outbreaks (event replay timeline)</h3>
+        <ul style="font-size:0.9rem">
+          <li><strong>EM-DAT</strong> - Emergency Events Database (EM-DAT), UCLouvain / CRED, Brussels, Belgium,
+              accessed on 2026-08-25, <a href="https://www.emdat.be/" target="_blank" rel="noopener">www.emdat.be</a>.
+              Delforge et al. (2025), <em>Int. J. Disaster Risk Reduct.</em> 124, 105509, <a href="https://doi.org/10.1016/j.ijdrr.2025.105509" target="_blank" rel="noopener">doi:10.1016/j.ijdrr.2025.105509</a>.</li>
+          <li><strong>Cholera in sub-Saharan Africa</strong> - Perez-Saez et al. (2022), <em>Lancet Glob. Health</em> 10, e831-e839, <a href="https://doi.org/10.1016/S2214-109X(22)00007-9" target="_blank" rel="noopener">doi:10.1016/S2214-109X(22)00007-9</a>,
+              data from the <a href="https://github.com/HopkinsIDD" target="_blank" rel="noopener">HopkinsIDD</a> repository.</li>
+          <li><strong>Meningitis</strong> - WHO Inter-country Support Team for West Africa, weekly meningitis bulletins, via
+              <a href="https://www.menafrinet.org" target="_blank" rel="noopener">MenAfriNet</a>.</li>
+          <li><strong>Chikungunya, Zika and dengue in Brazil</strong> - InfoDengue, Codeço et al. (2018),
+              <a href="https://info.dengue.mat.br" target="_blank" rel="noopener">info.dengue.mat.br</a>.</li>
+          <li><strong>Leptospirosis, leishmaniasis and hantavirus in Brazil</strong> - Ministério da Saúde, SINAN, via
+              <a href="https://datasus.saude.gov.br" target="_blank" rel="noopener">DATASUS</a> (CC BY).</li>
+          <li><strong>Dengue worldwide</strong> - WHO global dengue surveillance,
+              <a href="https://worldhealthorg.shinyapps.io/dengue_global/" target="_blank" rel="noopener">worldhealthorg.shinyapps.io/dengue_global</a>.</li>
+          <li><strong>WHO Disease Outbreak News</strong> - as compiled by Torres Munguía et al. (2022), <em>Sci. Data</em> 9, 683,
+              <a href="https://doi.org/10.6084/m9.figshare.17207183" target="_blank" rel="noopener">doi:10.6084/m9.figshare.17207183</a> (CC BY 4.0).</li>
+        </ul>
+        <h3 style="font-size:1rem;margin-top:1.2rem">Required credits</h3>
+        <p style="font-size:0.9rem">Contains modified Copernicus Climate Change Service information [2026]. Neither the
+          European Commission nor ECMWF is responsible for any use that may be made of the Copernicus information
+          or data it contains. The seasonal forecasts come from the C3S multi-system seasonal forecast
+          (<a href="https://doi.org/10.24381/cds.181d637e" target="_blank" rel="noopener">doi:10.24381/cds.181d637e</a>).
+          ERA5 is used through the NSF NCAR copy
+          (<a href="https://doi.org/10.5065/BH6N-5N20" target="_blank" rel="noopener">doi:10.5065/BH6N-5N20</a>).
+          COBE-SST2: Source, Japan Meteorological Agency, edited for ENSOscope.
+          CESM2: we acknowledge the CESM2 Large Ensemble Community Project and supercomputing resources provided by
+          the IBS Center for Climate Physics in South Korea.</p>
       </div>
     </div>
   </main>
 
-  <script src="static/js/site.js?v=20261014a"></script>
+  <script src="static/js/site.js?v=20261014b"></script>
 </body>
 </html>

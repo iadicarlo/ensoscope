@@ -1,0 +1,29 @@
+{
+  "title": "ENSOscope: seasonal El Niño and La Niña forecasts and impacts for humanitarian anticipatory action",
+  "upload_type": "dataset",
+  "description": "<p>ENSOscope shows what El Niño and La Niña are likely to do next, and what they have done before, for 83 countries most exposed to them. Each version holds the published website and its data for one monthly update: seasonal forecasts from ECMWF SEAS5 and Météo-France System 9, their past skill, maps of how past El Niño and La Niña years changed rainfall and heat, and a timeline of past disasters and disease outbreaks per country.</p><p>Website: <a href=\"https://iadicarlo.org/ensoscope/\">https://iadicarlo.org/ensoscope/</a>. The datasets ENSOscope builds on keep their own licences and must be cited separately; they are listed on the methodology page.</p>",
+  "creators": [
+    {
+      "name": "Abdelkader Di Carlo, Isma",
+      "affiliation": "Utrecht University",
+      "orcid": "0000-0002-8982-8343"
+    }
+  ],
+  "license": "cc-by-4.0",
+  "keywords": [
+    "El Niño",
+    "La Niña",
+    "ENSO",
+    "seasonal forecast",
+    "climate impacts",
+    "anticipatory action",
+    "humanitarian"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://iadicarlo.org/ensoscope/",
+      "relation": "isSupplementedBy",
+      "scheme": "url"
+    }
+  ]
+}

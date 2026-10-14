@@ -17,9 +17,11 @@ window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-14",
     tag: "New data",
-    title: "Yellow fever outbreaks from ProMED, 2007 to 2016",
+    title: "Observed sea temperatures now run to September 2026",
     items: [
-      "The outbreak timeline now adds yellow fever reports from ProMED behind the Shearer et al. (2018) dataset, which its authors shared with the source of each record. Each report is placed in the month it was posted: 22 new outbreaks on the timeline, and 3 that another source already showed now list ProMED too.",
+      "The observed Niño line now reaches September 2026. NOAA's data server has been refusing downloads since 13 October, so the newest months come straight from the producers: sea temperature from the Japan Meteorological Agency and rainfall from NOAA's NCEI archive. We checked them against NOAA's copies on the months both hold before using them.",
+      "With JMA's corrected November 2025 data, the 2025-26 La Niña now peaks in October 2025 rather than November. No other El Niño or La Niña event changed.",
+      "Disaster records from EM-DAT now carry the full credit EM-DAT asks for, and the data files no longer include death counts, which the timeline never showed.",
     ],
   },
   {

@@ -1,0 +1,5 @@
+# Left out of the release archives that Zenodo stores (the live site still serves them).
+# The outbreak and disaster records mix sources whose terms do not yet allow a
+# permanent public archive (EM-DAT, WHO dengue, meningitis bulletins, InfoDengue,
+# cholera compilation). See docs/outreach/data_licence_check_2026-10-14.md in the code repo.
+data/replay/impacts/** export-ignore

@@ -1,0 +1,34 @@
+# ENSOscope
+
+ENSOscope shows what El Niño and La Niña are likely to do next, and what they have done before, for 83 countries most exposed to them. It is built for humanitarian teams who need to plan ahead.
+
+Website: https://iadicarlo.org/ensoscope/
+
+## What is here
+
+This repository holds the published website and the data it shows:
+
+- seasonal El Niño and La Niña forecasts from ECMWF (SEAS5) and Météo-France (System 9), updated every month
+- how well those forecasts have done in the past
+- maps of how past El Niño and La Niña years changed rainfall and heat, by country and region
+- a timeline of past floods, droughts, heat waves and disease outbreaks for each country
+
+The data processing code is kept in a separate repository.
+
+## Updates and versions
+
+The site is updated every month when the new forecasts come out. Each update is published as a release here, and each release is archived on Zenodo with its own DOI, so a given version can always be found and cited.
+
+## How to cite
+
+Abdelkader Di Carlo, I. (2026). ENSOscope: seasonal El Niño and La Niña forecasts and impacts for humanitarian anticipatory action. https://iadicarlo.org/ensoscope/
+
+Please also cite the datasets ENSOscope builds on. They are listed, with their own licences and references, on the methodology page: https://iadicarlo.org/ensoscope/methodology.html#data-sources
+
+## Licence
+
+Original ENSOscope content is shared under CC BY 4.0. Third-party data keeps its own licence. See LICENSE.
+
+## Contact
+
+Isma Abdelkader Di Carlo, Utrecht University

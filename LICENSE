@@ -18,6 +18,14 @@ Suggested citation:
   forecasts and teleconnection maps for humanitarian anticipatory action.
   https://iadicarlo.org/ensoscope/
 
+CODE LICENSE
+------------
+The website code written for ENSOscope (HTML, CSS and JavaScript outside
+static/lib/) is licensed under the MIT License. Bundled third-party libraries
+in static/lib/ keep their own licenses, listed in THIRD_PARTY_LICENSES.
+
+MIT License text: https://opensource.org/license/mit
+
 THIRD-PARTY DATA
 ----------------
 This platform builds on third-party datasets (ECMWF SEAS5, Meteo-France
