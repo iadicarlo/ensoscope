@@ -17,7 +17,7 @@ const DATA_BASE = "data/";
 // Monthly data-build cache-buster. Bump whenever the served data/*.json are
 // regenerated (forecast, members, hindcast). Appended to every data fetch so a
 // fresh forecast vintage is never masked by a stale browser/CDN copy.
-const DATA_VERSION = "20261014e";
+const DATA_VERSION = "20261014f";
 function _dv(url) {
   return url + (url.indexOf("?") === -1 ? "?" : "&") + "v=" + DATA_VERSION;
 }
@@ -397,7 +397,7 @@ const PHASE_COLORS = {
   strong_la_nina:   () => cssVar("--ln-strong")   || "#1565C0",
   moderate_la_nina: () => cssVar("--ln-moderate") || "#42A5F5",
   neutral:          () => cssVar("--neutral")     || "#78909C",
-  moderate_el_nino: () => cssVar("--en-moderate") || "#FFA726",
+  moderate_el_nino: () => cssVar("--en-moderate") || "#F57C00",
   strong_el_nino:   () => cssVar("--en-strong")   || "#E64A19",
   extreme_el_nino:  () => cssVar("--en-extreme")  || "#B71C1C",
 };
@@ -883,8 +883,8 @@ function renderOutlookBanner(forecasts, sources) {
   // hardcoded, so it only read correctly for the classes starting with a
   // consonant, which is every class except this one.
   const _artcl = w => (/^[aeiou]/i.test(w) ? "an" : "a");
-  const ACCENT = { en: "#C0392B", ln: "#1565C0", neu: "#546E7A" };
-  const TINT = { en: "#FBEEEB", ln: "#EAF1FB", neu: "#ECEFF1" };
+  const ACCENT = { en: "#E64A19", ln: "#1565C0", neu: "#78909C" };   // style.css phase tokens
+  const TINT = { en: "#FCEDE8", ln: "#EAF1FB", neu: "#ECEFF1" };
   const FRIENDLY = { seas5: "SEAS5", mf9: "Météo-France", ncep2: "NCEP" };
   const nameOf = s => FRIENDLY[s] || CENTRE_SHORT[s] || s;
   const coarseWhen = vt => {

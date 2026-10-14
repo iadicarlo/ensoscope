@@ -32,9 +32,9 @@ const RP = {
 };
 
 const RP_COLOR = {
-  el_nino: "#B2182B",
-  la_nina: "#2166AC",
-  neutral: "#6B7B8A",
+  el_nino: "#E64A19",   // --en-strong in style.css: one ENSO palette site-wide
+  la_nina: "#1565C0",   // --ln-strong
+  neutral: "#78909C",   // --neutral
   other:   "rgba(120,134,148,0.28)",   // the comparison band
   zero:    "#C7CED6",
 };

@@ -8,6 +8,10 @@
   --en-moderate: #F57C00;
   --en-strong:   #E64A19;
   --en-extreme:  #B71C1C;
+  /* One colour per phase where a single one is needed (timeline bands, accents):
+     the strong shade. Every El Nino / La Nina colour on the site comes from here. */
+  --en-family:   var(--en-strong);
+  --ln-family:   var(--ln-strong);
 
   /* UI palette */
   --bg:           #F5F7FA;
