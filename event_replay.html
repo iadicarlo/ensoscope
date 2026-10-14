@@ -327,6 +327,8 @@
       line-height:1.5;border-top:1px solid var(--border);padding-top:.5rem}
     .rp-legend-note a{color:var(--accent);font-weight:600}
     .rp-btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .rp-pack{display:inline-flex;gap:.35rem}
+    .rp-pack a.rp-btn{text-decoration:none;color:inherit}
     .rp-btn-primary:hover{background:#0f4c8f;color:#fff}
     /* Print-only masthead: on screen it would duplicate the page title. */
     .rp-print-head{display:none}
@@ -519,6 +521,15 @@
           <label>&nbsp;</label>
           <button type="button" id="rp-pdf" class="rp-btn rp-btn-primary">Save as PDF</button>
         </div>
+        <div class="rp-ctrl">
+          <label>Country pack</label>
+          <span class="rp-pack">
+            <a id="rp-pack-pdf" class="rp-btn" target="_blank" rel="noopener"
+               title="This country's pack: outlook in plain words, maps and charts">PDF</a>
+            <a id="rp-pack-xlsx" class="rp-btn" rel="noopener"
+               title="The same pack with every table behind it, as an Excel workbook">Excel</a>
+          </span>
+        </div>
       </div>
 
       <!-- Masthead, print only. Filled in by JS so the sheet always names the
@@ -709,6 +720,7 @@
           entirely. How much is missing differs from country to country and has
           changed over the decades, which means a thin stretch here is at least
           as likely to be thin reporting as a quiet period.
+          <span id="rp-imp-sources">
           For cholera in sub-Saharan Africa a second source fills part of that
           gap: the compilation behind Perez-Saez et al. (2022), from ministries
           of health, WHO, MSF, ProMED and ReliefWeb, marking the months when
@@ -745,7 +757,8 @@
           which is usually some weeks after the outbreak began. Reports about
           imported cases or overseas territories are left out where WHO's title
           says so, but a few imported cases remain, such as Ebola in Spain and the
-          United States in 2014. An outbreak two sources both hold is shown once.
+          United States in 2014.
+          </span> An outbreak two sources both hold is shown once.
           A marker falling inside an El Ni&ntilde;o or La Ni&ntilde;a window
           shows only that both were recorded in the same months. This is a
           timeline placed on a shared axis: it is not evidence of cause, and it
@@ -833,9 +846,9 @@
   <script src="static/lib/d3.min.js?v=20260624g"></script>
   <script src="static/lib/d3-geo-projection.min.js?v=20260624g"></script>
   <script src="static/lib/chart.umd.min.js?v=20260624g"></script>
-  <script src="static/js/data_base.js?v=20261014f"></script>
-  <script src="static/js/index_names.js?v=20261014f"></script>
-  <script src="static/js/site.js?v=20261014f"></script>
-  <script src="static/js/event_replay.js?v=20261014f"></script>
+  <script src="static/js/data_base.js?v=20261014g"></script>
+  <script src="static/js/index_names.js?v=20261014g"></script>
+  <script src="static/js/site.js?v=20261014g"></script>
+  <script src="static/js/event_replay.js?v=20261014g"></script>
 </body>
 </html>

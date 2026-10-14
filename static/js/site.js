@@ -125,7 +125,43 @@
     }
   }
 
-  function init() { injectChrome(); wireNavDropdowns(); }
+  // Outbreak sources are listed once, in the build's source registry
+  // (build_impact_timeline.py), and published in impacts/index.json. The replay
+  // page's source notes and the methodology list are written from it, so a new
+  // source shows up here without editing either page. The text already in the
+  // HTML stays if the file cannot be read.
+  function renderOutbreakSources() {
+    var para = document.getElementById("rp-imp-sources");
+    var list = document.getElementById("outbreak-sources-list");
+    if (!para && !list) return;
+    fetch("data/replay/impacts/index.json", { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !d.sources || !d.sources.length) return;
+        if (para) para.textContent = d.sources.map(function (s) { return s.description; }).join(" ");
+        if (list) {
+          list.querySelectorAll("li.src-static").forEach(function (li) { li.remove(); });
+          d.sources.forEach(function (s) {
+            var li = document.createElement("li");
+            var b = document.createElement("strong");
+            b.textContent = s.title || s.label;
+            li.appendChild(b);
+            li.appendChild(document.createTextNode(" - " + (s.reference || s.label) + (s.url ? ", " : ".")));
+            if (s.url) {
+              var a = document.createElement("a");
+              a.href = s.url; a.target = "_blank"; a.rel = "noopener";
+              a.textContent = s.url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+              li.appendChild(a);
+              li.appendChild(document.createTextNode("."));
+            }
+            list.appendChild(li);
+          });
+        }
+      })
+      .catch(function () {});
+  }
+
+  function init() { injectChrome(); wireNavDropdowns(); renderOutbreakSources(); }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
   } else {

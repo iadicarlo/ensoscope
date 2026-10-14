@@ -14,6 +14,7 @@ This repository holds the published website and the data it shows:
 - how well those forecasts have done in the past
 - maps of how past El Niño and La Niña years changed rainfall and heat, by country and region
 - a timeline of past floods, droughts, heat waves and disease outbreaks for each country
+- a country pack for each country (PDF and Excel): the outlook for the next 3 and 6 months in plain words, maps, charts and the tables behind them
 
 The data processing code is kept in a separate repository.
 

@@ -16,6 +16,15 @@
 window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-14",
+    tag: "New feature",
+    title: "A country pack for every country, as PDF and Excel",
+    items: [
+      "On the event replay page, each country now has a downloadable pack: what the coming 3 and 6 months may bring, in plain words, with maps of rain and heat by region, charts of the forecast and of this season against every past year, and the outbreak record by disease.",
+      "Each pack starts with a short guide for readers who are not climate scientists, and every chart has a line explaining how to read it. Statements about health cite peer-reviewed studies only.",
+    ],
+  },
+  {
+    date: "2026-10-14",
     tag: "New data",
     title: "More yellow fever outbreaks, dated from WHO, PAHO and published reports",
     items: [

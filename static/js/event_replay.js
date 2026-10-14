@@ -75,7 +75,7 @@ const RP_DATA_BASE = (typeof window !== "undefined" && window.ENSOSCOPE_DATA_BAS
 // and every country border on the tab would vanish the moment DATA_BASE is set.
 // regions joined the bucket on 2026-08-27: 981 files, 94 MB of admin-1 series,
 // which only this tab reads and which no page needs on first paint.
-const RP_HEAVY = /^data\/(replay\/(globalmonths|months|maps|regions)|maps)\/(?!.*\.geojson$)/;
+const RP_HEAVY = /^data\/(replay\/(globalmonths|months|maps|regions)|maps|packs)\/(?!.*\.geojson$)/;
 
 const RP_DATA_VERSION = (typeof window !== "undefined" && window.ENSOSCOPE_DATA_VERSION) || "";
 
@@ -1907,8 +1907,21 @@ function _watchMapSize() {
   }).observe(wrap);
 }
 
+// The country pack (PDF and Excel) is built for every country at each monthly
+// update by build_country_pack.py and served from the bucket like the tiles.
+function _updatePack(id) {
+  const box = document.querySelector(".rp-pack");
+  const has = !RP.packs || RP.packs.has(id);   // no index: show the links rather than hide every pack
+  if (box) box.closest(".rp-ctrl").style.display = has ? "" : "none";
+  for (const [el, ext] of [["rp-pack-pdf", "pdf"], ["rp-pack-xlsx", "xlsx"]]) {
+    const a = document.getElementById(el);
+    if (a) a.href = _dataURL(`data/packs/ensoscope_${id}.${ext}`);
+  }
+}
+
 // ── boot ─────────────────────────────────────────────────────────────────────
 async function _loadCountry(id) {
+  _updatePack(id);
   RP.country = await _getJSON(`data/replay/${id}.json`);
 }
 
@@ -1963,6 +1976,7 @@ async function init() {
   cSel.innerHTML = cs.map(c => `<option value="${c.id}">${c.label}</option>`).join("");
   cSel.value = cs.some(c => c.id === "kenya") ? "kenya" : cs[0].id;
 
+  RP.packs = await _getJSON("data/packs_index.json").then(d => new Set(d.countries)).catch(() => null);
   await _loadCountry(cSel.value);
   await _loadImpacts(cSel.value);
   _wireThresholds();
