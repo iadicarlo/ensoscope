@@ -2424,9 +2424,11 @@ async function _renderRegions(countryId, varKey, sel, cmp) {
   if (!A) { box.hidden = true; return; }          // window view: no single month to tabulate
 
   const rows = data.regions.map(r => ({
-    name: r.name, n: r.n_cells,
+    name: r.name, n: r.n_cells, how: r.method || "centres",
     a: r.values[A.i], b: B ? r.values[B.i] : undefined,
-    sa: r.sd ? r.sd[A.i] : null, sb: (B && r.sd) ? r.sd[B.i] : null,
+    // One stand-in cell has no spread to report: "+/- 0.0" would read as uniform.
+    sa: (r.sd && r.method !== "nearest_cell") ? r.sd[A.i] : null,
+    sb: (B && r.sd && r.method !== "nearest_cell") ? r.sd[B.i] : null,
   })).sort((x, y) => (y.a ?? -Infinity) - (x.a ?? -Infinity));
 
   // "+18.6 +/- 15.3" reads as one figure with its spread. The spread is across
@@ -2441,6 +2443,11 @@ async function _renderRegions(countryId, varKey, sel, cmp) {
       : `${main}<span class="rp-rg-sd"> &plusmn; ${sd.toFixed(1)}</span>`;
   };
 
+  // How each region got its number (see build_region_month_series.py): most are
+  // the mean of the cells centred inside them; small ones say otherwise.
+  const cellsCell = (r) => r.how === "area_weighted" ? `${r.n} part`
+    : r.how === "nearest_cell" ? "nearest" : r.how === "no_cells" ? "none" : `${r.n}`;
+
   const hdrA = `${_shortEv(sel)}<br><span class="rp-sub">${_monthLabelAt(sel, RPZ.monthIdx)}</span>`;
   const hdrB = cmp
     ? `${_shortEv(cmp)}<br><span class="rp-sub">${_monthLabelAt(cmp, RPZ.monthIdx)}</span>`
@@ -2452,7 +2459,7 @@ async function _renderRegions(countryId, varKey, sel, cmp) {
     `<th>cells</th></tr></thead><tbody>` +
     rows.map(r => `<tr><td>${r.name}</td><td>${fmt(r.a, r.sa)}</td>` +
                   (hdrB ? `<td>${fmt(r.b, r.sb)}</td>` : "") +
-                  `<td class="rp-rg-na">${r.n}</td></tr>`).join("") +
+                  `<td class="rp-rg-na">${cellsCell(r)}</td></tr>`).join("") +
     `</tbody>`;
 
   document.getElementById("rp-regions-summary").textContent =
@@ -2462,8 +2469,11 @@ async function _renderRegions(countryId, varKey, sel, cmp) {
     + `${data.admin} admin-1 boundary, against ${data.climatology} for the same calendar `
     + `month. Same cells as the maps above. The figure after ± is the spread of those `
     + `cells within the region, so it says whether the region moved as one: a spread `
-    + `larger than the mean means part of it went the other way. Regions with fewer than `
-    + `${RPRG.index.min_cells} cells are omitted: a mean over one or two pixels is noise. `
+    + `larger than the mean means part of it went the other way. A region holding fewer `
+    + `than ${RPRG.index.min_cells} cell centres is averaged over every cell that overlaps `
+    + `it, weighted by the overlap ("part" in the cells column); a small island no cell `
+    + `overlaps takes the nearest cell ("nearest"); "none" means no data cell reaches `
+    + `the region for this variable. `
     + `Click a region on the maps above to put it in the charts below.`;
   box.hidden = false;
 }

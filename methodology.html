@@ -370,9 +370,14 @@
           are drawn from, so the table and the map above it can never disagree. Charts are shown in
           absolute units against the same neutral-year reference the country view uses: the store
           holds anomalies, and the neutral mean per calendar month is carried alongside them so the
-          absolute value can be recovered exactly rather than approximated. A region with fewer
-          than three grid cells is left out, because an average over one or two pixels is noise
-          rather than a measurement; that drops a few very small units, Nairobi among them.
+          absolute value can be recovered exactly rather than approximated. Every admin-1 unit is
+          listed. A unit holding fewer than three cell centres (a capital district, a small
+          province) is not a plain average of one or two pixels, which would be noise: it is
+          averaged over every cell whose 0.25° box overlaps it, weighted by the overlap, and its
+          row says "part" in the cells column. A small island that no cell box overlaps takes the
+          nearest cell within half a degree ("nearest"). A unit no data cell reaches, such as
+          northern Germany for rainfall (CHIRPS stops at 50° N) or a remote island, is shown
+          as "none" rather than left out.
         </p>
         <p>
           <strong>The ± beside a regional figure is a spread, not an error bar.</strong> It is the
@@ -388,7 +393,11 @@
           than the current 26, and Kenya as its former provinces rather than its 47 counties. This
           is adequate for regional comparison and inadequate for matching a specific current
           administrative unit; where that matters the OCHA Common Operational Datasets are the
-          right source, and are what humanitarian reporting aligns to.
+          right source, and are what humanitarian reporting aligns to. A few Natural Earth features
+          carry the wrong name and are corrected by location: Malawi's Karonga, which the file
+          calls a second Chitipa, Afghanistan's Daykundi and Panjshir, Uganda's Kiruhura, Wirral
+          in England, and Maputo, Cebu, Iloilo and Cotabato cities, named like the provinces
+          around them.
         </p>
         <p>
           <strong>The map.</strong> Each event's map is its own, not a phase composite: the field is
@@ -505,6 +514,6 @@
     </div>
   </main>
 
-  <script src="static/js/site.js?v=20261014i"></script>
+  <script src="static/js/site.js?v=20261015a"></script>
 </body>
 </html>

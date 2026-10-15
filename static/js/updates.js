@@ -15,6 +15,16 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-10-15",
+    tag: "Fix",
+    title: "Every province and district now has its own figures",
+    items: [
+      "Small provinces and districts were missing from the sub-national tables and the country packs: 620 of them across 62 countries, among them 11 of Malawi's 28 districts (the whole south, Blantyre included), 13 of Burundi's 17 provinces and most capital districts. They now have figures, averaged over the grid cells that overlap them, and the table says so.",
+      "Trinidad and Tobago now has sub-national figures, and the United Kingdom all 232 of its local areas instead of 53 (heat only there: the United Kingdom lies north of the rainfall data).",
+      "Some boundary names were wrong: Karonga in Malawi appeared as a second Chitipa, and a few others were mislabelled in Afghanistan, Uganda, England, Mozambique and the Philippines. They now carry their right names.",
+    ],
+  },
+  {
     date: "2026-10-14",
     tag: "New feature",
     title: "Event replay gets its own tab, and the guide is refreshed",
