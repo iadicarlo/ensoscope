@@ -16,6 +16,16 @@
 window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-15",
+    tag: "Fix",
+    title: "Country packs: El Niño and the Sahel, and stricter outbreak flags",
+    items: [
+      "The packs for Mauritania, Senegal, Mali, Burkina Faso, Niger, Chad, Sudan and Nigeria now include a short note on what research says about El Niño and the Sahel: it tilts the odds slightly towards a drier rainy season but explains only about a tenth of the year-to-year change in rainfall, the link has changed over the decades, and the Mediterranean and the tropical Atlantic matter about as much as the Pacific or more. Every statement cites a peer-reviewed paper, in English and, for French-speaking countries, in French.",
+      "A pack now says an outbreak \"began in El Niño months more often than chance would suggest\" only when there are at least 8 outbreaks and a statistical test supports it. Smaller differences are described as possibly due to chance.",
+      "The cholera line now states only what Moore et al. (2017) found: in El Niño years cholera in Africa shifted towards East Africa.",
+    ],
+  },
+  {
+    date: "2026-10-15",
     tag: "New data",
     title: "Six more countries: Mauritania, Namibia, Djibouti, Lesotho, Eswatini and Kiribati",
     items: [
