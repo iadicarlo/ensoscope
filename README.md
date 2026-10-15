@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23366523.svg)](https://doi.org/10.5281/zenodo.23366523)
 
-ENSOscope shows what El Niño and La Niña are likely to do next, and what they have done before, for 83 countries most exposed to them. It is built for humanitarian teams who need to plan ahead.
+ENSOscope shows what El Niño and La Niña are likely to do next, and what they have done before, for 89 countries most exposed to them. It is built for humanitarian teams who need to plan ahead.
 
 Website: https://iadicarlo.org/ensoscope/
 

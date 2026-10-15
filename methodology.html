@@ -293,6 +293,17 @@
           different quantities and are labelled differently.
         </p>
         <p>
+          <strong>Kiribati covers the Gilbert Islands only.</strong> Kiribati is a chain of atolls
+          spread across the date line, each far smaller than one 0.25° grid cell. ENSOscope covers
+          the Gilbert Islands (168° E to 178° E), Tarawa included, where most people live; the
+          Phoenix and Line Islands are left out, and CHIRPS has no rainfall cells at Kiritimati in
+          any case. No cell centre falls on an atoll, so the country is the average of the cells
+          that overlap the islands, each weighted by how much of it the islands cover: three
+          CHIRPS cells for rainfall, sixteen ERA5 cells for heat. Those ERA5 cells are mostly sea,
+          so the heat figures follow the air over the surrounding ocean and read lower than a
+          thermometer on land would. The country zoom shows these cells at 0.25° rather than 1°.
+        </p>
+        <p>
           <strong>The neutral reference.</strong> The dashed green line on each panel is what an
           <em>ordinary</em> year looks like in that country: the average of the catalogued neutral
           years for the same calendar month, between 11 and 16 years per month. Comparing an event
@@ -514,6 +525,6 @@
     </div>
   </main>
 
-  <script src="static/js/site.js?v=20261015a"></script>
+  <script src="static/js/site.js?v=20261015b"></script>
 </body>
 </html>

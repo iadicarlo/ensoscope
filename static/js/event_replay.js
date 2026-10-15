@@ -1553,7 +1553,7 @@ function _renderMeta(sel, nOthers) {
 }
 
 // ── country picker map ───────────────────────────────────────────────────────
-// A dropdown of 83 countries is a poor way to choose a place. This draws the
+// A dropdown of 89 countries is a poor way to choose a place. This draws the
 // world and lets you click. Countries WITHOUT data are drawn but inert, so the
 // map never invites a click that does nothing. The dropdown stays as the
 // keyboard and screen-reader path; the two are kept in sync.
@@ -2156,8 +2156,18 @@ async function _drawZoom() {
   const cmp = RP.events.events.find(e => e.id === RPZ.cmp) || null;
   const varKey = (document.getElementById("rp-map-variable") || {}).value;
 
-  const feat = RPMAP.geo.features.find(f =>
+  let feat = RPMAP.geo.features.find(f =>
     f.properties && f.properties.name === RP.country.regionmask);
+  // Kiribati is not in the 1:110m basemap: its atolls are far below that scale.
+  // Its own admin-1 outline (the Gilbert Islands) frames the panel instead,
+  // once the bounds below have arrived; until then the panel stays empty.
+  if (!feat) {
+    const sub = _adminFeatures(RP.country.id);
+    if (sub && sub.length) {
+      feat = { type: "Feature", properties: { name: RP.country.label },
+               geometry: { type: "GeometryCollection", geometries: sub.map(f => f.geometry) } };
+    }
+  }
 
   // ONE scale for both panels. Two panels on independent scales would show the
   // same anomaly in different colours and quietly invert the comparison they
@@ -2231,9 +2241,12 @@ async function _drawZoom() {
             ? ", set from the two months shown so the comparison uses the full range; it "
               + "rescales as you move the slider"
             : "")
-        + ". Values are clipped to the country; neighbours are outlined for orientation only. "
-        + "One degree, the resolution of the "
-        + (RPZ.monthIdx >= 0 ? "monthly fields." : "per-event maps.")
+        + (monthly && monthly.mask_method && monthly.mask_method !== "centres"
+            ? ". The islands are smaller than one grid cell, so the 0.25 degree cells that "
+              + "overlap them are shown whole, sea included. "
+            : ". Values are clipped to the country; neighbours are outlined for orientation only. "
+              + "One degree, the resolution of the "
+              + (RPZ.monthIdx >= 0 ? "monthly fields." : "per-event maps."))
         // Asked for by MSF, 2026-08-20. A single month is one draw from a noisy
         // distribution, and the pattern can move between neighbouring months
         // within the same event. Saying so is not a hedge: without it a reader
@@ -2654,9 +2667,15 @@ async function _drawZoomPanel(canvasId, svgId, wrapId, feat, evt, varKey, monthl
     // outlines stay, and the selected border is drawn heavy, so the reader can
     // still see where the clip runs and judge whether it cut a real gradient.
     ctx.save();
-    ctx.beginPath();
-    d3.geoPath(proj, ctx)(feat);
-    ctx.clip();
+    // No clip for an island store (mask_method other than "centres"): its cells
+    // were chosen because they overlap atolls far smaller than a cell, so
+    // clipping to the land would leave almost nothing visible.
+    const islandCells = monthly && monthly.mask_method && monthly.mask_method !== "centres";
+    if (!islandCells) {
+      ctx.beginPath();
+      d3.geoPath(proj, ctx)(feat);
+      ctx.clip();
+    }
     if (monthly && RPZ.monthIdx >= 0) {
       const key = _monthKeyAt(evt, RPZ.monthIdx);
       const row = monthly.at[key];

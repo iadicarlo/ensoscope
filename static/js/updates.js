@@ -16,6 +16,16 @@
 window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-15",
+    tag: "New data",
+    title: "Six more countries: Mauritania, Namibia, Djibouti, Lesotho, Eswatini and Kiribati",
+    items: [
+      "The event replay, the sub-national tables and the country packs now cover 89 countries. The six new ones have the same rainfall and heat records from 1981, their provinces and districts, and their recorded disasters and outbreaks.",
+      "Kiribati covers the Gilbert Islands, Tarawa included. The atolls are smaller than one grid cell, so its figures come from the cells around the islands, and its heat figures follow the air over the surrounding sea. The methodology page explains how.",
+      "Sub-national heat figures for Burkina Faso, Ecuador, Ghana, Japan, Nicaragua, Rwanda and Yemen were read from grid cells placed slightly off their true positions. They are now right, and the country packs have been rebuilt with them.",
+    ],
+  },
+  {
+    date: "2026-10-15",
     tag: "Fix",
     title: "Every province and district now has its own figures",
     items: [

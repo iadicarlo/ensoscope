@@ -215,6 +215,11 @@ const GEO_HIERARCHY = {
         { id: "chad",              label: "Chad",           regionmask: "Chad" },
         { id: "burkina_faso",      label: "Burkina Faso",   regionmask: "Burkina Faso" },
         { id: "malawi",            label: "Malawi",         regionmask: "Malawi" },
+        { id: "mauritania",        label: "Mauritania",     regionmask: "Mauritania" },
+        { id: "namibia",           label: "Namibia",        regionmask: "Namibia" },
+        { id: "djibouti",          label: "Djibouti",       regionmask: "Djibouti" },
+        { id: "lesotho",           label: "Lesotho",        regionmask: "Lesotho" },
+        { id: "eswatini",          label: "Eswatini",       regionmask: "eSwatini" },
       ],
     },
     {
@@ -256,6 +261,10 @@ const GEO_HIERARCHY = {
         { id: "australia",          label: "Australia",   regionmask: "Australia" },
         { id: "new_zealand",        label: "New Zealand", regionmask: "New Zealand" },
         { id: "south_korea",        label: "South Korea", regionmask: "South Korea" },
+        // Gilbert Islands only: the outline is Natural Earth 1:50m clipped to
+        // 168E-178E (scripts/analysis/finance/_country_masks.py). Not in the
+        // 1:110m basemap, so it is picked from the list, not clicked.
+        { id: "kiribati",           label: "Kiribati (Gilbert Islands)", regionmask: "Kiribati" },
       ],
     },
     {

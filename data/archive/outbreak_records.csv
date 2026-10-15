@@ -300,6 +300,7 @@ WHO Disease Outbreak News,costa_rica,CRI,chikungunya,2025-10,2025-10,"1 WHO repo
 WHO Disease Outbreak News,cuba,CUB,dengue,1997-06,1997-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,cuba,CUB,zika,2016-03,2016-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,cuba,CUB,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,djibouti,DJI,cholera,1997-11,1997-11,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,dominican_republic,DOM,zika,2016-01,2016-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,dominican_republic,DOM,cholera,2023-02,2023-02,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,dominican_republic,DOM,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
@@ -470,6 +471,7 @@ WHO Disease Outbreak News,kenya,KEN,cholera,2023-02,2023-02,"1 WHO report, dated
 WHO Disease Outbreak News,kenya,KEN,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,kenya,KEN,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,kenya,KEN,chikungunya,2025-10,2025-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,kiribati,KIR,dengue,1998-06,1998-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,laos,LAO,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,madagascar,MDG,cholera,1999-04,1999-08,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,madagascar,MDG,cholera,2000-03,2000-03,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
@@ -501,6 +503,13 @@ WHO Disease Outbreak News,mali,MLI,meningitis,2012-05,2012-05,"1 WHO report, dat
 WHO Disease Outbreak News,mali,MLI,ebola,2014-04,2014-10,"3 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,mali,MLI,yellow fever,2019-12,2019-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,mali,MLI,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mauritania,MRT,cholera,2005-08,2005-09,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mauritania,MRT,rift valley fever,2012-11,2012-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mauritania,MRT,rift valley fever,2020-11,2020-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mauritania,MRT,rift valley fever,2022-10,2022-10,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mauritania,MRT,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mauritania,MRT,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,mauritania,MRT,rift valley fever,2025-11,2025-11,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,mexico,MEX,cholera,1996-03,1996-03,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,mexico,MEX,cholera,2013-10,2013-11,"4 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,mexico,MEX,zika,2015-12,2015-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
@@ -519,6 +528,9 @@ WHO Disease Outbreak News,mozambique,MOZ,cholera,2025-08,2025-08,"1 WHO report, 
 WHO Disease Outbreak News,myanmar,MMR,dengue,1998-06,1998-06,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,myanmar,MMR,dengue,2024-05,2024-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,myanmar,MMR,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,namibia,NAM,plague,1999-05,1999-05,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,namibia,NAM,hepatitis,2018-01,2018-01,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
+WHO Disease Outbreak News,namibia,NAM,cholera,2025-08,2025-08,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,nepal,NPL,dengue,2022-10,2022-10,"2 WHO reports, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,nepal,NPL,cholera,2022-12,2022-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
 WHO Disease Outbreak News,nepal,NPL,dengue,2023-12,2023-12,"1 WHO report, dated by publication",https://www.who.int/emergencies/disease-outbreak-news
