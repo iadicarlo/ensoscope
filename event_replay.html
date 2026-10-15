@@ -327,8 +327,9 @@
       line-height:1.5;border-top:1px solid var(--border);padding-top:.5rem}
     .rp-legend-note a{color:var(--accent);font-weight:600}
     .rp-btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-    .rp-pack{display:inline-flex;gap:.35rem}
+    .rp-pack{display:inline-flex;flex-wrap:wrap;gap:.35rem}
     .rp-pack a.rp-btn{text-decoration:none;color:inherit}
+    .rp-pack a[hidden]{display:none}
     .rp-btn-primary:hover{background:#0f4c8f;color:#fff}
     /* Print-only masthead: on screen it would duplicate the page title. */
     .rp-print-head{display:none}
@@ -528,6 +529,14 @@
                title="This country's pack: outlook in plain words, maps and charts">PDF</a>
             <a id="rp-pack-xlsx" class="rp-btn" rel="noopener"
                title="The same pack with every table behind it, as an Excel workbook">Excel</a>
+            <a id="rp-pack-simple" class="rp-btn" rel="noopener"
+               title="One page for hospital and field teams: what to expect in the coming months, four maps and a region table (Excel, prints on one A4 page)">Simple sheet</a>
+            <a id="rp-pack-simple-fr" class="rp-btn" rel="noopener" lang="fr" hidden
+               title="Fiche d'une page en français pour les équipes de terrain et les hôpitaux (Excel)">Fiche simple (FR)</a>
+            <a id="rp-pack-simple-es" class="rp-btn" rel="noopener" lang="es" hidden
+               title="Hoja de una página en español para los equipos de terreno y los hospitales (Excel)">Hoja simple (ES)</a>
+            <a id="rp-pack-simple-pt" class="rp-btn" rel="noopener" lang="pt" hidden
+               title="Ficha de uma página em português para as equipas de terreno e os hospitais (Excel)">Ficha simples (PT)</a>
           </span>
         </div>
       </div>
@@ -846,9 +855,9 @@
   <script src="static/lib/d3.min.js?v=20260624g"></script>
   <script src="static/lib/d3-geo-projection.min.js?v=20260624g"></script>
   <script src="static/lib/chart.umd.min.js?v=20260624g"></script>
-  <script src="static/js/data_base.js?v=20261015c"></script>
-  <script src="static/js/index_names.js?v=20261015c"></script>
-  <script src="static/js/site.js?v=20261015c"></script>
-  <script src="static/js/event_replay.js?v=20261015c"></script>
+  <script src="static/js/data_base.js?v=20261015e"></script>
+  <script src="static/js/index_names.js?v=20261015d"></script>
+  <script src="static/js/site.js?v=20261015d"></script>
+  <script src="static/js/event_replay.js?v=20261015e"></script>
 </body>
 </html>

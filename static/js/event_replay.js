@@ -1907,15 +1907,27 @@ function _watchMapSize() {
   }).observe(wrap);
 }
 
-// The country pack (PDF and Excel) is built for every country at each monthly
-// update by build_country_pack.py and served from the bucket like the tiles.
+// The country pack (PDF and Excel) and the one-page simple sheets (English, and French,
+// Spanish or Portuguese where the country works in that language) are built for every
+// country at each monthly update by build_country_pack.py and served from the bucket like
+// the tiles. packs_index.json lists which files exist per country, so a link to a file that
+// was not built stays hidden.
+const RP_PACK_LINKS = [
+  ["rp-pack-pdf", "pdf", ".pdf"], ["rp-pack-xlsx", "xlsx", ".xlsx"],
+  ["rp-pack-simple", "simple", "_simple.xlsx"], ["rp-pack-simple-fr", "simple_fr", "_simple_fr.xlsx"],
+  ["rp-pack-simple-es", "simple_es", "_simple_es.xlsx"], ["rp-pack-simple-pt", "simple_pt", "_simple_pt.xlsx"],
+];
 function _updatePack(id) {
   const box = document.querySelector(".rp-pack");
   const has = !RP.packs || RP.packs.has(id);   // no index: show the links rather than hide every pack
   if (box) box.closest(".rp-ctrl").style.display = has ? "" : "none";
-  for (const [el, ext] of [["rp-pack-pdf", "pdf"], ["rp-pack-xlsx", "xlsx"]]) {
+  // Older index without a per-file list: PDF and Excel only, as before.
+  const files = RP.packFiles ? (RP.packFiles[id] || []) : ["pdf", "xlsx"];
+  for (const [el, key, suffix] of RP_PACK_LINKS) {
     const a = document.getElementById(el);
-    if (a) a.href = _dataURL(`data/packs/ensoscope_${id}.${ext}`);
+    if (!a) continue;
+    a.href = _dataURL(`data/packs/ensoscope_${id}${suffix}`);
+    a.hidden = !files.includes(key);
   }
 }
 
@@ -1989,7 +2001,9 @@ async function init() {
     history.replaceState(null, "", "?" + p.toString() + location.hash);
   };
 
-  RP.packs = await _getJSON("data/packs_index.json").then(d => new Set(d.countries)).catch(() => null);
+  const packIdx = await _getJSON("data/packs_index.json").catch(() => null);
+  RP.packs = packIdx ? new Set(packIdx.countries) : null;
+  RP.packFiles = packIdx && packIdx.files ? packIdx.files : null;
   await _loadCountry(cSel.value);
   await _loadImpacts(cSel.value);
   _wireThresholds();

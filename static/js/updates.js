@@ -16,6 +16,25 @@
 window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-15",
+    tag: "New feature",
+    title: "Country packs: heat named exactly, four maps, and a one-page sheet in four languages",
+    items: [
+      "Heat in the country packs is now named exactly: maximum temperature (the hottest point of each day) and heat-stress days (days with a UTCI of 32 °C or more, a \"feels like\" temperature combining air temperature, humidity, wind and sun), this season and in past El Niño years over the coming six months.",
+      "The PDF and the Excel workbook show four maps side by side: rain and maximum temperature this season, and what past El Niño years did to rain and to heat-stress days over the coming months. A region-by-region table follows them.",
+      "A one-page simple sheet (Excel) for hospital and field teams sits next to the PDF and Excel on the event replay page, in English and, for the countries that work in them, French, Spanish or Portuguese.",
+    ],
+  },
+  {
+    date: "2026-10-15",
+    tag: "Fix",
+    title: "Regional records now include every year from 1982",
+    items: [
+      "The monthly maps and the province and district records in the event replay now hold every month from January 1982. Three years, 1990, 2012 and 2013, had been missing because no El Niño or La Niña replay reached them.",
+      "Ranks such as \"second driest on record\" in the regional tables and the country packs are now counted against the full record. All three years were neutral, so they are also back in the normal that every anomaly is measured against. Some ranks and normals have moved slightly as a result.",
+    ],
+  },
+  {
+    date: "2026-10-15",
     tag: "Fix",
     title: "Country packs: El Niño and the Sahel, and stricter outbreak flags",
     items: [

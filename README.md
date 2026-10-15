@@ -14,7 +14,8 @@ This repository holds the published website and the data it shows:
 - how well those forecasts have done in the past
 - maps of how past El Niño and La Niña years changed rainfall and heat, by country and region
 - an event replay: any past El Niño or La Niña, month by month, for each country, with a timeline of the floods, droughts, heat waves and disease outbreaks recorded at the time
-- a country pack for each country (PDF and Excel): the outlook for the next 3 and 6 months in plain words, maps, charts and the tables behind them
+- a country pack for each country (PDF and Excel): the outlook for the next 3 and 6 months in plain words, four maps (rain and maximum temperature this season, and what past El Niño years did to rain and to heat-stress days over the coming months), a region table, charts and the tables behind them
+- a one-page simple sheet per country (Excel) for hospital and field teams, in English and, where the country works in it, French, Spanish or Portuguese
 
 The outbreak records from sources that allow it are in data/archive/, with a note on how to credit each source. The rest of the outbreak and disaster records are shown on the site but kept out of the archived releases until their owners agree.
 
