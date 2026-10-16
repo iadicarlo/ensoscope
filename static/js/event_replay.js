@@ -456,7 +456,11 @@ const RP_FC_KEYS = ["pr_total", "rx10day", "cdd", "dry_days", "tmax", "utci_stro
 
 async function _fcLoad(id) {
   if (RPFC.index === undefined) {
-    RPFC.index = await _getJSON("data/replay/forecast/index.json").catch(() => null);
+    // Asked for only when the replay index says an outlook is published (build_region_forecast
+    // --stage publish writes the flag), so an unpublished outlook costs no request and no 404.
+    const flag = RP.countries && RP.countries.outlook;
+    RPFC.index = flag ? await _getJSON("data/replay/forecast/index.json").catch(() => null) : null;
+    if (RPFC.index && RPFC.index.init !== flag) RPFC.index = null;
   }
   RPFC.country = null; RPFC.docs = {}; RPFC.cmp = null;
   const idx = RPFC.index;

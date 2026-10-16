@@ -154,6 +154,8 @@ const _SSTA_LEAD_OPTIONS = [];
 function _isFc(v) { return VARIABLES[v] && VARIABLES[v].tileStyle === "fcmap"; }
 
 async function _loadFcManifest() {
+  // Only when the SST manifest says an outlook is published for this same month.
+  if (!_manifest || _manifest.outlook !== `${_tag.slice(0, 4)}-${_tag.slice(4, 6)}`) return;
   try {
     const r = await fetch(_dv(DATA_BASE + `fcmap_manifest_${_tag}.json`), {cache: "no-cache"});
     if (!r.ok) return;

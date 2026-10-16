@@ -15,6 +15,17 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-10-16",
+    tag: "Fix",
+    title: "Daily maximum and minimum temperature now cover the whole day",
+    items: [
+      "Daily maximum and minimum temperature from ERA5, 1981 to 2026, are now the highest and lowest values of the whole day, 00 to 24 UTC. Until now they covered only 06 to 18 UTC, which misses the coolest hours of the night over Africa, Europe and Asia and the hottest hours of the afternoon over the Americas.",
+      "Night temperatures over Africa, Europe and Asia and afternoon maxima over the Americas change most: minimum temperature is now about 2 to 3 °C lower on average over Africa and Asia and over Europe in summer (about 1 °C in a European winter, close to 5 °C in the Yemen highlands), and maximum temperature about 2 °C higher over North America and a few tenths of a degree to 0.7 °C higher over Central and South America. Maximum temperature over Africa and the Middle East is unchanged.",
+      "Because every year moved together, anomalies and ranks change far less than the values. June to August 2026 is still the warmest since 1982 for maximum temperature in Haiti, in central Mali (Ségou and Mopti) and in the Yemen highlands, and the second warmest in the Honduran Dry Corridor and in both Burkina Faso zones; in La Paz, Bolivia it moves from 8th to 7th warmest. Warm-night counts are lower where the coolest hours of the night had been missed.",
+      "Every map, regional series, heatwave and warm-night count and country pack built on them has been rebuilt, and the heatwave-day thresholds recomputed. Heat-stress days (UTCI, WBGT) and rainfall are not affected.",
+    ],
+  },
+  {
     date: "2026-10-15",
     tag: "Fix",
     title: "Maximum and minimum temperature for May to August 2026 corrected",
