@@ -16,6 +16,16 @@
 window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-15",
+    tag: "Fix",
+    title: "Maximum and minimum temperature for May to August 2026 corrected",
+    items: [
+      "Daily maximum and minimum temperature for May to August 2026 had been computed differently from every earlier month of the ERA5 record: from another ERA5 temperature field, and over a different part of the day. Measured against the rest of the record, 2026 maximum temperature looked too warm, by about 1 °C over most of the Americas and by up to 4 °C in western North America, and minimum temperature looked 3 to 4 °C too cold over Europe, the Middle East and Africa east of 20°E.",
+      "The four months are now computed exactly as the rest of the record is, and every map, regional series, count of warm nights and country pack that uses them has been rebuilt. Maximum-temperature anomalies and ranks for 2026 have come down across the Americas, by 1 to 2 °C in Honduras and in La Paz, Bolivia, for example, and by about half a degree to one degree over much of Asia, Europe and Australia; in parts of the Sahel they rose by a few tenths. Warm-night counts have gone up where minimum temperature had been too cold.",
+      "Heat-stress days (UTCI) and rainfall were not affected.",
+    ],
+  },
+  {
+    date: "2026-10-15",
     tag: "New feature",
     title: "Country packs: heat named exactly, four maps, and a one-page sheet in four languages",
     items: [

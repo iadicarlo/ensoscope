@@ -120,6 +120,10 @@ const VARIABLES = {
 
 const CMAPS = {
   "RdBu_r": CMAP_RDBU_R,
+  // Rain: brown dry, green-blue wet, as on every other rainfall map of the site.
+  "BrBG":   [[0,[140,81,10]],[0.25,[216,179,101]],[0.5,[245,245,245]],[0.75,[90,180,172]],[1,[1,102,94]]],
+  "BrBG_r": [[0,[1,102,94]],[0.25,[90,180,172]],[0.5,[245,245,245]],[0.75,[216,179,101]],[1,[140,81,10]]],
+  "Grey":   [[0,[213,219,225]],[1,[213,219,225]]],
   "Blues": [
     [0,   [247, 252, 253]],
     [0.2, [204, 236, 230]],
@@ -138,6 +142,87 @@ const CMAPS = {
     [1,    [127, 39, 4]],
   ],
 };
+
+// ── Regional outlook maps (build_region_forecast.py) ─────────────────────────
+// Each index forecast from daily SEAS5 and MF9 fields, corrected day by day against
+// the observations, shown as the change from the model's own normal. Cells where a
+// model's 1993-2025 hindcast showed no skill are drawn grey: no forecast is implied
+// there. These replace the uncorrected April 2026 daily-precip maps.
+const FC_CMAP = { pr_total: "BrBG", rx10day: "BrBG", dry_days: "BrBG_r", cdd: "BrBG_r" };
+let _fcManifest = null, _fcGrid = null;
+const _SSTA_LEAD_OPTIONS = [];
+function _isFc(v) { return VARIABLES[v] && VARIABLES[v].tileStyle === "fcmap"; }
+
+async function _loadFcManifest() {
+  try {
+    const r = await fetch(_dv(DATA_BASE + `fcmap_manifest_${_tag}.json`), {cache: "no-cache"});
+    if (!r.ok) return;
+    _fcManifest = await r.json();
+    const g = await fetch(_dv(DATA_BASE + `fcmap_grid_${_tag}.json`), {cache: "no-cache"});
+    _fcGrid = g.ok ? await g.json() : null;
+  } catch (_) { _fcManifest = null; }
+  if (!_fcManifest || !_fcGrid) { _fcManifest = null; return; }
+  // The subtitle describes the outlook only once its maps are actually served.
+  const note = document.getElementById("fm-outlook-note");
+  if (note) {
+    note.innerHTML = "The <strong>Forecast</strong> entries in the variable menu are the regional outlook: rain, "
+      + "dry days, dry spells, heavy rain, maximum temperature, heat-stress days and warm nights from the daily "
+      + "SEAS5 and Météo-France fields, corrected day by day against the observations and shown as the change "
+      + "from each model's own normal. Grey cells: that model's past forecasts ("
+      + (_fcManifest.hindcast || "1993-2025") + ") did not match the observations there well enough, so no "
+      + "forecast is drawn. Region by region numbers are on the <a href=\"event_replay.html\">Event replay</a> page.";
+  }
+  const sel = document.getElementById("fm-variable");
+  for (const ix of _fcManifest.indices) {
+    VARIABLES[`fc_${ix.key}`] = { tileStyle: "fcmap", fcKey: ix.key, cmap: FC_CMAP[ix.key] || "RdBu_r",
+                                  units: ix.key === "pr_total" ? "% of normal" : ix.units,
+                                  label: ix.label, vmin: -1, vmax: 1 };
+    const o = document.createElement("option");
+    o.value = `fc_${ix.key}`;
+    o.textContent = `Forecast: ${ix.label.replace(/ vs normal$/, "")}`;
+    sel.appendChild(o);
+  }
+}
+
+function _b64bytes(s) {
+  const raw = atob(s), b = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) b[i] = raw.charCodeAt(i);
+  return b;
+}
+
+/** Decoded per-cell values of one fcmap field: null where no data. */
+function _fcField(f) {
+  const b = _b64bytes(f.data);
+  return Array.from(b, x => x === 0 ? null : f.lo + (x - 1) / 254 * (f.hi - f.lo));
+}
+
+/** Lead and centre menus follow the variable: months and periods with SEAS5, MF9 or both
+ *  for the outlook, lead months and the multi-model median for SST. */
+function _syncMenus() {
+  const lead = document.getElementById("fm-lead"), cen = document.getElementById("fm-centre");
+  if (!_SSTA_LEAD_OPTIONS.length) {
+    [...lead.options].forEach(o => _SSTA_LEAD_OPTIONS.push([o.value, o.textContent]));
+    _SSTA_CENTRES.push(...[...cen.options].map(o => [o.value, o.textContent]));
+  }
+  if (_isFc(_variable)) {
+    lead.innerHTML = _fcManifest.periods.map(p => `<option value="${p.id}">${p.label}`
+      + `${p.id[0] === "N" ? ` (next ${p.id.slice(1)} months)` : ""}</option>`).join("");
+    if (!_fcManifest.periods.some(p => p.id === String(_lead))) _lead = "N6";
+    lead.value = String(_lead);
+    cen.innerHTML = `<option value="__multi">Both models, where both show skill</option>`
+      + Object.entries(_fcManifest.sources).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
+    if (!["__multi", ...Object.keys(_fcManifest.sources)].includes(_centre)) _centre = "__multi";
+    cen.value = _centre;
+  } else {
+    lead.innerHTML = _SSTA_LEAD_OPTIONS.map(([v, t]) => `<option value="${v}">${t}</option>`).join("");
+    if (!_SSTA_LEAD_OPTIONS.some(([v]) => v === String(_lead))) _lead = 1;
+    lead.value = String(_lead);
+    cen.innerHTML = _SSTA_CENTRES.map(([v, t]) => `<option value="${v}">${t}</option>`).join("");
+    if (!_SSTA_CENTRES.some(([v]) => v === _centre)) _centre = "__multi";
+    cen.value = _centre;
+  }
+}
+const _SSTA_CENTRES = [];
 
 let _tag = null;
 let _manifest = null;
@@ -208,7 +293,9 @@ async function loadTile(variable, lead) {
   const key = `${variable}_L${lead}`;
   if (_tiles[key]) return _tiles[key];
   const spec = VARIABLES[variable];
-  const url = DATA_BASE + `${spec.filePrefix}${lead}_${_tag}.json`;
+  const url = spec.tileStyle === "fcmap"
+    ? DATA_BASE + `fcmap_${spec.fcKey}_${lead}_${_tag}.json`
+    : DATA_BASE + `${spec.filePrefix}${lead}_${_tag}.json`;
   const r = await fetch(_dv(url), {cache:"no-cache"});
   if (!r.ok) throw new Error(`tile ${key} ${r.status}`);
   const j = await r.json();
@@ -307,6 +394,24 @@ function _renderData() {
       return _renderSparse(pc.ri, pc.ci, pc.v, null, lats, lons, scale, vmin, vmax, cmap);
     }
     _renderSparse(ri, ci, v, va, lats, lons, scale, vmin, vmax, cmap);
+  } else if (spec.tileStyle === "fcmap") {
+    const lats = _fcGrid.lats, lons = _fcGrid.lons, gri = _fcGrid.ri, gci = _fcGrid.ci;
+    const rain = !!tile.rain;
+    const systems = _centre === "__multi" ? Object.keys(tile.per_centre) : [_centre];
+    const fields = systems.map(s => ({ a: _fcField(tile.per_centre[s].anom), k: _fcField(tile.per_centre[s].skill) }));
+    const ri = [], ci = [], v = [], gr = [], gc = [], gv = [];
+    for (let i = 0; i < gri.length; i++) {
+      const vals = fields.map(f => f.a[i]);
+      if (vals.some(x => x === null)) continue;
+      const skilful = fields.every(f => f.k[i] !== null && f.k[i] > 0.5);
+      // Both models: coloured only where both show skill and change the same way.
+      const same = vals.every(x => Math.sign(x) === Math.sign(vals[0]));
+      if (!skilful || (systems.length > 1 && !same)) { gr.push(gri[i]); gc.push(gci[i]); gv.push(0); continue; }
+      const m = vals.reduce((p, q) => p + q, 0) / vals.length;
+      ri.push(gri[i]); ci.push(gci[i]); v.push(rain ? m + 100 : m);
+    }
+    _renderSparse(gr, gc, gv, null, lats, lons, 1, -1, 1, CMAPS.Grey);
+    _renderSparse(ri, ci, v, null, lats, lons, 1, spec.vmin, spec.vmax, cmap);
   } else if (spec.tileStyle === "dense-daily") {
     // Daily precip tile: tile.{pr_total_mm|rx1day_mm} = {multi_model_median, per_centre_mean}
     const inner = tile[spec.innerKey];
@@ -524,8 +629,35 @@ function _updateStippleLegend() {
 
 // ── Colourbar ────────────────────────────────────────────────────────────────
 
+/** Colour range for an outlook tile: rain 40 to 160 % of normal; the rest symmetric at
+ *  the 98th percentile of the skilful cells, so one outlier does not wash the map out. */
+function _fcRange(tile) {
+  if (tile.rain) return [40, 160];
+  const vals = [];
+  for (const s of Object.keys(tile.per_centre)) {
+    const a = _fcField(tile.per_centre[s].anom), k = _fcField(tile.per_centre[s].skill);
+    a.forEach((x, i) => { if (x !== null && k[i] !== null && k[i] > 0.5) vals.push(Math.abs(x)); });
+  }
+  vals.sort((p, q) => p - q);
+  const top = vals.length ? vals[Math.floor(0.98 * (vals.length - 1))] : 1;
+  const nice = [0.5, 1, 2, 3, 5, 10, 15, 20, 30, 50, 100].find(x => x >= top) || top;
+  return [-nice, nice];
+}
+
 function renderColorbar(vmin, vmax, units) {
   const spec = VARIABLES[_variable];
+  if (spec.tileStyle === "fcmap") {
+    const tile = _tiles[`${_variable}_L${_lead}`];
+    if (tile) {
+      [vmin, vmax] = _fcRange(tile);
+      spec.vmin = vmin; spec.vmax = vmax;
+      const p = tile.period || {};
+      tile.meta = { units: spec.units, label: `${spec.label.replace(/ vs normal$/, "")}, ${p.label || ""}`
+        + `${(p.id || "")[0] === "N" ? ` (next ${p.id.slice(1)} months)` : ""}: forecast `
+        + (tile.rain ? "as % of normal" : `change from normal (${spec.units})`)
+        + ". Grey: no skill shown." };
+    }
+  }
   const cmap = CMAPS[spec.cmap] || CMAP_RDBU_R;
   // Read the units + label from the tile meta rather than the static registry:
   // the SSTA field is a variance-adjusted sigma, not K, and the meta label is
@@ -643,14 +775,18 @@ async function init() {
     sel.appendChild(opt);
   }
 
+  await _loadFcManifest();
+  _syncMenus();
+
   // Preload all SSTA leads for default variable
   await preloadVariable(_variable);
 
   const spec = VARIABLES[_variable];
   renderColorbar(spec.vmin, spec.vmax, spec.units);
 
-  document.getElementById("fm-lead").addEventListener("change", e => {
-    _lead = parseInt(e.target.value, 10);
+  document.getElementById("fm-lead").addEventListener("change", async e => {
+    _lead = _isFc(_variable) ? e.target.value : parseInt(e.target.value, 10);
+    if (_isFc(_variable)) await loadTile(_variable, _lead).catch(err => console.warn(err));
     const s = VARIABLES[_variable];
     renderColorbar(s.vmin, s.vmax, s.units);   // keep the meta caption's month in sync
     _redraw();
@@ -661,7 +797,9 @@ async function init() {
   });
   document.getElementById("fm-variable").addEventListener("change", async e => {
     _variable = e.target.value;
-    await preloadVariable(_variable);
+    _syncMenus();
+    if (_isFc(_variable)) await loadTile(_variable, _lead).catch(err => console.warn(err));
+    else await preloadVariable(_variable);
     const s = VARIABLES[_variable];
     renderColorbar(s.vmin, s.vmax, s.units);
     _redraw();
@@ -1171,6 +1309,11 @@ function _attachCountryClicks() {
     if (!ll) return;
     const [lon, lat] = ll;
 
+    if (_isFc(_variable)) {
+      _flashMapToast("Region by region detail for this forecast: Event replay, with the country and the "
+                     + "developing El Niño selected.");
+      return;
+    }
     if (_pixelMode) {
       showPixelPanel(lon, lat);
       return;

@@ -150,6 +150,23 @@
       text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
     .rp-regions-table td:first-child{text-align:left;font-weight:500}
     .rp-regions-table tr:last-child td{border-bottom:none}
+    /* Regional outlook: observed / past El Nino / the two forecast models, per region */
+    .rp-ol-table th,.rp-ol-table td{text-align:left!important;vertical-align:top}
+    .rp-ol-table td{min-width:7.5rem}
+    .rp-ol-table td.na{color:#8A96A3}
+    .rp-ol-table td.wet{background:#E3F3F0}.rp-ol-table td.dry{background:#F5EBD8}
+    .rp-ol-table td.hot{background:#FBE5E5}.rp-ol-table td.cool{background:#E5EEF8}
+    .rp-ol-tabs{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0}
+    .rp-ol-tabs button{padding:.2rem .6rem;border:1px solid #C9D2D9;border-radius:5px;background:#fff;
+      font-size:.8rem;cursor:pointer}
+    .rp-ol-tabs button.on{background:#0B2138;color:#fff;border-color:#0B2138}
+    .rp-ol-sent{margin:.3rem 0 .5rem 1.1rem;padding:0;font-size:.82rem;line-height:1.45}
+    #rp-outlook-intro{font-size:.79rem;color:var(--text-muted);line-height:1.45;margin:.1rem 0 .4rem}
+    .rp-ol-mapbox{max-width:520px;margin:.3rem 0 .7rem}
+    #rp-ol-canvas{position:absolute;inset:0;width:100%;height:250px}
+    #rp-ol-svg{display:block;width:100%;height:250px;position:relative}
+    .rp-ol-mapbar{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.35rem}
+    .rp-ol-mapnote{font-size:.74rem;color:var(--text-muted);line-height:1.4;margin:.25rem 0 0}
     .rp-rg-na{color:#93A2AC}
     /* The spread sits with its value but must not compete with it: the mean is
        the number being read, the spread is context. */
@@ -650,6 +667,35 @@
           </div>
         </div>
       </details>
+      <details class="rp-regions rp-outlook" id="rp-outlook" open hidden>
+        <summary id="rp-outlook-summary">What the forecast models say, by region</summary>
+        <div class="rp-regions-body">
+          <p class="rp-sub" id="rp-outlook-intro"></p>
+          <ul class="rp-ol-sent" id="rp-outlook-sent"></ul>
+          <div class="rp-ol-tabs" id="rp-outlook-tabs"></div>
+          <div class="rp-ol-mapbox">
+            <div class="rp-ol-mapbar">
+              <div class="rp-zc-ctrl"><label for="rp-ol-sys">Model</label>
+                <select id="rp-ol-sys"><option value="seas5">ECMWF SEAS5</option>
+                  <option value="mf9">Météo-France System 9</option></select></div>
+              <div class="rp-zc-ctrl"><label for="rp-ol-per">Months</label><select id="rp-ol-per"></select></div>
+            </div>
+            <div class="rp-zoomwrap" id="rp-ol-wrap">
+              <canvas id="rp-ol-canvas"></canvas>
+              <svg id="rp-ol-svg" role="img" aria-label="Forecast for the selected country."></svg>
+            </div>
+            <div class="rp-panel-cb" id="rp-ol-cb">
+              <div class="rp-cb-cap" id="rp-ol-cb-cap"></div>
+              <canvas id="rp-ol-cb-bar" height="9"></canvas>
+              <div class="rp-cb-ticks" id="rp-ol-cb-ticks"></div>
+            </div>
+            <p class="rp-sub rp-ol-mapnote" id="rp-ol-mapnote"></p>
+          </div>
+          <div class="rp-regions-tablewrap">
+            <table class="rp-regions-table rp-ol-table" id="rp-outlook-table"></table>
+          </div>
+        </div>
+      </details>
 
       <div class="rp-meta" id="rp-meta"></div>
 
@@ -855,9 +901,9 @@
   <script src="static/lib/d3.min.js?v=20260624g"></script>
   <script src="static/lib/d3-geo-projection.min.js?v=20260624g"></script>
   <script src="static/lib/chart.umd.min.js?v=20260624g"></script>
-  <script src="static/js/data_base.js?v=20261015f"></script>
+  <script src="static/js/data_base.js?v=20261015g"></script>
   <script src="static/js/index_names.js?v=20261015d"></script>
   <script src="static/js/site.js?v=20261015d"></script>
-  <script src="static/js/event_replay.js?v=20261015f"></script>
+  <script src="static/js/event_replay.js?v=20261015g"></script>
 </body>
 </html>

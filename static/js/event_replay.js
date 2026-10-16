@@ -75,7 +75,7 @@ const RP_DATA_BASE = (typeof window !== "undefined" && window.ENSOSCOPE_DATA_BAS
 // and every country border on the tab would vanish the moment DATA_BASE is set.
 // regions joined the bucket on 2026-08-27: 981 files, 94 MB of admin-1 series,
 // which only this tab reads and which no page needs on first paint.
-const RP_HEAVY = /^data\/(replay\/(globalmonths|months|maps|regions)|maps|packs)\/(?!.*\.geojson$)/;
+const RP_HEAVY = /^data\/(replay\/(globalmonths|months|maps|regions|forecast)|maps|packs)\/(?!.*\.geojson$)/;
 
 const RP_DATA_VERSION = (typeof window !== "undefined" && window.ENSOSCOPE_DATA_VERSION) || "";
 
@@ -158,6 +158,14 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
   // Live forecast, only when it overlaps this window (i.e. the event is running).
   // Dashed so it can never be mistaken for something that has happened.
   for (const f of (opts.forecasts || [])) {
+    if (f.band) {
+      // 10 to 90% of the runs as a shaded band: the upper edge fills down to the lower.
+      ds.push({ data: f.hi, borderWidth: 0, pointRadius: 0, tension: 0.25, spanGaps: false,
+                backgroundColor: f.faint, fill: "+1", label: `${f.label} 10-90%`, _isOther: true,
+                _isMember: true });
+      ds.push({ data: f.lo, borderWidth: 0, pointRadius: 0, tension: 0.25, spanGaps: false,
+                fill: false, label: `${f.label} 10-90% low`, _isOther: true, _isMember: true });
+    }
     for (const m of f.members) {
       ds.push({ data: m, borderColor: f.faint, borderWidth: 1,
                 pointRadius: 0, tension: 0.25, spanGaps: true, fill: false,
@@ -359,9 +367,11 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
 // practice means the event still running. On a past event a current forecast
 // would be meaningless, so nothing is drawn rather than something decorative.
 //
-// The impact panels get no forecast: there is no calibrated forecast of country
-// rainfall or heat behind this site, and inventing one from the SST forecast
-// would be a different (and much larger) claim than the SST plume makes.
+// The impact panels get the regional outlook instead (build_region_forecast.py):
+// each index forecast from daily SEAS5 and MF9 fields, corrected against the
+// observations, and drawn only for months where that model's 1993-2025
+// hindcast matched the observations in this country or region
+// (_indexForecasts). It is never derived from the SST plume.
 function _forecastForWindow(sel, nMonths, fc, meta) {
   if (!fc || !fc.vintages || !fc.vintages.length) return null;
 
@@ -435,6 +445,228 @@ function _forecastsForWindow(sel, nMonths) {
   return RP_FC_SOURCES
     .map(m => _forecastForWindow(sel, nMonths, RP[m.key], m))
     .filter(Boolean);
+}
+
+// ── regional outlook: index forecasts per country and region ─────────────────
+// Loaded per country in the background (_fcLoad); render() reads the cache and
+// draws nothing until it is there, so the page never waits on it.
+const RPFC = { index: undefined, country: null, docs: {}, cmp: null, key: "pr_total" };
+const RP_FC_KEYS = ["pr_total", "rx10day", "cdd", "dry_days", "tmax", "utci_strong_days",
+  "utci_vstrong_days", "utci_extreme_days", "night_tropical", "night_equatorial", "night_torrid"];
+
+async function _fcLoad(id) {
+  if (RPFC.index === undefined) {
+    RPFC.index = await _getJSON("data/replay/forecast/index.json").catch(() => null);
+  }
+  RPFC.country = null; RPFC.docs = {}; RPFC.cmp = null;
+  const idx = RPFC.index;
+  if (!idx || !(idx.countries || []).includes(id)) { _renderOutlook(); return; }
+  const docs = {};
+  const have = idx.indices || RP_FC_KEYS;          // UTCI arrives later than rain and temperature
+  await Promise.all(RP_FC_KEYS.filter(k => have.includes(k)).map(k => _getJSON(`data/replay/forecast/${id}/${k}.json`)
+    .then(d => { docs[k] = d; }).catch(() => {})));
+  const cmp = await _getJSON(`data/replay/forecast/${id}/comparison.json`).catch(() => null);
+  if (!RP.country || RP.country.id !== id) return;      // the reader moved on meanwhile
+  RPFC.country = id; RPFC.docs = docs; RPFC.cmp = cmp;
+  render();
+}
+
+/** The two models' forecast of one index, on the chart's own scale: the observed
+ *  neutral-year normal of that month times the model's ratio to its own normal
+ *  (rain), or plus its difference from it (everything else). Median and the 10 to
+ *  90% range of the runs, and only months where that model showed skill here. */
+function _indexForecasts(sel, nMonths, seriesKey) {
+  const key = RP_REGION_VAR[seriesKey];
+  const idx = RPFC.index;
+  if (!key || !idx || !RP.country || RPFC.country !== RP.country.id) return [];
+  const lastObs = RP.nino && RP.nino.times && RP.nino.times[RP.nino.times.length - 1];
+  const ongoing = sel.is_current === true || (sel.end && lastObs && sel.end.slice(0, 7) >= lastObs);
+  if (!ongoing) return [];
+  const doc = RPFC.docs[key];
+  if (!doc) return [];
+  const reg = RPRG.selected;
+  const unit = reg ? doc.units_list.find(u => u.kind !== "country" && u.name === reg.name)
+                   : doc.units_list.find(u => u.kind === "country");
+  const base = reg ? (reg.clim || {})[seriesKey] : (RP.country.neutral || {})[seriesKey];
+  if (!unit || !base) return [];
+  const F = {};
+  doc.fields.forEach((f, i) => { F[f] = i; });
+  const pos = {};
+  _monthsFrom(sel.window_start, nMonths).forEach((m, i) => { pos[m] = i; });
+  const rain = key === "pr_total", signed = key === "tmax";
+  const out = [];
+  for (const meta of RP_FC_SOURCES) {
+    const per = unit.v[meta.key === "forecast" ? "seas5" : "mf9"];
+    if (!per) continue;
+    const mean = new Array(nMonths).fill(null), lo = mean.slice(), hi = mean.slice();
+    let hit = 0;
+    for (const p of idx.periods) {
+      if (p.id[0] !== "L") continue;
+      const i = pos[p.months[0]];
+      const row = per[p.id];
+      if (i === undefined || !row || row[F.skill] !== 1) continue;
+      const b = base[parseInt(p.months[0].slice(5), 10) - 1];
+      if (b === null || b === undefined) continue;
+      const conv = q => {
+        if (q === null || q === undefined) return null;
+        const v = rain ? b * q / 100 : b + q;
+        return signed ? v : Math.max(0, v);
+      };
+      mean[i] = conv(row[F.q50]); lo[i] = conv(row[F.q10]); hi[i] = conv(row[F.q90]);
+      hit++;
+    }
+    if (hit) out.push({ mean, lo, hi, members: [], band: true, vintage: idx.init,
+                        label: meta.label, color: meta.color, faint: meta.faint, dash: meta.dash });
+  }
+  return out;
+}
+
+/** The comparison the country pack prints, from comparison.json (built with the
+ *  pack's own functions, so the page and the pack cannot disagree). Shown with
+ *  the developing event only: it is about the coming months. */
+function _renderOutlook() {
+  const box = document.getElementById("rp-outlook");
+  if (!box) return;
+  const c = RPFC.cmp;
+  const evSel = document.getElementById("rp-event");
+  const sel = RP.events && evSel && RP.events.events.find(e => e.id === evSel.value);
+  if (!c || !sel || !sel.is_current || RPFC.country !== (RP.country && RP.country.id)) {
+    box.hidden = true;
+    return;
+  }
+  const keys = Object.keys(c.tables);
+  if (!keys.includes(RPFC.key)) RPFC.key = keys[0];
+  const t = c.tables[RPFC.key];
+  document.getElementById("rp-outlook-intro").textContent = c.intro;
+  document.getElementById("rp-outlook-sent").innerHTML =
+    c.sentences.map(x => `<li>${_impEsc(x)}</li>`).join("");
+  const tabs = document.getElementById("rp-outlook-tabs");
+  tabs.innerHTML = keys.map(k => `<button type="button" data-k="${k}"`
+    + `${k === RPFC.key ? ' class="on"' : ""}>${_impEsc(c.tables[k].title)}</button>`).join("");
+  tabs.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    RPFC.key = b.dataset.k; _renderOutlook();
+  }));
+  const cls = (v) => {
+    const s = String(v || "");
+    if (/no skill|not compared|no forecast|dry months/.test(s)) return "na";
+    if (/wetter|heavier/.test(s)) return "wet";
+    if (/drier|more dry days|longer dry/.test(s)) return "dry";
+    if (/hotter|more heat-stress|more such/.test(s)) return "hot";
+    if (/cooler|fewer heat-stress/.test(s)) return "cool";
+    return "";
+  };
+  const fc = new Set(t.columns.map((col, j) => /SEAS5|Météo-France/.test(col) ? j : -1));
+  document.getElementById("rp-outlook-table").innerHTML =
+    `<thead><tr>${t.columns.map(h => `<th>${_impEsc(h)}</th>`).join("")}</tr></thead><tbody>`
+    + t.rows.map(r => `<tr>${r.map((v, j) => `<td class="${fc.has(j) ? cls(v) : ""}">`
+      + `${_impEsc(v === null ? "" : String(v))}</td>`).join("")}</tr>`).join("") + `</tbody>`;
+  document.getElementById("rp-outlook-summary").textContent =
+    `What the forecast models say, by region (${c.label}, ${pd_month(c.init)} run)`;
+  box.hidden = false;
+  _renderOutlookMap();
+}
+
+// The forecast map in the outlook block: one country, one index, one model, one
+// period. Its own colour bar, because the zoom pair above is in mm or days against
+// neutral years while the forecast is % of normal (rain) or the change from the
+// model's own normal. Cells where that model showed no skill are drawn grey.
+const RP_OL_CMAP = { pr_total: "BrBG", dry_days: "BrBG_r", cdd: "BrBG_r", rx10day: "BrBG" };
+
+async function _fcCells(countryId, key) {
+  const k = `${countryId}/cells_${key}`;
+  if (RPFC.cells === undefined) RPFC.cells = {};
+  if (RPFC.cells[k] === undefined) {
+    RPFC.cells[k] = await _getJSON(`data/replay/forecast/${countryId}/cells_${key}.json`).catch(() => null);
+  }
+  return RPFC.cells[k];
+}
+
+function _b64(s) {
+  const raw = atob(s), b = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) b[i] = raw.charCodeAt(i);
+  return b;
+}
+
+async function _renderOutlookMap() {
+  const c = RPFC.cmp, idx = RPFC.index;
+  const per = document.getElementById("rp-ol-per"), sysSel = document.getElementById("rp-ol-sys");
+  const wrap = document.getElementById("rp-ol-wrap"), cv = document.getElementById("rp-ol-canvas");
+  const svgEl = document.getElementById("rp-ol-svg");
+  if (!c || !idx || !per || !wrap || !window.d3 || !RPMAP.geo) return;
+  if (!per.options.length) {
+    per.innerHTML = idx.periods.map(p => `<option value="${p.id}">${_impEsc(p.label)}`
+      + `${p.id[0] === "N" ? ` (next ${p.id.slice(1)} months)` : ""}</option>`).join("");
+    per.value = "N6";
+    per.addEventListener("change", _renderOutlookMap);
+    sysSel.addEventListener("change", _renderOutlookMap);
+  }
+  const key = RPFC.key, cid = RPFC.country;
+  const d = await _fcCells(cid, key);
+  if (!d || RPFC.country !== cid || RPFC.key !== key) return;
+  const e = d.per_centre[sysSel.value] && d.per_centre[sysSel.value][per.value];
+  const w = wrap.clientWidth || 300, h = wrap.clientHeight || 250;
+  const svg = d3.select(svgEl).attr("width", w).attr("height", h).attr("viewBox", `0 0 ${w} ${h}`);
+  svg.selectAll("*").remove();
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = w * dpr; cv.height = h * dpr;
+  const ctx = cv.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  let feat = RPMAP.geo.features.find(f => f.properties && f.properties.name === RP.country.regionmask);
+  if (!feat) {
+    const sub = _adminFeatures(cid);
+    if (sub && sub.length) feat = { type: "Feature", properties: {},
+      geometry: { type: "GeometryCollection", geometries: sub.map(f => f.geometry) } };
+  }
+  if (!feat || !e) return;
+  const proj = d3.geoEquirectangular().fitExtent([[5, 5], [w - 5, h - 5]], feat);
+  const dec = (f) => { const b = _b64(f.data); return i => b[i] === 0 ? null : f.lo + (b[i] - 1) / 254 * (f.hi - f.lo); };
+  const anom = dec(e.anom), skill = dec(e.skill);
+  const vals = [];
+  for (let i = 0; i < d.lats.length; i++) {
+    const v = anom(i), s = skill(i);
+    if (v !== null && s !== null && s > 0.5) vals.push(Math.abs(v));
+  }
+  vals.sort((a, b) => a - b);
+  const vmax = Math.max(key === "pr_total" ? 20 : 0.5, _niceMax(vals.length ? vals[Math.floor(0.98 * (vals.length - 1))] : 1));
+  const cmap = RP_OL_CMAP[key] || "RdBu_r";
+  const B = { x0: 0, x1: w, y0: 0, y1: h };
+  ctx.save();
+  ctx.beginPath(); d3.geoPath(proj, ctx)(feat); ctx.clip();
+  for (let i = 0; i < d.lats.length; i++) {
+    const v = anom(i), s = skill(i);
+    if (v === null) continue;
+    if (s === null || s < 0.5) {               // no skill shown: grey, no number implied
+      const p0 = proj([d.lons[i] - 0.5, d.lats[i] + 0.5]), p1 = proj([d.lons[i] + 0.5, d.lats[i] - 0.5]);
+      ctx.fillStyle = "#D5DBE1";
+      ctx.fillRect(p0[0], p0[1], Math.max(1, p1[0] - p0[0]), Math.max(1, p1[1] - p0[1]));
+      continue;
+    }
+    _fillCell(ctx, proj, d.lats[i], d.lons[i], 1, 1, v, cmap, vmax, B);
+  }
+  ctx.restore();
+  const path = d3.geoPath(proj);
+  const sub = _adminFeatures(cid);
+  if (sub && sub.length) svg.append("g").selectAll("path").data(sub).enter().append("path")
+    .attr("d", path).attr("class", "rp-zr").append("title").text(f => (f.properties || {}).name || "");
+  else if (RPRG.bounds[cid] === undefined) {          // outlines arrive after the first paint
+    _prefetchBounds(cid).then(got => { if (got && RPFC.country === cid) _renderOutlookMap(); }).catch(() => {});
+  }
+  svg.append("g").selectAll("path").data(RPMAP.geo.features).enter().append("path")
+    .attr("d", path).attr("class", f => "rp-zc" + (f === feat ? " rp-zc-sel" : ""));
+  const rain = key === "pr_total";
+  document.getElementById("rp-ol-cb-cap").textContent = rain
+    ? "Rain, % of normal minus 100 (0 = normal)" : `${d.label.replace(/ vs normal$/, "")}, change from normal (${d.units})`;
+  _paintColorbar(document.getElementById("rp-ol-cb-bar"), document.getElementById("rp-ol-cb-ticks"), cmap, vmax);
+  document.getElementById("rp-ol-mapnote").textContent =
+    `${sysSel.options[sysSel.selectedIndex].text}, ${per.options[per.selectedIndex].text}: the forecast median `
+    + "against the model's own normal, one degree cells, corrected day by day against the observations. "
+    + "Grey: this model showed no skill there in these months, so no forecast is drawn.";
+}
+
+function pd_month(ym) {
+  const [y, m] = ym.split("-").map(Number);
+  return `${RP_MON[m - 1]} ${y}`;
 }
 
 // ── data assembly ────────────────────────────────────────────────────────────
@@ -539,12 +771,14 @@ function render() {
       others.map(o => ({ label: o.label, start: o.window_start,
                          values: _seriesFor(o, nMonths, ct, vals) })),
       { color: colour, unit, yTitle, xTitle, beginAtZero: zero,
-        neutral: _neutralFor(sel, nMonths, series) });
+        neutral: _neutralFor(sel, nMonths, series),
+        forecasts: _indexForecasts(sel, nMonths, series) });
   }
   _renderThresholdUI();
   _renderLegend(sel, others.length, _forecastsForWindow(sel, nMonths));
   _renderMeta(sel, others.length);
   _renderImpacts(sel, nMonths);
+  _renderOutlook();
 }
 
 // ── x axis: real months, on two lines, never rotated ─────────────────────────
@@ -1935,6 +2169,7 @@ function _updatePack(id) {
 async function _loadCountry(id) {
   _updatePack(id);
   RP.country = await _getJSON(`data/replay/${id}.json`);
+  _fcLoad(id);            // in the background: render() draws without it, then again with it
 }
 
 async function init() {
