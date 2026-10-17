@@ -7,7 +7,7 @@
   <meta name="description" content="ENSO sea-surface-temperature anomaly forecast maps by lead time, from ECMWF SEAS5 and Météo-France.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/forecast_maps.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261017a">
+  <link rel="stylesheet" href="static/css/style.css?v=20261017b">
   <style>
     .fm-controls {
       display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;
@@ -34,9 +34,9 @@
       overflow:hidden;
     }
     #fm-map svg { display:block; }
-    #fm-colorbar-wrap { display:flex; align-items:center; gap:0.6rem;
+    #fm-colorbar-wrap { display:flex; flex-wrap:wrap; align-items:center; gap:0.6rem;
                         padding:0.4rem 0.8rem; font-size:0.8rem; }
-    #fm-colorbar { width:360px; height:14px; border:1px solid #ddd; }
+    #fm-colorbar { width:360px; max-width:100%; min-width:0; flex:0 1 auto; height:14px; border:1px solid #ddd; }
     #fm-meta { font-size:0.78rem; color:var(--text-muted); margin-bottom:0.5rem; }
 
     /* Country detail card */
@@ -60,13 +60,13 @@
     }
     #fm-country-chart-wrap { position:relative; height:360px; }
   </style>
-  <link rel="icon" type="image/png" href="favicon.png?v=20261017a">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261017b">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="forecast_maps">
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017a" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017b" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -215,11 +215,11 @@
     </div>
   </main>
 
-  <script src="static/lib/d3.min.js?v=20261017a"></script>
+  <script src="static/lib/d3.min.js?v=20261017b"></script>
   <!-- d3-geo-projection provides geoRobinson; vanilla d3 already has equalEarth + naturalEarth1 -->
-  <script src="static/lib/d3-geo-projection.min.js?v=20261017a"></script>
-  <script src="static/lib/chart.umd.min.js?v=20261017a"></script>
-  <script src="static/js/forecast_maps.js?v=20261017a"></script>
-  <script src="static/js/site.js?v=20261017a"></script>
+  <script src="static/lib/d3-geo-projection.min.js?v=20261017b"></script>
+  <script src="static/lib/chart.umd.min.js?v=20261017b"></script>
+  <script src="static/js/forecast_maps.js?v=20261017b"></script>
+  <script src="static/js/site.js?v=20261017b"></script>
 </body>
 </html>

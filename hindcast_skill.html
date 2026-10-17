@@ -7,7 +7,7 @@
   <meta name="description" content="ENSO forecast skill verified against observations: temporal correlation and intensity discrimination by start month and lead time.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/hindcast_skill.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261017a">
+  <link rel="stylesheet" href="static/css/style.css?v=20261017b">
   <style>
     .skill-toolbar { display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; margin-bottom:1rem; }
     .skill-toolbar button {
@@ -38,14 +38,14 @@
     .disc-na { color:var(--text-muted); font-style:italic; }
     @media (max-width:768px){ .disc-lab{flex-basis:150px} .disc-n{display:none} }
   </style>
-  <link rel="icon" type="image/png" href="favicon.png?v=20261017a">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261017b">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="hindcast_skill">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017a" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017b" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -199,7 +199,7 @@
     </div>
   </main>
 
-  <script src="static/lib/chart.umd.min.js?v=20261017a"></script>
+  <script src="static/lib/chart.umd.min.js?v=20261017b"></script>
   <script>
     const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     let SKILL = null, CURRENT = null;
@@ -324,8 +324,8 @@
     }
 
     Promise.all([
-      fetch("data/hindcast_skill.json?v=20261017a").then(r=>r.json()),
-      fetch("data/skill_timeseries.json?v=20261017a").then(r=>r.json()).catch(()=>null),
+      fetch("data/hindcast_skill.json?v=20261017b").then(r=>r.json()),
+      fetch("data/skill_timeseries.json?v=20261017b").then(r=>r.json()).catch(()=>null),
     ]).then(([d, ts])=>{
       SKILL = d; TS = ts;
       document.getElementById("hc-period").textContent = (d.hindcast_period||"");
@@ -341,6 +341,6 @@
         `<p style="color:#c62828">Error loading skill data: ${e.message}</p>`;
     });
   </script>
-  <script src="static/js/site.js?v=20261017a"></script>
+  <script src="static/js/site.js?v=20261017b"></script>
 </body>
 </html>

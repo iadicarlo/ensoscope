@@ -16,6 +16,24 @@
 window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-17",
+    tag: "New data",
+    title: "Rain and heat observations through September 2026",
+    items: [
+      "Observed rainfall (CHIRPS) and temperature and heat stress (ERA5 reanalysis) now run through September 2026, one month further. The event replay, the regional series and the country packs and sheets include September.",
+      "Earlier months are unchanged: the updated CHIRPS file matches the previous one day for day through August.",
+    ],
+  },
+  {
+    date: "2026-10-17",
+    tag: "New feature",
+    title: "ENSO meter under the header of every page",
+    items: [
+      "A thin strip under the header now says where ENSO stands: the latest month's conditions on a scale from extreme La Niña to extreme El Niño, since when they have held and, during an El Niño, the latest eastern Pacific rain against the 5 mm a day an extreme El Niño needs.",
+      "It also gives the most likely class from the latest ENSO forecast, with a link to the Forecast page, and a link to how we measure this on the Methodology page.",
+    ],
+  },
+  {
+    date: "2026-10-17",
     tag: "Fix",
     title: "Heat stress on the first day of each month, over Asia and the Pacific",
     items: [

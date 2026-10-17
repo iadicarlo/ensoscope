@@ -7,15 +7,15 @@
   <meta name="description" content="Methodology and open data sources behind the ENSOscope ENSO forecasts, skill verification and teleconnection composites, with DOIs.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/methodology.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261017a">
-  <link rel="icon" type="image/png" href="favicon.png?v=20261017a">
+  <link rel="stylesheet" href="static/css/style.css?v=20261017b">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261017b">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="methodology">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017a" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017b" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -54,7 +54,7 @@
       composites are produced.
     </p>
 
-    <div class="card">
+    <div class="card" id="enso-classes">
       <h2>ENSO index &amp; 7-class classification</h2>
       <div class="prose">
         <p>
@@ -121,6 +121,32 @@
           The precipitation requirement is deliberate: a truly <em>extreme</em> El Niño is
           distinguished not by SST alone but by the eastward shift of deep convection into the
           eastern Pacific, captured by the NINO3 rainfall response.
+        </p>
+        <p>
+          <strong>The strip under the page header.</strong> "Now" is the latest month we have
+          sea surface temperature for, usually last month. The strip gives that month's
+          <em>conditions</em>: how warm or cool the central Pacific was that month on its own,
+          sorted into the seven classes above with the same thresholds as the forecast. The
+          number behind it, the relative Niño 3.4 index, shows when you hover over the scale.
+          The second line says since which month the conditions have been on the same side
+          (El Niño, La Niña or neutral), each month classed on its own.
+        </p>
+        <p>
+          An <em>event</em> is more than a few warm or cool months: the conditions have to
+          last five overlapping three-month seasons in a row before a period counts as an El
+          Niño or La Niña event. So a new El Niño can show strong El Niño conditions for months
+          before it counts as an event. Whether it counts yet shows when you hover over the
+          second line, and screen readers read it out.
+        </p>
+        <p>
+          <em>Extreme needs rain.</em> In an extreme El Niño the heavy rain of the western
+          Pacific moves east, so as well as very warm water in the NINO3 region we need that
+          region's rain to be at least 5 mm a day above normal (GPCP rain data). Rain data
+          arrive later than sea temperature, so during an El Niño the second line gives the
+          latest month of eastern Pacific rain next to the 5 mm a day an extreme class needs.
+          Until a month's rain is in, that month cannot be classed extreme. The forecast line
+          gives the class the latest ENSO forecast finds most likely, chosen the same way as on
+          the Forecast page.
         </p>
         <p>
           <strong>Where the observed record stops.</strong> The relative index needs nothing but
@@ -575,6 +601,6 @@
     </div>
   </main>
 
-  <script src="static/js/site.js?v=20261017a"></script>
+  <script src="static/js/site.js?v=20261017b"></script>
 </body>
 </html>

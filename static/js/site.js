@@ -3,6 +3,7 @@
    - "About" nav link
    - mobile hamburger menu
    - site footer with author credit, contact, and data-source pointer
+   - the ENSO meter strip under the header (data/enso_now.json)
    Self-contained and safe to load alongside app.js. */
 (function () {
   function wireNavDropdowns() {
@@ -162,7 +163,174 @@
       .catch(function () {});
   }
 
-  function init() { injectChrome(); wireNavDropdowns(); renderOutbreakSources(); }
+  // ENSO meter: the strip under the header on every page. Everything it says is
+  // written by build_enso_now.py into data/enso_now.json (checked against the
+  // classifier, the catalogue and the Forecast page by check_consistency.py);
+  // this only lays it out. If the file cannot be read the strip is simply absent.
+  var EM_COLOR = {
+    extreme_la_nina: "--ln-extreme", strong_la_nina: "--ln-strong", moderate_la_nina: "--ln-moderate",
+    neutral: "--neutral",
+    moderate_el_nino: "--en-moderate", strong_el_nino: "--en-strong", extreme_el_nino: "--en-extreme"
+  };
+  var SVG_NS = "http://www.w3.org/2000/svg";
+
+  function emEl(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  // Two wordings of one phrase: the long one on wide screens, the short one on phones.
+  function emDual(longText, shortText) {
+    var f = document.createDocumentFragment();
+    f.appendChild(emEl("span", "em-long", longText));
+    f.appendChild(emEl("span", "em-short", shortText));
+    return f;
+  }
+  function emSigned(v) { return (v >= 0 ? "+" : "-") + Math.abs(v).toFixed(2); }
+
+  function emTrace(trace, labelOf) {
+    var W = 76, H = 18, P = 3, n = trace.length;
+    var vmax = 1;
+    trace.forEach(function (t) { vmax = Math.max(vmax, Math.abs(t.value)); });
+    var x = function (k) { return P + k * (W - 2 * P) / Math.max(1, n - 1); };
+    var y = function (v) { return H / 2 - v / vmax * (H / 2 - P); };   // zero in the middle
+    var svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("class", "em-trace");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "Relative Niño 3.4 index, " + trace[0].label + " to " +
+      trace[n - 1].label + ", from " + emSigned(trace[0].value) + " to " + emSigned(trace[n - 1].value) + " σ");
+    var zero = document.createElementNS(SVG_NS, "line");
+    zero.setAttribute("class", "em-zero");
+    zero.setAttribute("x1", 0); zero.setAttribute("x2", W);
+    zero.setAttribute("y1", y(0)); zero.setAttribute("y2", y(0));
+    svg.appendChild(zero);
+    var line = document.createElementNS(SVG_NS, "polyline");
+    line.setAttribute("class", "em-line");
+    line.setAttribute("points", trace.map(function (t, k) { return x(k).toFixed(1) + "," + y(t.value).toFixed(1); }).join(" "));
+    svg.appendChild(line);
+    trace.forEach(function (t, k) {
+      var c = document.createElementNS(SVG_NS, "circle");
+      c.setAttribute("cx", x(k).toFixed(1)); c.setAttribute("cy", y(t.value).toFixed(1));
+      c.setAttribute("r", k === n - 1 ? 2.6 : 1.8);
+      if (k === n - 1) c.setAttribute("class", "em-last");
+      c.style.fill = "var(" + EM_COLOR[t["class"]] + ")";
+      var tt = document.createElementNS(SVG_NS, "title");
+      tt.textContent = t.label + ": " + emSigned(t.value) + " σ, " + labelOf[t["class"]] + " conditions";
+      c.appendChild(tt);
+      svg.appendChild(c);
+    });
+    return svg;
+  }
+
+  function renderEnsoMeter() {
+    var header = document.querySelector("body > header");
+    if (!header || document.querySelector(".enso-meter")) return;
+    var v = window.ENSOSCOPE_DATA_VERSION ? "?v=" + window.ENSOSCOPE_DATA_VERSION : "";
+    fetch("data/enso_now.json" + v, { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !d.observed || document.querySelector(".enso-meter")) return;
+        var o = d.observed, ev = d.event || {}, fc = d.forecast;
+        var labelOf = {};
+        (d.classes || []).forEach(function (c) { labelOf[c.key] = c.label; });
+
+        var sec = emEl("section", "enso-meter");
+        sec.setAttribute("aria-label", d.sentence);
+        var inner = emEl("div", "em-inner");
+        sec.appendChild(inner);
+
+        // 1. the seven classes, La Niña to El Niño, the observed one marked
+        var g = emEl("div", "em-gauge");
+        g.setAttribute("role", "img");
+        g.setAttribute("aria-label", "Seven classes from extreme La Niña to extreme El Niño; " +
+          o.month_label + " is in " + o.class_label + ", " + o.value_title);
+        g.title = o.value_title;
+        g.appendChild(emEl("span", "em-end", "La Niña"));
+        var bar = emEl("span", "em-bar");
+        var on = -1;
+        (d.classes || []).forEach(function (c, k) {
+          var s = emEl("span", "em-seg" + (c.key === o["class"] ? " is-on" : ""));
+          s.style.background = "var(" + EM_COLOR[c.key] + ")";
+          s.title = c.key === o["class"] ? c.label + ", " + o.value_title : c.label;
+          if (c.key === o["class"]) on = k;
+          bar.appendChild(s);
+        });
+        if (on >= 0) {
+          var mk = emEl("span", "em-mark");
+          mk.style.left = ((on + 0.5) / d.classes.length * 100).toFixed(2) + "%";
+          bar.appendChild(mk);
+        }
+        g.appendChild(bar);
+        g.appendChild(emEl("span", "em-end", "El Niño"));
+        inner.appendChild(g);
+
+        // 2. the latest month and its class (the index value is on the scale's tooltip)
+        var now = emEl("p", "em-now");
+        var b = emEl("strong");
+        b.appendChild(emDual(o.line, o.line_short));
+        now.appendChild(b);
+        inner.appendChild(now);
+
+        // 3. since when, and for El Niño the latest eastern Pacific rain; whether it
+        //    counts as an event yet (the catalogue's view) is in the tooltip
+        var st = emEl("p", "em-status");
+        st.appendChild(emDual(o.status_line, o.status_short));
+        if (ev.text) st.title = ev.text;
+        inner.appendChild(st);
+
+        var def = emEl("a", "em-def", d.definition_text || "How we measure this");
+        def.href = d.definition_href || "methodology.html#enso-classes";
+        inner.appendChild(def);
+
+        // 4. the last months of the index, each dot coloured by its month's class
+        if (o.trace && o.trace.length > 1) {
+          inner.appendChild(emTrace(o.trace.map(function (t) {
+            return { value: t.value, "class": t["class"], label: _emMonth(t.month) };
+          }), labelOf));
+        }
+
+        // 5. the ENSO forecast, one line, secondary
+        if (fc) {
+          var a = emEl("a", "em-fc");
+          a.href = fc.href || "index.html";
+          var key = emEl("span", "em-key");
+          key.style.background = "var(" + EM_COLOR[fc["class"]] + ")";
+          a.appendChild(key);
+          var run = emEl("span", "em-fc-run");
+          run.appendChild(emDual(fc.run_label + ":", fc.run_short + ":"));
+          a.appendChild(run);
+          a.appendChild(document.createTextNode(" "));
+          a.appendChild(emDual(fc.sentence, fc.short));
+          inner.appendChild(a);
+        }
+
+        header.parentNode.insertBefore(sec, header.nextSibling);
+        emFit(sec);
+        var t;
+        window.addEventListener("resize", function () { clearTimeout(t); t = setTimeout(function () { emFit(sec); }, 120); });
+      })
+      .catch(function () {});
+  }
+  // If a line would be cut short, switch the first two lines to their short wording.
+  // Phones have it already from the stylesheet, so this only acts above 768 px.
+  // The forecast line is not part of it: it wraps on desktop, and on tablets and
+  // phones its short wording fits.
+  function emFit(sec) {
+    sec.classList.remove("em-fit1");
+    if (window.matchMedia("(max-width: 768px)").matches) return;
+    var lines = sec.querySelectorAll(".em-now, .em-status");
+    var cut = function () {
+      for (var i = 0; i < lines.length; i++) if (lines[i].scrollWidth > lines[i].clientWidth + 1) return true;
+      return false;
+    };
+    if (cut()) sec.classList.add("em-fit1");
+  }
+  var _EM_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  function _emMonth(ym) { return _EM_MONTHS[parseInt(ym.slice(5, 7), 10) - 1] + " " + ym.slice(0, 4); }
+
+  function init() { injectChrome(); wireNavDropdowns(); renderOutbreakSources(); renderEnsoMeter(); }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
   } else {
