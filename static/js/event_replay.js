@@ -1293,11 +1293,37 @@ function _impDrawBand(sel, nMonths, px, trackW) {
 }
 
 // Like _impMonthIndex but pinned to the window instead of rejecting: used for
-// an event's end, which may legitimately fall outside the replayed window.
+// an event's end, which may legitimately fall outside the replayed window, and
+// for the start of one that began before it.
 function _impClampIndex(ym, start, n) {
   const [y0, m0] = start.split("-").map(Number);
   const [y, m] = ym.split("-").map(Number);
   return Math.max(0, Math.min(n - 1, (y - y0) * 12 + (m - m0)));
+}
+
+// Which records belong to a window. One rule for the site, the country packs
+// and the paper (scripts/analysis/finance/impact_windows.py, Isma, 17 Oct
+// 2026): a record counts when its span, start to end or its start alone,
+// shares a month with the window. Counting by start only dropped Zimbabwe's
+// drought of Oct 1982 to Jan 1984 from every window after the one it began in.
+// Months are "YYYY-MM", which order correctly as strings. These three stay
+// pure: check_consistency.py runs them in node against the Python helper.
+function _impWindowLast(start, n) {
+  const [y, m] = String(start).split("-").map(Number);
+  const k = y * 12 + (m - 1) + (n - 1);
+  return `${Math.floor(k / 12)}-${String(k % 12 + 1).padStart(2, "0")}`;
+}
+
+function _impOverlaps(e, first, last) {
+  if (!e || !e.start) return false;
+  const s = String(e.start).slice(0, 7);
+  const end = String(e.end || e.start).slice(0, 7);
+  return s <= last && end >= first;
+}
+
+function _impInWindow(events, theme, start, n) {
+  const last = _impWindowLast(start, n);
+  return (events || []).filter(e => e.theme === theme && _impOverlaps(e, start, last));
 }
 
 // EM-DAT hazard types arrive capitalised ("Flood") but disease names do not
@@ -1319,8 +1345,7 @@ function _renderImpacts(sel, nMonths) {
   if (!d || !sel) { box.hidden = true; return; }
   box.hidden = false;
 
-  const inWindow = d.events.filter(e => e.theme === RPIMP.theme &&
-                                        _impMonthIndex(e.start, sel.window_start, nMonths) >= 0);
+  const inWindow = _impInWindow(d.events, RPIMP.theme, sel.window_start, nMonths);
   const track = document.getElementById("rp-imp-track");
   const list = document.getElementById("rp-imp-list");
   track.innerHTML = ""; list.innerHTML = "";
@@ -1357,9 +1382,9 @@ function _renderImpacts(sel, nMonths) {
 
   const label = {water: "floods and droughts", heat: "extreme heat", disease: "disease outbreaks"};
   document.getElementById("rp-imp-sub").textContent =
-    `Events recorded in ${RP.country.label || "this country"} during this window, `
-    + `positioned by the month they began. Markers show that something was recorded and when, `
-    + `not how large it was.`;
+    `Events recorded in ${RP.country.label || "this country"} that ran during this window; `
+    + `one that began earlier starts at the left edge. Markers show that something was `
+    + `recorded and when, not how large it was.`;
 
   if (!inWindow.length) {
     // "No extreme heat recorded" reads as "no extreme heat happened", which is
@@ -1410,7 +1435,10 @@ function _renderImpacts(sel, nMonths) {
   // this strip exists to show.
   const DOT = 12;                          // must match .rp-imp-ev::before in the CSS
   const geo = inWindow.map(e => {
-    const i0 = _impMonthIndex(e.start, sel.window_start, nMonths);
+    // A record that began before the window is drawn from its first month;
+    // the tooltip and the list still give the real start.
+    const before = e.start.slice(0, 7) < sel.window_start;
+    const i0 = _impClampIndex(e.start, sel.window_start, nMonths);
     const iEnd = e.end ? _impClampIndex(e.end, sel.window_start, nMonths) : null;
     const i1 = (iEnd != null && iEnd > i0) ? iEnd : i0;
     // An event running past the window edge is drawn to the edge and says so,
@@ -1423,7 +1451,7 @@ function _renderImpacts(sel, nMonths) {
     // The dot sits ON the onset month. The tail runs to the end month, and is
     // zero-length for a single-month event, which then reads as just a dot.
     const tail = Math.max(0, Math.min(xb, trackW) - xa);
-    return {e, x: Math.max(DOT / 2, Math.min(xa, trackW - DOT / 2)), tail, overruns,
+    return {e, x: Math.max(DOT / 2, Math.min(xa, trackW - DOT / 2)), tail, overruns, before,
             left: xa - DOT / 2, width: Math.max(tail + DOT, DOT)};
   });
 
@@ -1484,8 +1512,10 @@ function _renderImpacts(sel, nMonths) {
       ? _impWhere(e.regions, 3)
       : {short: e.location_text ? _impClip(e.location_text, 58) : "location not recorded",
          full: e.location_text || "location not recorded"};
-    bar.title = `${_impTitle(_impLabel(e))} - ${_impWhen(e)}\n${where.full}\n${_impBy(e)}`
-              + (g.overruns ? "\ncontinues past the end of this window" : "");
+    const span = (g.before ? "\nbegan before this window" : "")
+               + (g.overruns ? "\ncontinues past the end of this window" : "")
+               + (e.end_month_estimated ? "\nend month estimated" : "");
+    bar.title = `${_impTitle(_impLabel(e))} - ${_impWhen(e)}\n${where.full}\n${_impBy(e)}` + span;
     bar.dataset.id = e.id;
     bar.addEventListener("click", () => _selectImpact(e, sel, nMonths));
     track.appendChild(bar);
@@ -1501,7 +1531,7 @@ function _renderImpacts(sel, nMonths) {
           ? `<a class="rp-imp-src" href="${_impEsc(e.source_url)}" target="_blank" rel="noopener"`
             + ` title="${_impEsc(e.source)}">source</a>`
           : "");
-    li.title = `${where.full}\n${_impBy(e)}`;
+    li.title = `${_impWhen(e)}\n${where.full}\n${_impBy(e)}` + span;
     const src = li.querySelector(".rp-imp-src");
     if (src) src.addEventListener("click", ev => ev.stopPropagation());
     li.addEventListener("click", () => _selectImpact(e, sel, nMonths));
@@ -1623,9 +1653,11 @@ function _selectImpact(e, sel, nMonths) {
   // Move the month slider to the event, so the maps above show the climate of
   // that month. This is the whole interaction: click what happened, see what
   // the climate was doing.
-  const i = _impMonthIndex(e.start, sel.window_start, nMonths);
+  // A record that began before the window moves it to the first month, where
+  // it is drawn.
+  const i = _impClampIndex(e.start, sel.window_start, nMonths);
   const slider = document.getElementById("rp-zoom-month");
-  if (RPIMP.sel && slider && i >= 0) {
+  if (RPIMP.sel && slider) {
     slider.value = String(i);
     slider.dispatchEvent(new Event("input", {bubbles: true}));
   }

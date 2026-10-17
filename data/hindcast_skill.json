@@ -398,12 +398,12 @@
      },
      "extreme_detection": {
       "observed_strong": {
-       "mean_pct": 8.6,
+       "mean_pct": 6.1,
        "n_events": 29,
        "n_fc": 171
       },
       "observed_extreme": {
-       "mean_pct": 91.2,
+       "mean_pct": 97.0,
        "n_events": 6,
        "n_fc": 36
       }
@@ -786,12 +786,12 @@
      },
      "extreme_detection": {
       "observed_strong": {
-       "mean_pct": 5.7,
+       "mean_pct": 6.0,
        "n_events": 33,
        "n_fc": 181
       },
       "observed_extreme": {
-       "mean_pct": 49.3,
+       "mean_pct": 77.9,
        "n_events": 6,
        "n_fc": 36
       }

@@ -7,15 +7,15 @@
   <meta name="description" content="Methodology and open data sources behind the ENSOscope ENSO forecasts, skill verification and teleconnection composites, with DOIs.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/methodology.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261017b">
-  <link rel="icon" type="image/png" href="favicon.png?v=20261017b">
+  <link rel="stylesheet" href="static/css/style.css?v=20261017c">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261017c">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="methodology">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017b" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017c" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -104,7 +104,9 @@
         <ul>
           <li><strong>Extreme</strong> - NINO3 (El Niño) or NINO4 (La Niña) at or
               beyond <strong>1.75</strong>, and for El Niño also a
-              <strong>NINO3 precipitation anomaly ≥ 5 mm/day</strong></li>
+              <strong>NINO3 precipitation anomaly ≥ 5 mm/day</strong> of observed (GPCP)
+              rainfall; a forecast run's rainfall is first put on this observed scale, see
+              <em>Bias &amp; amplitude correction</em> below</li>
           <li><strong>Strong</strong> - otherwise, at or beyond <strong>1.25</strong>, with no
               upper bound</li>
           <li><strong>Moderate</strong> - an event that clears detection but not the strong tier</li>
@@ -182,9 +184,21 @@
           probability.
         </p>
         <p>
-          On the 1993-2016 hindcast this reproduces observed extreme-event frequencies
-          (extreme El Niño 1.7% modelled vs 2.1% observed; extreme La Niña 10.5% vs 7.6%), which a
-          calibration layer would otherwise obscure.
+          The SST thresholds (0.5, 1.25, 1.75) are in standard deviations of the observations, so
+          <em>z</em> can be compared with them directly. The extreme El Niño rainfall threshold is in
+          mm/day of observed rainfall, so each run's NINO3 rainfall <em>z</em> is first put back on the
+          observed scale of the month it forecasts,
+          <em>rain = μ<sub>obs</sub>(m) + z × σ<sub>obs</sub>(m)</em>, with the mean and standard
+          deviation of observed GPCP rainfall for that calendar month over 1980-2014, the baseline
+          of the observed SST indices. Only then is the ≥ 5 mm/day test applied. The scale is fixed
+          in advance and stored with the code, and the hindcast evaluation uses the same scale,
+          as it uses the same observed standard deviations for the SST indices.
+        </p>
+        <p>
+          On the 1993-2016 hindcast the extreme classes come out close to their observed
+          frequencies: extreme El Niño in 2.8% of SEAS5 and 2.3% of Météo-France run-months against
+          2.1% of observed months; extreme La Niña in 6.9% and 6.4% against 8.3%. A calibration
+          layer would obscure that.
         </p>
       </div>
     </div>
@@ -601,6 +615,6 @@
     </div>
   </main>
 
-  <script src="static/js/site.js?v=20261017b"></script>
+  <script src="static/js/site.js?v=20261017c"></script>
 </body>
 </html>

@@ -16,6 +16,40 @@
 window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-17",
+    tag: "Fix",
+    title: "Extreme El Niño: the rain test now uses observed millimetres",
+    items: [
+      "An extreme El Niño also needs heavy rain over the eastern Pacific, a Niño 3 rainfall anomaly of at least 5 mm a day. In the forecasts and in the past forecasts on the Skill page, that test had been applied to each run's rainfall in the model's own units instead of millimetres. Each run's rainfall is now first put on the observed scale of the month it forecasts, the way the sea temperature thresholds already worked.",
+      "The October forecast now finds an extreme El Niño most likely through March 2027 (it said January 2027), on the Forecast page, the ENSO meter and the Event replay. The chance of a strong or extreme El Niño does not change: 100% in every month from October 2026 to March 2027, for both models.",
+      "Country packs, forecast table: the most likely class is now extreme El Niño in every month for SEAS5 (it was strong from December 2026), and for Météo-France through February 2027, then strong El Niño in March 2027.",
+      "Skill page: in the past months that were extreme, SEAS5 gave extreme 97% on average (it showed 91%) and Météo-France 78% (49%). All six of those months belong to one event, 1997 to 1998. In months that were only strong, the chance SEAS5 gave to extreme falls from 9% to 6%, and Météo-France's stays at 6%. The correlation maps do not change.",
+    ],
+  },
+  {
+    date: "2026-10-17",
+    tag: "Fix",
+    title: "Outbreak record and country packs: health records and literature rechecked",
+    items: [
+      "Cholera (Perez-Saez et al. 2022): months that two or more sources recorded had been left out, which split some outbreaks in two. They are back. A cholera run that began more than a month before the one record it overlaps, and lasted at most two years, is now shown once from its own start, with that record listed as also reported.",
+      "WHO outbreak news: reports of meningococcal epidemics that the compilation filed as viral meningitis (1996 to 2002) were read one by one, and 27 now count as meningitis, so the 1996 to 1997 epidemic of the meningitis belt appears for Burkina Faso, Chad, Niger and Nigeria. An outbreak WHO reported on both sides of New Year is now shown once, and each outbreak is dated from the reports about that country only.",
+      "Brazil: chikungunya and Zika keep one marker per state, but are now counted once per national wave (chikungunya 10 waves, not 65 markers; Zika 2, not 12).",
+      "Across the 89 countries the timeline holds 2,043 disease markers (it held 2,045). For example DR Congo cholera 36 (was 37), and new markers for malaria in DR Congo (2024), meningitis in Zimbabwe (1997) and leptospirosis in Kenya (2004).",
+      "Event replay: the list under the charts now keeps every record that ran during the window, also those that began before it, which start at the left edge. Zimbabwe's droughts of 1982 to 1984 and 1991 to 1995 now also appear in the later windows they ran into.",
+      "Country packs: every literature line was checked again against the paper itself, and a line now appears only for countries inside the region the paper studied. Elsewhere the pack says that no peer-reviewed evidence was checked for that region. Each pack now lists only the papers it cites.",
+    ],
+  },
+  {
+    date: "2026-10-17",
+    tag: "New data",
+    title: "WHO malaria estimates in the country packs; WHO outbreak news through October 2026",
+    items: [
+      "Country packs: where WHO estimates that malaria is transmitted (59 of the 88 packs), the Diseases page and a new Malaria (WHO) sheet show WHO's yearly malaria incidence per 1,000 people at risk, with El Niño and La Niña months shaded. It is shown as a yearly estimate, never as outbreaks, and is not tested against ENSO.",
+      "WHO Disease Outbreak News now comes from the compilation's release of 10 October 2026 (it was 14 August): five more reports, and no new outbreak of a disease we track. DR Congo's Ebola outbreak of 2026 now runs from May to October.",
+      "From May 2026, a newly reported outbreak is shown only once a second, independent report (a ministry of health, OCHA or ReliefWeb, or WHO's Africa bulletin) confirms it. Five yellow fever outbreaks of June 2026 that rest on suspected cases only (Angola, Côte d'Ivoire, Gabon, Ghana and Nigeria) are held back until then; Angola, Ghana and Nigeria lose that marker.",
+    ],
+  },
+  {
+    date: "2026-10-17",
     tag: "New data",
     title: "Rain and heat observations through September 2026",
     items: [

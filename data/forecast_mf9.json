@@ -22,8 +22,8 @@
       "moderate_la_nina": 0.0,
       "neutral": 0.0,
       "moderate_el_nino": 0.0,
-      "strong_el_nino": 0.0,
-      "extreme_el_nino": 1.0
+      "strong_el_nino": 0.0784,
+      "extreme_el_nino": 0.9216
     },
     {
       "lead": 2,
@@ -44,8 +44,8 @@
       "moderate_la_nina": 0.0,
       "neutral": 0.0,
       "moderate_el_nino": 0.0,
-      "strong_el_nino": 0.0392,
-      "extreme_el_nino": 0.9608
+      "strong_el_nino": 0.0,
+      "extreme_el_nino": 1.0
     },
     {
       "lead": 4,
@@ -55,8 +55,8 @@
       "moderate_la_nina": 0.0,
       "neutral": 0.0,
       "moderate_el_nino": 0.0,
-      "strong_el_nino": 0.3529,
-      "extreme_el_nino": 0.6471
+      "strong_el_nino": 0.0,
+      "extreme_el_nino": 1.0
     },
     {
       "lead": 5,
@@ -66,8 +66,8 @@
       "moderate_la_nina": 0.0,
       "neutral": 0.0,
       "moderate_el_nino": 0.0,
-      "strong_el_nino": 1.0,
-      "extreme_el_nino": 0.0
+      "strong_el_nino": 0.0784,
+      "extreme_el_nino": 0.9216
     },
     {
       "lead": 6,
@@ -77,8 +77,8 @@
       "moderate_la_nina": 0.0,
       "neutral": 0.0,
       "moderate_el_nino": 0.0,
-      "strong_el_nino": 1.0,
-      "extreme_el_nino": 0.0
+      "strong_el_nino": 0.6863,
+      "extreme_el_nino": 0.3137
     }
   ],
   "build_month_utc": "2026-10"

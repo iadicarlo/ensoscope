@@ -999,8 +999,8 @@ const _MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","No
 // Both forecast models, as on the Forecast page. ?v= is bumped with each build;
 // no-store because the files are small and change monthly.
 const _FC_FILES = [
-  { key: "seas5", name: "SEAS5", file: "data/forecast.json?v=20261017b" },
-  { key: "mf9", name: "Météo-France", file: "data/forecast_mf9.json?v=20261017b" },
+  { key: "seas5", name: "SEAS5", file: "data/forecast.json?v=20261017c" },
+  { key: "mf9", name: "Météo-France", file: "data/forecast_mf9.json?v=20261017c" },
 ];
 const _PANEL_VAR = {
   wet: { variable: "rx10day_anomaly", units: "mm", up: "heavier", down: "lighter" },
