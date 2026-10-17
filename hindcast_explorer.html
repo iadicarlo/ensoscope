@@ -7,16 +7,16 @@
   <meta name="description" content="Explore the ENSO hindcast archive (1993-2026): past forecasts and observed phases by month and year.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/hindcast_explorer.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20260624g">
-  <script src="static/lib/chart.umd.min.js?v=20260624g"></script>
-  <link rel="icon" type="image/png" href="favicon.png?v=20260624g">
+  <link rel="stylesheet" href="static/css/style.css?v=20261017a">
+  <script src="static/lib/chart.umd.min.js?v=20261017a"></script>
+  <link rel="icon" type="image/png" href="favicon.png?v=20261017a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="hindcast_explorer">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20260624g" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -51,8 +51,8 @@
   <main>
     <h1 class="page-title">Hindcasts</h1>
     <p class="page-subtitle">
-      Browse individual ensemble member Niño index forecasts for any available year/month in the hindcast archive.
-      Each spaghetti line is one member; the thick line is the ensemble median; the dotted black line is the observed value.
+      Browse every run of the Niño index past forecasts for any available year/month in the hindcast archive.
+      Each spaghetti line is one run; the thick line is the median of the runs; the dotted black line is the observed value.
       Observed overlays use the relative observational indices, each box minus the concurrent 20°S to 20°N tropical mean (SST standardized to a fixed 1980-2014 baseline; Niño-3 precipitation shown as anomaly in mm/day).
     </p>
 
@@ -105,11 +105,11 @@
     </div>
 
     <!-- Multi-centre member plumes -->
-    <h2 style="margin-top:2rem;margin-bottom:0.3rem">Multi-centre member plumes</h2>
+    <h2 style="margin-top:2rem;margin-bottom:0.3rem">Runs from each model</h2>
     <p class="page-subtitle" style="margin-top:0">
-      Individual ensemble member trajectories for the selected (year, start month),
-      per centre. Each thin line is one member; thick line is the centre's ensemble
-      median. Select which centres to overlay via the checkboxes above.
+      Every run for the selected (year, start month), per model. Each thin line is one
+      run; the thick line is the median of that model's runs. Select which models to
+      overlay via the checkboxes above.
     </p>
 
     <div class="card" style="padding:1rem 1.5rem">
@@ -128,7 +128,7 @@
     </div>
 
     <div class="card">
-      <h2 id="hxp-chart-title">Multi-centre member plumes</h2>
+      <h2 id="hxp-chart-title">Runs from each model</h2>
       <div style="position:relative;height:460px">
         <canvas id="hxp-chart"></canvas>
       </div>
@@ -136,9 +136,9 @@
     </div>
   </main>
 
-  <script src="static/js/data_base.js?v=20261016a"></script>
+  <script src="static/js/data_base.js?v=20261017a"></script>
 
-  <script src="static/js/app.js?v=20261015g"></script>
-  <script src="static/js/site.js?v=20261015d"></script>
+  <script src="static/js/app.js?v=20261017a"></script>
+  <script src="static/js/site.js?v=20261017a"></script>
 </body>
 </html>

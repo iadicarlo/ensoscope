@@ -7,7 +7,7 @@
   <meta name="description" content="A short guide to using ENSOscope: how to read the ENSO forecast, the teleconnection impact maps, and the skill, and how to turn the signal into anticipatory action.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/guide.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20260624g">
+  <link rel="stylesheet" href="static/css/style.css?v=20261017a">
   <style>
     .guide-steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
     .guide-steps li { position: relative; padding: 0.55rem 0 0.55rem 2.6rem; border-bottom: 1px solid var(--border); }
@@ -29,14 +29,14 @@
     .schem-wrap svg { display: block; margin: 0 auto; height: auto; }
     .schem-note { font-size: 0.82rem; color: var(--text-muted); margin: 0 0 0.4rem; }
   </style>
-  <link rel="icon" type="image/png" href="favicon.png?v=20260624g">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261017a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="guide">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20260624g" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -121,7 +121,7 @@
       <ol class="guide-steps">
         <li>
           <h3>See what's coming</h3>
-          <p>Check the ENSO outlook: how strong an El Niño or La Niña is likely, and how many months ahead.</p>
+          <p>Check the ENSO forecast: how strong an El Niño or La Niña is likely, and how many months ahead.</p>
           <a href="index.html">Open the Forecast &rarr;</a>
         </li>
         <li>
@@ -185,7 +185,7 @@
         </li>
         <li>
           <h3>Ask: can I trust it?</h3>
-          <p>Open the <a href="hindcast_skill.html">Skill</a> tab. The grid grades how well the model predicted ENSO in the past: greener and closer to 1.0 means more reliable. If your lead time sits in the reliable part, you can act with confidence.</p>
+          <p>Open the <a href="hindcast_skill.html">Skill</a> tab. The grid grades how well the model predicted ENSO in the past: the colours run from blue (no skill) to red, and redder, closer to 1.0, means more reliable. If your lead time sits in the reliable part, you can act with confidence.</p>
         </li>
         <li class="act">
           <h3>Act on the lead time</h3>
@@ -220,7 +220,7 @@
             January of their own first year. If the coloured line sits outside the grey band, this
             event was doing something the others did not. Point at a grey line to see which year
             it is.</li>
-          <li><strong>The dashed green line</strong> is an ordinary year: the average of the years
+          <li><strong>The dashed green line</strong> is normal: the average of the years
             with no El Niño and no La Niña. Comparing an El Niño only with other El Niños tells you
             whether it was worse than the last one. It cannot tell you whether it was worse than
             normal, which is usually what decides whether to act.</li>
@@ -255,14 +255,18 @@
           <strong>Country pack.</strong> The PDF and Excel buttons next to the country give a pack
           for that country: the outlook for the next three and six months in plain words, maps of
           the country, charts, and what peer-reviewed research says about El Niño and disease
-          there. Every chart comes with a line on how to read it.
+          there. Every chart comes with a line on how to read it. Past El Niño seasons are read in
+          three levels: <em>drier</em> or <em>wetter</em> when at least 7 in 10 went that way,
+          <em>tends drier</em> or <em>tends wetter</em> when 6 in 10 did, each with a median more
+          than 5% from normal, and <em>no clear signal</em> otherwise.
         </p>
         <p>
           <strong>Share what you see.</strong> The page address keeps the event and the country you
           chose, so you can send someone straight to the same view.
         </p>
         <p class="schem-note">
-          Everything here is observed, from CHIRPS rainfall and ERA5 heat. The one exception is
+          Everything here comes from the record: rainfall is observed (CHIRPS), heat comes from the ERA5
+          reanalysis. The one exception is
           drawn dashed and labelled: where an event is still running, the sea-surface-temperature
           panel also carries the live forecast. There is no forecast of country rainfall or heat
           behind this site, so those panels stop where the observations do.
@@ -275,11 +279,11 @@
       <h2>Reading the forecast</h2>
       <div class="prose">
         <p>
-          The <a href="index.html">Forecast</a> page opens with a plain-language outlook line, then a table of
+          The <a href="index.html">Forecast</a> page opens with a one-line ENSO forecast in plain language, then a table of
           <strong>probability bars</strong>, one row per lead time. <strong>Lead time</strong> is how many months
-          ahead the forecast looks (L1 = this month, L6 = six months out). Each bar is split by colour into the
+          ahead the forecast looks (L1 is the month the forecast is issued, L6 is five months later). Each bar is split by colour into the
           seven ENSO classes (from extreme La Niña in deep blue to extreme El Niño in deep red); the width of a
-          segment is the share of model members in that class, which is the probability. Two forecast centres are
+          segment is the share of the model's runs in that class, which is the chance. Two forecast models are
           shown (ECMWF SEAS5 and Météo-France); when they agree, confidence is higher.
         </p>
       </div>
@@ -327,8 +331,9 @@
       <div class="prose">
         <p>
           On the <a href="map_explorer.html">Teleconnections</a> globe, pick a <em>phase</em>, <em>season</em> and
-          <em>hazard</em>; the map shows how that indicator typically <strong>departs from normal</strong>. Colour
-          tells you the direction:
+          <em>hazard</em>; the map shows how that indicator typically <strong>departs from the neutral-season
+          average</strong>, the usual level in seasons with neither El Niño nor La Niña. Colour tells you the
+          direction:
         </p>
         <div class="legend-key">
           <span><span class="legend-sw" style="background:linear-gradient(90deg,#2c7bb6,#abd9e9)"></span> wetter or cooler than usual</span>
@@ -336,14 +341,19 @@
           <span><span class="legend-sw" style="background:#eef2f6"></span> little change</span>
         </div>
         <p style="margin-top:0.6rem">
-          "Anomaly" is the difference from ENSO-neutral years (it isolates the El Niño / La Niña effect); "absolute"
-          is the raw value during that phase. <strong>Robustness dots</strong> mark pixels where fewer than 60% of
+          "Anomaly" is the difference from the neutral-season average (it isolates the El Niño / La Niña effect);
+          "absolute" is the raw value during that phase. The neutral-season average is the mean of past neutral
+          seasons, one per neutral period, chosen by the same full-season rule as the El Niño and La Niña seasons.
+          The Event replay and the country packs compare with <em>normal</em> instead, the average of every neutral
+          month, so their numbers differ slightly. <strong>Robustness dots</strong> mark pixels where fewer than 60% of
           events agree on the direction, so treat dotted areas with caution: the colour there is an average of
           events that pulled both ways, not a signal you can plan on. The dots appear in the anomaly view only,
           because they are a statement about a <em>change</em>, and the absolute view shows no change, just the
           average level during that phase. Click a country to drill all the way
-          down to it. Behind the maps, observations are combined with a large climate-model ensemble so the patterns
-          are robust even though few strong events sit in the observed record.
+          down to it: a panel under the map then sets each month of the ENSO forecast beside what past events
+          of the most likely class did to rain in that country, in that month's season. Each map shows one source at a time: observed rainfall (CHIRPS), heat from the ERA5
+          reanalysis, or the CESM2 climate model run 50 times. Compare them to see whether a pattern holds: the
+          observed record holds only a few strong events, the climate model many.
         </p>
       </div>
     </section>
@@ -419,9 +429,9 @@
         <dt>UTCI</dt>
         <dd>A similar "feels-like" comfort index.</dd>
         <dt>Anomaly</dt>
-        <dd>The difference from normal (from ENSO-neutral years), so it isolates the El Niño or La Niña effect.</dd>
+        <dd>The difference from the usual level without El Niño or La Niña, so it isolates their effect. On the Teleconnections maps the usual level is the neutral-season average (one past neutral season per neutral period); on the Event replay and in the country packs it is normal (the average of every neutral month).</dd>
         <dt>Lead time</dt>
-        <dd>How many months ahead the forecast looks. L1 is this month, L6 is six months out.</dd>
+        <dd>How many months ahead the forecast looks. L1 is the month the forecast is issued, L6 is five months later.</dd>
         <dt>Skill / correlation</dt>
         <dd>How closely past forecasts matched what actually happened, from 0 (no skill) to 1 (perfect).</dd>
       </dl>
@@ -431,6 +441,6 @@
     </section>
   </main>
 
-  <script src="static/js/site.js?v=20261015d"></script>
+  <script src="static/js/site.js?v=20261017a"></script>
 </body>
 </html>

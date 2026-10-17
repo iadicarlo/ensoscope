@@ -15,6 +15,42 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-10-17",
+    tag: "Fix",
+    title: "Heat stress on the first day of each month, over Asia and the Pacific",
+    items: [
+      "Heat stress (UTCI and WBGT) on the first day of every month, from 1981 to April 2026, was slightly underestimated over Asia and the Pacific. One of the inputs, the sunshine reaching the ground, was missing for the first hours of that day (00 to 06 UTC), which is the afternoon there. Those days now use all 24 hours, like every other day.",
+      "On those days the daily maximum UTCI is now about 1.7 to 1.8 °C higher on average between 100°E and 150°E in the tropics, and WBGT about 0.1 to 0.2 °C higher; over Africa, Europe and the Americas almost nothing changes. Since only one day a month moved, a monthly count of heat-stress days rises by at most one day. Most countries do not change; Papua New Guinea, Kiribati, Indonesia and the Philippines gain about 0.2 to 0.3 days a month on average.",
+      "The heat-stress maps, regional series and country packs built on these days have been rebuilt.",
+    ],
+  },
+  {
+    date: "2026-10-16",
+    tag: "Fix",
+    title: "Teleconnections: true values in the country table, and the past events behind them; packs gain a middle level",
+    items: [
+      "Teleconnections: the map files had been cut at the ends of the colour scale before they were saved, and the country table under the map averaged those cut values. For most countries nothing changes, but some values were too small: Vietnam, June to August, moderate El Niño, read +37.1 mm where past events averaged +90.7 mm, and the Philippines, December to February, strong El Niño, -40.6 mm instead of -47.6 mm. One reading changes: Madagascar, March to May, moderate El Niño, is +1.4 mm, heavier, not -0.5 mm, lighter. The files now hold the values as computed; the colours on the map do not change, and pointing at the map now shows the real number.",
+      "Teleconnections: the table now names the past events behind each value and in how many of them the change went the way of the average, for example Kenya, September to November, strong El Niño: n = 4: 1986, 1991, 2015, 2023; heavier in 2 of 4. It also says what the value is: the heaviest 10-day rainfall over the whole season, one season per event (the one the event covers most), against the neutral-season average. The Event replay shows the same index month by month, so it reads smaller there and can differ in sign.",
+      "Teleconnections and Event replay compare with two different references, and they now have two names: the maps use the neutral-season average (one past neutral season per neutral period), the Event replay and the country packs use normal (every neutral month). Both pages say so.",
+      "Event replay: a line under the charts names the season the Teleconnections maps use for events that start late in the year, read from the map data, for example 2014-16: September to November 2015 and December 2015 to February 2016.",
+      "Country packs and one-page sheets, in every language: a middle level between a consistent pattern and no clear signal. When 6 in 10 past El Niño seasons (60 to 69%) went one way and the median was below 95% or above 105% of normal, the sheet now says tends drier or tends wetter, in a lighter colour in the table. Honduras, November to January: tends drier, drier in 9 of 14 seasons, median 89% of normal. Kenya, November to January (wetter in 9 of 14, median 111%) now reads tends wetter instead of no clear signal.",
+    ],
+  },
+  {
+    date: "2026-10-16",
+    tag: "Fix",
+    title: "Corrections across the site: the country panel on Teleconnections, lead times, heat bands and wording",
+    items: [
+      "Teleconnections: the table under the map, now titled \"ENSO forecast and what past events did here\", read the average of the whole world map instead of the country picked, so for Kenya in September to November it said \"drier than normal\" when past El Niño seasons were wetter there. It now averages only the cells inside the country, weighted by area, uses the season each forecast month falls in and both forecast models, names the most likely class by the same rule as the Forecast page, and says how it decides \"no clear signal\". The table had also been hidden by a styling error; it now shows when you pick a country.",
+      "Teleconnections: the colour bars of the heat-stress layers said \"UTCI 32 °C or more\" (and the same for WBGT and warm nights) on maps that count one band only, for example 32 to 38 °C. They now name the band, as the menu does. From the CESM2 climate model these layers are offered only as the change against neutral seasons, as the Methodology page explains; the absolute day counts come from ERA5 only.",
+      "Skill page and Guide: lead L1 is the month the forecast is issued and L6 five months later, not \"next month\" and \"six months ahead\". The heatmap colours run from blue to red; the text no longer says \"greener\".",
+      "Forecast page: the headline is now called the ENSO forecast, and the window it averages is named by its months (December 2026 to March 2027, L3 to L6). The chance of each class is the share of the forecast runs in it.",
+      "Event replay: the line for the El Niño under way now says what the Forecast page says, from both models: an extreme El Niño is favoured through January 2027. Rainfall on the site is observed (CHIRPS); heat comes from the ERA5 reanalysis, and the pages now say so instead of calling both observed.",
+      "Methodology: neutral months are those inside a catalogued neutral period, not every month outside an event; the neutral reference on the replay charts uses 15 to 22 years per calendar month, not 11 to 16; the heat bands are described as bands.",
+      "Country packs and one-page sheets, in every language: where past El Niño seasons went no consistent way, the sheet now says \"no clear signal\" and counts the side most seasons fell on (Kenya, November to January: wetter in 9 of 14, median 111% of normal), instead of \"no large change\"; counts are of seasons, not years or episodes; the headline figures name the forecast months (October 2026 to March 2027) instead of \"next 6 months\", which on the same sheet means November to April; the forecast table's most likely class follows the Forecast page's rule.",
+    ],
+  },
+  {
     date: "2026-10-16",
     tag: "Fix",
     title: "Daily maximum and minimum temperature now cover the whole day",

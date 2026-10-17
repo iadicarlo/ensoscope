@@ -7,8 +7,8 @@
   <meta name="description" content="Replay a past El Nino or La Nina month by month for any country: sea surface temperature, rainfall, drought and heat, against every other observed event.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/event_replay.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20260624g">
-  <link rel="icon" type="image/png" href="favicon.png?v=20260624g">
+  <link rel="stylesheet" href="static/css/style.css?v=20261017a">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261017a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
     /* Page-local, following the house convention (map_explorer.html does the
@@ -25,11 +25,11 @@
        One rule fixes every element rather than each class re-stating it. */
     [hidden] { display: none !important; }
     .rp-controls{display:flex;flex-wrap:wrap;gap:1.1rem;align-items:flex-end;margin-bottom:1rem}
-    .rp-ctrl{display:flex;flex-direction:column;gap:.3rem}
+    .rp-ctrl{display:flex;flex-direction:column;gap:.3rem;min-width:0;max-width:100%}
     .rp-ctrl label{font-size:.78rem;font-weight:600;color:var(--text-muted);
       text-transform:uppercase;letter-spacing:.04em}
     .rp-ctrl select{padding:.45rem .6rem;border:1px solid var(--border);border-radius:6px;
-      background:#fff;font-size:.92rem;min-width:210px;color:var(--text)}
+      background:#fff;font-size:.92rem;min-width:210px;max-width:100%;color:var(--text)}
     .rp-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin:.2rem 0 1rem}
     .rp-chip{font-size:.8rem;padding:.22rem .6rem;border-radius:999px;
       background:var(--surface-2,#f0f4f8);color:var(--text-muted);border:1px solid var(--border)}
@@ -451,7 +451,7 @@
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20260624g" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -510,12 +510,13 @@
           own years at the same point in its own sequence.
         </p>
         <p>
-          Every <strong>impact</strong> on this page is <strong>observed</strong>: sea surface
-          temperature from the ENSO indices, rainfall from CHIRPS, heat from ERA5. The one exception
+          Every <strong>impact</strong> on this page comes from the <strong>record</strong>: sea surface
+          temperature from the ENSO indices and rainfall from CHIRPS are observed, heat comes from the
+          ERA5 reanalysis. The one exception
           is drawn so it cannot be mistaken for anything else: where the selected event is still
           running, the sea-surface-temperature panel also carries the live <strong>forecast</strong>
           from ECMWF SEAS5 and Météo-France System 9, dashed and in their own colours. The rainfall
-          and heat panels stop at the observed record, because there is no calibrated forecast of
+          and heat panels stop where the record ends, because there is no calibrated forecast of
           country rainfall or heat behind this site.
         </p>
       </div>
@@ -840,8 +841,8 @@
         </div>
         <div class="rp-panel">
           <h3>Rainfall</h3>
-          <p class="rp-sub">Monthly total over the country, and the departure from a neutral year
-            for that same calendar month.</p>
+          <p class="rp-sub">Monthly total over the country, and the difference from normal (the
+            average of neutral years) for that same calendar month.</p>
           <div class="rp-canvas-wrap"><canvas id="rp-chart-rain"></canvas></div>
         </div>
         <div class="rp-panel">
@@ -898,12 +899,12 @@
 
   </main>
 
-  <script src="static/lib/d3.min.js?v=20260624g"></script>
-  <script src="static/lib/d3-geo-projection.min.js?v=20260624g"></script>
-  <script src="static/lib/chart.umd.min.js?v=20260624g"></script>
-  <script src="static/js/data_base.js?v=20261016a"></script>
-  <script src="static/js/index_names.js?v=20261015d"></script>
-  <script src="static/js/site.js?v=20261015d"></script>
-  <script src="static/js/event_replay.js?v=20261016a"></script>
+  <script src="static/lib/d3.min.js?v=20261017a"></script>
+  <script src="static/lib/d3-geo-projection.min.js?v=20261017a"></script>
+  <script src="static/lib/chart.umd.min.js?v=20261017a"></script>
+  <script src="static/js/data_base.js?v=20261017a"></script>
+  <script src="static/js/index_names.js?v=20261017a"></script>
+  <script src="static/js/site.js?v=20261017a"></script>
+  <script src="static/js/event_replay.js?v=20261017a"></script>
 </body>
 </html>

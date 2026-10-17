@@ -7,15 +7,15 @@
   <meta name="description" content="Methodology and open data sources behind the ENSOscope ENSO forecasts, skill verification and teleconnection composites, with DOIs.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/methodology.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20260624g">
-  <link rel="icon" type="image/png" href="favicon.png?v=20260624g">
+  <link rel="stylesheet" href="static/css/style.css?v=20261017a">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261017a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="methodology">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20260624g" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -108,7 +108,9 @@
           <li><strong>Strong</strong> - otherwise, at or beyond <strong>1.25</strong>, with no
               upper bound</li>
           <li><strong>Moderate</strong> - an event that clears detection but not the strong tier</li>
-          <li><strong>Neutral</strong> - every month in no event window</li>
+          <li><strong>Neutral</strong> - months inside a catalogued neutral period. The short gaps
+              between events are transitions and count as neither, and so do the latest months the
+              catalogue cannot classify yet (see below)</li>
         </ul>
         <p>
           The tiers were disjoint bands until 14 September 2026, and a single month past 1.75
@@ -180,7 +182,8 @@
         <p>
           The Teleconnections maps composite climate-impact indicators (heat: Tmax, UTCI, WBGT, and
           daytime, nighttime and compound heatwave days; precipitation extremes: Rx10day, consecutive
-          dry days) by ENSO phase, from ERA5/CHIRPS observations and a CESM2 large ensemble.
+          dry days) by ENSO phase, from observed rainfall (CHIRPS), heat from the ERA5 reanalysis, and the
+          CESM2 large ensemble, a climate model run 50 times.
           The <strong>ENSO indices</strong> used to classify each event are relative indices
           (the box mean minus the concurrent 20°S to 20°N tropical mean), deseasonalised with a
           30-year rolling window and standardised by the <strong>ENSO standard deviation over
@@ -188,7 +191,32 @@
           <strong>composited fields themselves are left alone</strong>: taking the tropical mean
           out belongs to the classification, so a composite shows the conditions actually
           observed or simulated during those events, warming included. Anomalies are shown
-          relative to the neutral composite.
+          relative to the <strong>neutral-season average</strong>: the average of past neutral seasons,
+          chosen by the same full-season rule as the El Niño and La Niña seasons, so like is compared with
+          like (one season per neutral period, 11 or 12 in the observations). The Event replay and the
+          country packs use <em>normal</em> instead, every neutral month in the record, so their numbers
+          differ slightly.
+        </p>
+        <p>
+          <strong>The country panel under the map.</strong> Picking a country opens a table with one row
+          per month of the ENSO forecast (L1, the month the forecast is issued, to L6). For each forecast
+          model it names the most likely class by the rule of the Forecast page: the family with the
+          highest chance (El Niño, neutral or La Niña), then its most likely strength. Beside it is what
+          past events of that class did to the heaviest 10-day rainfall (or, on the dry tab, the longest
+          dry spell) in the season that month falls in: the composite anomaly averaged over the map cells
+          whose centres lie inside the country, each weighted by its area (the cosine of its latitude).
+          The value is one number per season: the heaviest 10-day total (or the longest dry spell)
+          anywhere in the three months, crossing month ends, one season per event (the one the event covers most), minus
+          the neutral-season average. The Event replay shows the same index inside each calendar month
+          against normal, so a season there reads smaller and can differ in sign; for an event that starts
+          late in the year it also draws the first year's months, where the map takes the next year's
+          season (2014-16: SON 2015, DJF 2015-16), and the replay page names those seasons under the charts.
+          A change under 0.5 mm or 0.5 days either way, as printed, reads "no clear signal". The number of
+          past events is shown with the season each one gave and how many of them went the way of the
+          average ("n = 4: 1986, 1991, 2015, 2023; heavier in 2 of 4"), because one or two events make a
+          weak guide and an average can rest on one event. The map tiles store the composite as computed;
+          the colour scale saturates at its ends, the numbers do not. The panel does not average a whole
+          region, which can hold opposite changes, and it is not a forecast of rain.
         </p>
         <p>
           <strong>How the heatwave days are defined.</strong> Following the daytime, nighttime and
@@ -224,29 +252,37 @@
         <p>
           Alongside the percentile-based heatwave days, the heat indicators are also counted
           against <strong>fixed temperature thresholds that carry a direct health meaning</strong>,
-          so a number can be read as "days in the 32 to 38 C band" rather than "days above
+          so a number can be read as "days in the 32 to 38 °C band" rather than "days above
           the local 90th percentile". These were added at the request of the humanitarian teams.
         </p>
         <ul>
-          <li><strong>UTCI</strong> - days at or above <strong>32 °C</strong> (strong heat stress),
-              <strong>38 °C</strong> (very strong) and <strong>46 °C</strong> (extreme), following the
-              standard UTCI thermal-stress scale.</li>
-          <li><strong>WBGT</strong> - days at or above <strong>29 °C</strong>, <strong>31 °C</strong>
-              and <strong>32 °C</strong>, approximately the US National Weather Service category
-              edges (29.4, 31.1 and 32.2 °C).</li>
-          <li><strong>Nighttime heat</strong> - nights whose minimum stays at or above
-              <strong>20 °C</strong> (tropical night), <strong>25 °C</strong> (equatorial night) and
-              <strong>30 °C</strong> (torrid night).</li>
+          <li><strong>UTCI</strong> - days in three bands: <strong>32 to 38 °C</strong> (strong heat
+              stress), <strong>38 to 46 °C</strong> (very strong) and <strong>46 °C and above</strong>
+              (extreme), following the standard UTCI thermal-stress scale.</li>
+          <li><strong>WBGT</strong> - days in <strong>29 to 31 °C</strong>, <strong>31 to 32 °C</strong>
+              and <strong>32 °C and above</strong>, approximately the US National Weather Service
+              category edges (29.4, 31.1 and 32.2 °C).</li>
+          <li><strong>Nighttime heat</strong> - nights whose minimum is <strong>20 to 25 °C</strong>
+              (tropical night), <strong>25 to 30 °C</strong> (equatorial night) or
+              <strong>30 °C and above</strong> (torrid night).</li>
         </ul>
         <p>
-          <strong>These are shown from the observations only, and that is deliberate.</strong> A
+          The bands do not overlap: each day lands in exactly one, and the three add up to the days at or
+          above the lowest cut-off. "Heat-stress days" in the country packs are that sum, days with UTCI
+          32 °C or more.
+        </p>
+        <p>
+          <strong>As absolute counts these come from the ERA5 reanalysis only, and that is
+          deliberate.</strong> A
           percentile threshold is defined from the field's own distribution, so a uniform warm or
           cold bias cancels out: a model running 2 °C warm still has the same number of days above
           its own 90th percentile. An absolute threshold has no such protection, because it reads
-          the actual value. Measured on ERA5, a 1 °C warm bias adds roughly 6 days per season over
+          the actual value. Computed on ERA5, a 1 °C warm bias adds roughly 6 days per season over
           the Horn of Africa, 7 over South Asia and 10 over Southeast Asia, which is as large as
-          the El Niño signal itself. The percentile-based layers are therefore the ones to use for
-          the model ensemble; the fixed thresholds are reported from the reanalysis.
+          the El Niño signal itself. From the CESM2 climate model the fixed-threshold layers are
+          therefore offered only as the change against neutral seasons (how many days El Niño adds),
+          where the model's bias is largely shared by both composites, though it does not cancel exactly
+          as it does for a mean. The percentile-based layers remain the safer choice for the model.
         </p>
         <p>
           One further caution on WBGT. It is computed here with a simplified formula that uses
@@ -304,9 +340,9 @@
           thermometer on land would. The country zoom shows these cells at 0.25° rather than 1°.
         </p>
         <p>
-          <strong>The neutral reference.</strong> The dashed green line on each panel is what an
+          <strong>Normal.</strong> The dashed green line on each panel is normal, what an
           <em>ordinary</em> year looks like in that country: the average of the catalogued neutral
-          years for the same calendar month, between 11 and 16 years per month. Comparing an event
+          years for the same calendar month, between 15 and 22 years per calendar month since 1981. Comparing an event
           only against other events answers "was this El Niño worse than the last one"; it cannot
           answer "was it worse than a normal year", which is the question that decides whether to
           pre-position anything. The same reference defines every anomaly on the page. A conventional
@@ -326,6 +362,18 @@
           site. As of August 2026 that period is March to August 2026, which contains an August at
           +2.4 standard deviations: unambiguously not an ordinary month, and exactly the kind of
           value that must not be allowed to define what ordinary means.
+        </p>
+        <p>
+          <strong>Past El Niño seasons in the country packs.</strong> The packs and the one-page sheets
+          say how rain went in past El Niño seasons over the coming three and six months, for the country
+          and each region, as % of normal. Three levels, the same in every language. <em>Drier</em> or
+          <em>wetter</em>: at least 7 in 10 seasons on that side of normal and a median below 95% or above
+          105% of normal. <em>Tends drier</em> or <em>tends wetter</em>: 6 in 10 seasons (60 to 69%) on
+          that side and a median beyond the same limits; Honduras, November to January, was drier in 9 of
+          14 seasons with a median of 89% of normal. Otherwise <em>no clear signal</em>, with the count of
+          seasons on the side the median falls on. When 7 in 10 seasons or more went one way but the
+          median stayed between 95% and 105%, the sheet says the change was slight. Counts are of seasons,
+          not events: an event that lasts into a second year can give two seasons.
         </p>
         <p>
           <strong>Thresholds.</strong> Heat stress and warm nights each carry all three health
@@ -527,6 +575,6 @@
     </div>
   </main>
 
-  <script src="static/js/site.js?v=20261015d"></script>
+  <script src="static/js/site.js?v=20261017a"></script>
 </body>
 </html>

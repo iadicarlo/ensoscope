@@ -17,7 +17,7 @@ const DATA_BASE = "data/";
 // Monthly data-build cache-buster. Bump whenever the served data/*.json are
 // regenerated (forecast, members, hindcast). Appended to every data fetch so a
 // fresh forecast vintage is never masked by a stale browser/CDN copy.
-const DATA_VERSION = "20261014g";
+const DATA_VERSION = "20261017a";
 function _dv(url) {
   return url + (url.indexOf("?") === -1 ? "?" : "&") + "v=" + DATA_VERSION;
 }
@@ -584,7 +584,7 @@ window.updateForecastLatestChart = async function() {
   const { datasets, labels } = _buildSpaghettiDatasets(_latestForecastMembers, varName, obsLookup);
   if (titleEl) {
     titleEl.textContent =
-      `${_latestForecastVintage} Forecast Plumes - ${varLabel(varName)} - ${Object.keys(_latestForecastMembers).length} members`;
+      `${_latestForecastVintage} Forecast Plumes - ${varLabel(varName)} - ${Object.keys(_latestForecastMembers).length} runs`;
   }
 
   _drawChart("forecast-latest-chart", datasets, labels, varName);
@@ -917,7 +917,8 @@ function renderOutlookBanner(forecasts, sources) {
     const sp = dom === "en" ? ["strong_el_nino", "extreme_el_nino"]
              : dom === "ln" ? ["strong_la_nina", "extreme_la_nina"] : ["neutral"];
     const meanSP = sig.reduce((s, l) => s + sp.reduce((a, c) => a + (l[c] || 0), 0), 0) / sig.length;
-    return { dom, INT, nearInt, peakInt, peakMonth, peakLastMonth, meanSP, vintage: f.vintage, lastMonth: leads[leads.length - 1].valid_time };
+    return { dom, INT, nearInt, peakInt, peakMonth, peakLastMonth, meanSP, vintage: f.vintage, lastMonth: leads[leads.length - 1].valid_time,
+             sigFirst: sig[0], sigLast: sig[sig.length - 1] };
   }
 
   const A = srcs.map(s => Object.assign({ src: s }, analyse(forecasts[s])));
@@ -945,11 +946,11 @@ function renderOutlookBanner(forecasts, sources) {
   const whenStr = A.length === 1 ? _formatValidMonth(peakWhenMonth) : coarseWhen(peakWhenMonth);
   let headline;
   if (dom === "neu") {
-    headline = `Current outlook: ENSO-neutral conditions are favoured through ${lastMonth}.`;
+    headline = `ENSO forecast: ENSO-neutral conditions are favoured through ${lastMonth}.`;
   } else if (rankOf(peakInt) > rankOf(nearInt)) {
-    headline = `Current outlook: ${_artcl(INTLABEL[nearInt])} ${INTLABEL[nearInt]} ${FAMLABEL[dom]} now, strengthening toward ${INTLABEL[peakInt]} by ${whenStr}.`;
+    headline = `ENSO forecast: ${_artcl(INTLABEL[nearInt])} ${INTLABEL[nearInt]} ${FAMLABEL[dom]} now, strengthening toward ${INTLABEL[peakInt]} by ${whenStr}.`;
   } else {
-    headline = `Current outlook: ${_artcl(INTLABEL[peakInt])} ${INTLABEL[peakInt]} ${FAMLABEL[dom]} is favoured through ${_formatValidMonth(throughMonth)}.`;
+    headline = `ENSO forecast: ${_artcl(INTLABEL[peakInt])} ${INTLABEL[peakInt]} ${FAMLABEL[dom]} is favoured through ${_formatValidMonth(throughMonth)}.`;
   }
 
   const ctaPhase = dom === "en" ? "strong_el_nino" : dom === "ln" ? "strong_la_nina" : "neutral";
@@ -958,23 +959,27 @@ function renderOutlookBanner(forecasts, sources) {
   const names = A.map(a => nameOf(a.src));
   const namesText = names.length === 1 ? names[0]
     : names.slice(0, -1).join(", ") + " and " + names[names.length - 1];
-  const systemWord = A.length >= 3 ? "all systems" : "both systems";
+  const systemWord = A.length >= 3 ? "all models" : "both models";
   const vintage = _formatValidMonth(primary.vintage);
+  // The window the cards and this line average over, named by its months and
+  // leads, never "the next N months" (glossary G8: L1 is the issue month).
+  const winTxt = `${_formatValidMonth(primary.sigFirst.valid_time)} to ${_formatValidMonth(primary.sigLast.valid_time)} `
+    + `(L${primary.sigFirst.lead} to L${primary.sigLast.lead})`;
 
   let sub;
   if (dom === "neu") {
     sub = `${namesText}, issued ${vintage}. Full distributions and skill below.`;
   } else if (A.length === 1) {
-    const spTxt = primary.meanSP >= 0.995 ? `Every ${names[0]} ensemble member is`
-                                          : `${Math.round(primary.meanSP * 100)}% of ${names[0]} ensemble members are`;
-    sub = `${spTxt} in the strong-or-extreme ${FAMLABEL[dom]} range across the 3-6 month outlook (issued ${vintage}) - that lead time is the window for anticipatory action.`;
+    const spTxt = primary.meanSP >= 0.995 ? `Every ${names[0]} run is`
+                                          : `${Math.round(primary.meanSP * 100)}% of ${names[0]} runs are`;
+    sub = `${spTxt} in the strong-or-extreme ${FAMLABEL[dom]} range from ${winTxt}, forecast issued ${vintage}. That lead time is the window for anticipatory action.`;
   } else if (agree && A.every(a => a.meanSP >= 0.995)) {
-    sub = `${namesText} agree: every ensemble member in ${systemWord} is in the strong-or-extreme ${FAMLABEL[dom]} range across the 3-6 month outlook (issued ${vintage}) - that lead time is the window for anticipatory action.`;
+    sub = `${namesText} agree: every run of ${systemWord} is in the strong-or-extreme ${FAMLABEL[dom]} range from ${winTxt}, forecast issued ${vintage}. That lead time is the window for anticipatory action.`;
   } else if (agree) {
     const shares = A.map(a => `${Math.round(a.meanSP * 100)}% (${nameOf(a.src)})`).join(" and ");
-    sub = `${namesText} agree on ${FAMLABEL[dom]}; the strong-or-extreme share over the 3-6 month outlook is ${shares}, issued ${vintage} - that lead time is the window for anticipatory action.`;
+    sub = `${namesText} agree on ${FAMLABEL[dom]}; the share of runs in the strong-or-extreme range from ${winTxt} is ${shares}, forecast issued ${vintage}. That lead time is the window for anticipatory action.`;
   } else {
-    sub = `${names[0]} favours a ${INTLABEL[primary.peakInt]} ${FAMLABEL[primary.dom]} over the 3-6 month outlook (issued ${vintage}); the centres differ on phase - compare them below.`;
+    sub = `${names[0]} favours a ${INTLABEL[primary.peakInt]} ${FAMLABEL[primary.dom]} from ${winTxt} (forecast issued ${vintage}); the models differ on phase, compare them below.`;
   }
 
   el.style.display = "block";
@@ -993,7 +998,7 @@ function _renderMultiForecastMeta(metaEl, forecasts, sources) {
     if (!f) return `<span style="color:#c62828">${CENTRE_SHORT[src] || src}: missing</span>`;
     return `<span><strong style="color:${CENTRE_COLOR[src] || '#111'}">${CENTRE_SHORT[src] || src}</strong> ${f.vintage}${f.calibrated ? " ✓" : ""}</span>`;
   }).join("");
-  metaEl.innerHTML = parts + `<span style="font-size:0.8rem;color:var(--text-muted)">Probabilities = raw ensemble member fraction</span>`;
+  metaEl.innerHTML = parts + `<span style="font-size:0.8rem;color:var(--text-muted)">Chance = share of the runs in each class</span>`;
 }
 
 function _renderMultiForecastBars(container, forecasts, sources) {
@@ -2092,7 +2097,7 @@ function _buildSpaghettiDatasets(memberData, varName, obsLookup) {
     return vals.length ? _median(vals) : null;
   });
   datasets.push({
-    label: "Ensemble Median",
+    label: "Median of the runs",
     data: medianData,
     borderColor: "#000000",
     borderWidth: 2.5,
@@ -2135,7 +2140,7 @@ function _renderSeriesLegend(canvasId, hasObserved) {
   }
 
   const items = [
-    `<div class="series-legend-item"><span class="series-line median"></span><span>Ensemble Median</span></div>`,
+    `<div class="series-legend-item"><span class="series-line median"></span><span>Median of the runs</span></div>`,
   ];
   if (hasObserved) {
     items.push(`<div class="series-legend-item"><span class="series-line observed"></span><span>Observed</span></div>`);
@@ -2378,7 +2383,7 @@ window.updateHindcastChart = async function() {
       if (years.length) {
         titleEl.textContent = `No data for year ${year} (available: ${years[0]}-${years[years.length - 1]})`;
       } else {
-        titleEl.textContent = hxData ? `No data for year ${year}` : "Hindcast member data not available";
+        titleEl.textContent = hxData ? `No data for year ${year}` : "Past-forecast runs not available";
       }
     }
     return;
@@ -2390,14 +2395,14 @@ window.updateHindcastChart = async function() {
 
   const { datasets, labels } = _buildSpaghettiDatasets(yearData, varName, obsLookup);
 
-  if (titleEl) titleEl.textContent = `${year} ${MONTH_NAMES[month-1]} start - ${varLabel(varName)} - ${Object.keys(yearData).length} members`;
+  if (titleEl) titleEl.textContent = `${year} ${MONTH_NAMES[month-1]} start - ${varLabel(varName)} - ${Object.keys(yearData).length} runs`;
 
   if (summaryEl) {
     const lastPhases = Object.values(yearData).map(rows => rows[rows.length-1]?.phase || rows[rows.length-1]?.classified_phase || "").filter(Boolean);
     const counts = {};
     lastPhases.forEach(p => { counts[p] = (counts[p] || 0) + 1; });
     const top = Object.entries(counts).sort((a,b) => b[1]-a[1])[0];
-    if (top) summaryEl.innerHTML = `L6 majority: <strong>${CLASS_LABEL[top[0]] || top[0]}</strong> (${top[1]}/${lastPhases.length} members)`;
+    if (top) summaryEl.innerHTML = `L6 majority: <strong>${CLASS_LABEL[top[0]] || top[0]}</strong> (${top[1]} of ${lastPhases.length} runs)`;
   }
 
   _drawChart("hx-chart", datasets, labels, varName);
@@ -2415,7 +2420,7 @@ window.updateForecastChart = async function() {
   const titleEl = document.getElementById("fc-chart-title");
 
   if (!_fcMembersData?.by_start?.[vintage]) {
-    if (titleEl) titleEl.textContent = _fcMembersData ? `No member data for vintage ${vintage}` : "Forecast member data not available";
+    if (titleEl) titleEl.textContent = _fcMembersData ? `No runs for the ${vintage} forecast` : "Forecast runs not available";
     return;
   }
 
@@ -2424,7 +2429,7 @@ window.updateForecastChart = async function() {
   if (_obsData) _obsData.times.forEach((t, i) => { obsLookup[t] = _obsData[varName]?.[i] ?? null; });
 
   const { datasets, labels } = _buildSpaghettiDatasets(memberData, varName, obsLookup);
-  if (titleEl) titleEl.textContent = `${vintage} Forecast - ${varLabel(varName)} - ${Object.keys(memberData).length} members`;
+  if (titleEl) titleEl.textContent = `${vintage} Forecast - ${varLabel(varName)} - ${Object.keys(memberData).length} runs`;
 
   _drawChart("fc-chart", datasets, labels, varName);
   _renderSpreadStats(_buildSpreadStats(memberData, varName), "fc-spread-content", "fc-spread-card");
@@ -2699,7 +2704,7 @@ window.updateEnsoHindcastPlume = async function() {
           onClick: _makeLegendCentreToggle(),
         },
         tooltip: {callbacks: {
-          label: ctx => `${ctx.dataset.label || "member"}: ${ctx.parsed.y == null ? "n/a" : ctx.parsed.y.toFixed(2)}`,
+          label: ctx => `${ctx.dataset.label || "run"}: ${ctx.parsed.y == null ? "n/a" : ctx.parsed.y.toFixed(2)}`,
         }},
       },
       scales: {
@@ -2711,7 +2716,7 @@ window.updateEnsoHindcastPlume = async function() {
 
   const title = document.getElementById("hxp-chart-title");
   if (title) title.textContent =
-    `Multi-centre member plumes - ${year}-${String(month).padStart(2,"0")} init - ${variable}`;
+    `Runs from each model - ${year}-${String(month).padStart(2,"0")} init - ${variable}`;
   _renderPlumeCoverageBanner({
     hostId: "hxp-coverage-banner",
     insertAfter: "hxp-chart-title",
@@ -2868,7 +2873,7 @@ window.updateIodHindcastPlume = async function() {
           onClick: _makeLegendCentreToggle(),
         },
         tooltip: {callbacks: {
-          label: ctx => `${ctx.dataset.label || "member"}: ${ctx.parsed.y == null ? "n/a" : ctx.parsed.y.toFixed(2)}`,
+          label: ctx => `${ctx.dataset.label || "run"}: ${ctx.parsed.y == null ? "n/a" : ctx.parsed.y.toFixed(2)}`,
         }},
       },
       scales: {
@@ -2879,7 +2884,7 @@ window.updateIodHindcastPlume = async function() {
   });
   const title = document.getElementById("iodhxp-chart-title");
   if (title) title.textContent =
-    `Multi-centre IOD member plumes - ${year}-${String(month).padStart(2,"0")} init - ${variable}`;
+    `IOD runs from each model - ${year}-${String(month).padStart(2,"0")} init - ${variable}`;
   _renderPlumeCoverageBanner({
     hostId: "iodhxp-coverage-banner",
     insertAfter: "iodhxp-chart-title",
@@ -3014,7 +3019,7 @@ async function _renderForecastMembersPlume({canvasId, titleLabel, variable, iod}
         },
         tooltip: {
           callbacks: {
-            label: ctx => `${ctx.dataset.label || "member"}: ${ctx.parsed.y == null ? "n/a" : ctx.parsed.y.toFixed(2)}`,
+            label: ctx => `${ctx.dataset.label || "run"}: ${ctx.parsed.y == null ? "n/a" : ctx.parsed.y.toFixed(2)}`,
           },
         },
       },

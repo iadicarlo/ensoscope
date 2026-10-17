@@ -24,6 +24,7 @@ const RP = {
   country: null,     // currently loaded country payload
   forecast: null,    // SEAS5 Nino3.4 plume, drawn only where the event is running
   forecastMf9: null, // Meteo-France System 9, same
+  mapSeasons: null,  // teleconnection_event_seasons.json: the season each event gives the Teleconnections maps
   charts: {},
   // Which cut-off each threshold panel is showing. Defaults are the mildest
   // useful one: >=32 UTCI and >=25 nights are the levels most countries
@@ -148,7 +149,7 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
   if (opts.neutral) {
     ds.push({ data: opts.neutral, borderColor: "#2E7D5B", borderWidth: 1.6,
               borderDash: [3, 3], pointRadius: 0, tension: 0.25, spanGaps: true,
-              fill: false, label: "Neutral years (average)" });
+              fill: false, label: "Normal (average of neutral years)" });
   }
 
   ds.push({ data: main.values, borderColor: opts.color, borderWidth: 2.4,
@@ -169,7 +170,7 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
     for (const m of f.members) {
       ds.push({ data: m, borderColor: f.faint, borderWidth: 1,
                 pointRadius: 0, tension: 0.25, spanGaps: true, fill: false,
-                label: `${f.label} member`, _isOther: true, _isMember: true });
+                label: `${f.label} run`, _isOther: true, _isMember: true });
     }
     ds.push({ data: f.mean, borderColor: f.color, borderWidth: 2.2,
               borderDash: f.dash, pointRadius: 0, tension: 0.25, spanGaps: true,
@@ -1177,7 +1178,7 @@ function _impDrawRain(sel, nMonths, px, trackW) {
               hi: "#2E74B5", lo: "#A9713A"},
     heat:    {keys: ["utci_strong_days", "utci_vstrong_days", "utci_extreme_days"],
               vsNeutral: true, unit: "days", dp: 1,
-              name: "Days above UTCI 32 \u00B0C, vs a neutral year",
+              name: "Days above UTCI 32 \u00B0C, vs normal",
               hi: "#C0392B", lo: "#4A7FB5"},
   };
   const drv = DRIVER[RPIMP.theme] || DRIVER.water;
@@ -1381,11 +1382,11 @@ function _renderImpacts(sel, nMonths) {
         + hc.top.map(t => `${_impTitle(t.country.replace(/_/g, " "))} accounts for ${t.n}`)
               .join(", ") + ". "
         + "Read a blank panel as a gap in reporting rather than an absence of "
-        + "dangerous heat. The heat panels below are measured from ERA5 and do "
+        + "dangerous heat. The heat panels below come from the ERA5 reanalysis and do "
         + "not depend on an event being reported at all."
       : "EM-DAT records no heat wave here. Read that as a gap in reporting "
         + "rather than an absence of dangerous heat: the heat panels below are "
-        + "measured from ERA5 and do not depend on a report being filed.";
+        + "from the ERA5 reanalysis and do not depend on a report being filed.";
     const why = {
       heat: heatWhy,
       water: "No flood or drought was recorded here in this window. EM-DAT "
@@ -1683,7 +1684,7 @@ function _renderLegend(sel, nOthers, fcs) {
     [colour, "solid", 2.6, sel.is_current ? "This event (developing)" : sel.label],
     ["#8A99A8", "solid", 1.4,
      `${nOthers} other observed event${nOthers === 1 ? "" : "s"} of the same type`],
-    ["#2E7D5B", "dashed", 2, "Average neutral year"],
+    ["#2E7D5B", "dashed", 2, "Normal (average of neutral years)"],
   ].concat((fcs || []).map(f => [f.color, "dashed", 2, `${f.label} forecast`]));
   const html = (list) => list.map(([c, style, w, txt]) =>
     `<span class="rp-lg"><i style="border-top-color:${c};border-top-style:${style};`
@@ -1699,7 +1700,7 @@ function _renderLegend(sel, nOthers, fcs) {
   const short = [
     [colour, "solid", 2.6, sel.is_current ? "This event" : _shortEventName(sel.label)],
     ["#8A99A8", "solid", 1.4, "Other events"],
-    ["#2E7D5B", "dashed", 2, "Neutral year"],
+    ["#2E7D5B", "dashed", 2, "Normal"],
   ].concat((fcs || []).map(f => [f.color, "dashed", 2, f.label]));
   const compact = html(short);
   for (const panel of document.querySelectorAll(".rp-panel")) {
@@ -1715,6 +1716,40 @@ function _renderLegend(sel, nOthers, fcs) {
   }
   const mslot = document.getElementById("rp-modal-lg");
   if (mslot) mslot.innerHTML = html(items);
+}
+
+// The Teleconnections maps take ONE season per event, the one the event covers
+// most (functions.select_event_season). The charts here align every event on
+// its own first calendar year, so for an event that starts late in the year the
+// map's season is a later one than the same months at the start of the chart:
+// 2014-16 starts in October 2014, the map uses SON 2015 and DJF 2015-16. Read
+// from teleconnection_event_seasons.json, which the tile exporter writes from
+// the event NetCDFs, so the line names the seasons the maps really averaged.
+const RP_SEASON_ORDER = ["MAM", "JJA", "SON", "DJF"];
+
+function _mapSeasonNote(sel) {
+  const S = RP.mapSeasons && RP.mapSeasons.seasons;
+  if (!S || sel.is_current) return "";
+  const cmp = document.getElementById("rp-compare");
+  const shown = [sel].concat(_comparisonEvents(sel, cmp ? cmp.value : "same_family"));
+  const parts = [];
+  for (const e of shown) {
+    if (!e.start || e.phase === "current") continue;
+    const y0 = parseInt(String(e.window_start).slice(0, 4), 10);
+    const later = [];
+    let evName = null;
+    for (const key of RP_SEASON_ORDER) {
+      const hit = (S[key] || []).find(x => x.phase === e.phase && x.start === String(e.start).slice(0, 7));
+      if (!hit) continue;
+      evName = hit.label;
+      if (hit.season_year !== y0) later.push(`${key} ${hit.season}`);
+    }
+    if (later.length) parts.push(`${evName}: ${later.join(", ")}`);
+  }
+  if (!parts.length) return "";
+  return "The Teleconnections maps count each event once per season, in the season it covers most; for "
+    + `${parts.length === 1 ? "this event" : "these events"} that is later than the first year drawn here: `
+    + parts.join("; ") + ".";
 }
 
 // "1997-98 El Nino (extreme)" is wider than a half-page panel can spare, and
@@ -1760,6 +1795,8 @@ function _renderMeta(sel, nOthers) {
     notes.push(`${c.label} lies outside the CHIRPS band (50°S to 50°N), so the rainfall panels `
              + "are empty. The heat panels use ERA5 and are unaffected.");
   }
+  const ms = _mapSeasonNote(sel);
+  if (ms) notes.push(ms);
   const fcs2 = _forecastsForWindow(sel, sel.window_months);
   if (fcs2.length) {
     notes.push("The forecast is drawn for sea surface temperature only: there is no calibrated "
@@ -1769,7 +1806,9 @@ function _renderMeta(sel, nOthers) {
   noteEl.innerHTML = (notes.length ? notes.join(" ") + " " : "")
     + `<a href="methodology.html#event-replay">How these are built</a>`
     + ` &middot; CHIRPS and ERA5, ${c.n_cells} grid cells over ${c.label}`
-    + ` &middot; anomalies against neutral years`
+    + ` &middot; differences from normal, the average of every neutral month in the record; the `
+    + `Teleconnections maps use the neutral-season average instead (one season per neutral period), so their `
+    + `numbers differ slightly`
     + ` &middot; <a href="index.html">ENSOscope</a>, Isma Abdelkader Di Carlo, Utrecht University`;
 
   // Print masthead, so a saved sheet always names what it shows rather than
@@ -1782,9 +1821,10 @@ function _renderMeta(sel, nOthers) {
     // so "Heat stress" alone leaves the reader unable to tell which cut-off
     // they are looking at.
     const lb = c.labels || {};
-    s.textContent = `Observed monthly sequence, ${sel.window_start} to ${sel.window_end}. `
+    s.textContent = `Monthly sequence from the record (rain observed by CHIRPS, heat from the ERA5 reanalysis), `
+      + `${sel.window_start} to ${sel.window_end}. `
       + `Compared against ${nOthers} other observed event${nOthers === 1 ? "" : "s"} of the same type, `
-      + `and against the average of the catalogued neutral years. `
+      + `and against normal (the average of the catalogued neutral years). `
       + `Heat stress: ${lb[RP.thr.heat] || RP.thr.heat}. Warm nights: ${lb[RP.thr.night] || RP.thr.night}. `
       + `ENSOscope, generated ${new Date().toISOString().slice(0, 10)}.`;
   }
@@ -2190,6 +2230,7 @@ async function init() {
     ]);
     RPMAP.index = await _getJSON("data/replay/maps/index.json").catch(() => null);
     RPGM.index = await _getJSON("data/replay/globalmonths/index.json").catch(() => null);
+    RP.mapSeasons = await _getJSON("data/teleconnection_event_seasons.json").catch(() => null);
   } catch (err) {
     document.getElementById("rp-grid").innerHTML =
       `<div class="rp-empty">Replay data not available: ${err.message}</div>`;
@@ -2487,7 +2528,7 @@ async function _drawZoom() {
   const note = document.getElementById("rp-zoom-note");
   if (note) {
     note.textContent = scale
-      ? `${scale.label} (${scale.units}), against ${RP.country.climatology || "neutral years"} `
+      ? `${scale.label} (${scale.units}), against normal (the average of ${RP.country.climatology || "neutral years"}) `
         + `for the same calendar month${RPZ.monthIdx >= 0 ? "" : "s"}. Both panels share one `
         + "colour scale, so a stronger colour really is a stronger anomaly"
         + (RPZ.monthIdx >= 0
@@ -2732,7 +2773,7 @@ async function _renderRegions(countryId, varKey, sel, cmp) {
     `By sub-national region (${rows.length})`;
   document.getElementById("rp-regions-note").textContent =
     `${data.var_label} (${data.units}) averaged over the 0.25 degree cells inside each `
-    + `${data.admin} admin-1 boundary, against ${data.climatology} for the same calendar `
+    + `${data.admin} admin-1 boundary, against normal (the average of ${data.climatology}) for the same calendar `
     + `month. Same cells as the maps above. The figure after ± is the spread of those `
     + `cells within the region, so it says whether the region moved as one: a spread `
     + `larger than the mean means part of it went the other way. A region holding fewer `

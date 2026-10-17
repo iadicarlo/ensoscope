@@ -10,13 +10,13 @@
   <meta property="og:title" content="ENSOscope: El Niño / La Niña forecasts for humanitarian action">
   <meta property="og:description" content="Operational El Niño / La Niña forecasts and teleconnection impact maps, turning seasonal forecasts into regional signals for humanitarian anticipatory action.">
   <meta property="og:url" content="https://iadicarlo.org/ensoscope/">
-  <meta property="og:image" content="https://iadicarlo.org/ensoscope/og_card.png?v=20260624h">
+  <meta property="og:image" content="https://iadicarlo.org/ensoscope/og_card.png?v=20261017a">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ENSOscope: El Niño / La Niña forecasts for humanitarian action">
   <meta name="twitter:description" content="Seasonal El Niño / La Niña forecasts and teleconnection impact maps for humanitarian anticipatory action.">
-  <meta name="twitter:image" content="https://iadicarlo.org/ensoscope/og_card.png?v=20260624h">
+  <meta name="twitter:image" content="https://iadicarlo.org/ensoscope/og_card.png?v=20261017a">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <script type="application/ld+json">
@@ -36,9 +36,9 @@
     "license": "https://creativecommons.org/licenses/by/4.0/"
   }
   </script>
-  <link rel="stylesheet" href="static/css/style.css?v=20260624g">
-  <script src="static/lib/chart.umd.min.js?v=20260624g"></script>
-  <link rel="icon" type="image/png" href="favicon.png?v=20260624g">
+  <link rel="stylesheet" href="static/css/style.css?v=20261017a">
+  <script src="static/lib/chart.umd.min.js?v=20261017a"></script>
+  <link rel="icon" type="image/png" href="favicon.png?v=20261017a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
     /* "From forecast to action" workflow band (landing) */
@@ -112,7 +112,7 @@
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20260624g" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle active" data-nav="forecast">Forecast</span>
@@ -148,7 +148,8 @@
     <h1 class="page-title">ENSO Forecast on File</h1>
     <p class="page-subtitle">
       ENSO phase &amp; intensity probability forecast (ECMWF SEAS5 + Météo-France),
-      leads 1-6 months. Probabilities are the raw fraction of ensemble members in each class.
+      leads L1 to L6 (L1 is the month the forecast is issued, L6 five months later). The chance of each
+      class is the share of the forecast runs in it.
     </p>
 
     <!-- New-visitor pointer to the Guide -->
@@ -182,7 +183,7 @@
         </div>
       </div>
       <a class="rf-shot" href="event_replay.html?event=extreme_el_nino_199705&amp;country=kenya" aria-label="Open the Kenya 1997-98 El Niño replay">
-        <img src="static/media/event_replay_preview.jpg?v=20261015d" width="880" height="556" loading="lazy"
+        <img src="static/media/event_replay_preview.jpg?v=20261017a" width="880" height="556" loading="lazy"
              alt="Event replay for Kenya in the 1997-98 El Niño: the Pacific sea surface temperature rising through 1997, and below it Kenya's rainfall with a flood recorded in September 1997.">
       </a>
     </section>
@@ -237,9 +238,9 @@
     <div id="current-status-section" style="display:none">
       <div class="status-banner" id="status-cards"></div>
       <div class="card" style="margin-bottom:1.5rem;padding:1rem 1.2rem">
-        <h2 style="margin-bottom:0.3rem">Phase Outlook by Lead Time</h2>
+        <h2 style="margin-bottom:0.3rem">ENSO forecast by lead</h2>
         <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.75rem">
-          Summary cards above show averages over leads 3-6. Rows highlighted in light blue are the medium-range signal leads.
+          Summary cards above show averages over leads L3 to L6 (two to five months after the month the forecast is issued). Rows highlighted in light blue are those leads.
         </p>
         <table class="status-lead-table" id="status-lead-table">
           <thead>
@@ -321,10 +322,10 @@
     </div>
 
     <div class="card" id="forecast-members-card">
-      <h2>Per-centre ensemble member plumes</h2>
+      <h2>Runs from each forecast model</h2>
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.9rem">
-        Individual member trajectories from every contributing centre. Thin lines = members;
-        thick line = centre's ensemble median. Centre selection follows the same checkbox
+        Every run of each forecast model. Thin lines = runs;
+        thick line = the median of that model's runs. The model selection follows the same checkbox
         set as the probability plume above.
       </p>
       <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;margin-bottom:0.9rem">
@@ -348,8 +349,8 @@
       <h2>About This Forecast</h2>
       <div class="prose">
         <p>
-          The probability bars above show the <strong>raw fraction of ensemble members</strong>
-          falling in each ENSO intensity class. Each member's NINO index is first bias- and
+          The probability bars above show the <strong>raw share of the runs</strong>
+          falling in each ENSO intensity class. Each run's NINO index is first bias- and
           amplitude-corrected to the 1993-2016 hindcast
           (<em>z = (anomaly − μ<sub>hindcast</sub>) / σ<sub>hindcast</sub></em>, matching observed
           variance per the ECCC/Merryfield method). The NINO indices are relative: the
@@ -375,10 +376,10 @@
     </div>
   </main>
 
-  <script src="static/js/data_base.js?v=20261016a"></script>
+  <script src="static/js/data_base.js?v=20261017a"></script>
 
-  <script src="static/js/app.js?v=20261015g"></script>
-  <script src="static/js/updates.js?v=20261016a"></script>
-  <script src="static/js/site.js?v=20261015d"></script>
+  <script src="static/js/app.js?v=20261017a"></script>
+  <script src="static/js/updates.js?v=20261017a"></script>
+  <script src="static/js/site.js?v=20261017a"></script>
 </body>
 </html>

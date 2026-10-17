@@ -367,7 +367,11 @@ function renderColorbar(meta) {
   const _vmin = symmetric ? -Math.abs(vmax) : (vmin != null ? vmin : 0);
   const _vmax = symmetric ?  Math.abs(vmax) : vmax;
 
-  document.getElementById("colorbar-title").textContent = `${label} (${units})`;
+  // The title comes from the menu label, not the tile's own label: the tiles
+  // written before 2026-10-16 still say "UTCI >=32" for what is the 32 to 38 °C
+  // band, and the menu and the colour bar must name the same thing.
+  const opt = Object.values(VARIABLE_OPTIONS).flat().find(o => o.value === meta.variable);
+  document.getElementById("colorbar-title").textContent = `${opt ? opt.label : label} (${units})`;
 
   const canvas = document.getElementById("colorbar-bar");
   const W = canvas.offsetWidth || 180;
@@ -435,48 +439,48 @@ const VARIABLE_OPTIONS = {
   // Base names come from index_names.js so this tab and the Replay tab cannot
   // drift apart again; only the " - anomaly/absolute" suffix is local.
   wet: [
-    { value: "rx10day_anomaly",      label: `${window.ensoIndexName("rx10day")} - anomaly vs neutral` },
+    { value: "rx10day_anomaly",      label: `${window.ensoIndexName("rx10day")} - anomaly vs neutral-season average` },
     { value: "rx10day_absolute",     label: `${window.ensoIndexName("rx10day")} - absolute mean` },
   ],
   dry: [
-    { value: "cdd_anomaly",    label: `${window.ensoIndexName("cdd")} - anomaly vs neutral` },
+    { value: "cdd_anomaly",    label: `${window.ensoIndexName("cdd")} - anomaly vs neutral-season average` },
     { value: "cdd_absolute",   label: `${window.ensoIndexName("cdd")} - absolute mean` },
   ],
   heat: [
-    { value: "wbgt_max_anomaly",    label: "WBGT (heat-stress) - anomaly vs neutral" },
+    { value: "wbgt_max_anomaly",    label: "WBGT (heat-stress) - anomaly vs neutral-season average" },
     { value: "wbgt_max_absolute",   label: "WBGT - absolute mean" },
-    { value: "utci_max_anomaly",    label: "UTCI (universal heat-stress) - anomaly vs neutral" },
+    { value: "utci_max_anomaly",    label: "UTCI (universal heat-stress) - anomaly vs neutral-season average" },
     { value: "utci_max_absolute",   label: "UTCI - absolute mean" },
-    { value: "tmax_anomaly",        label: `${window.ensoIndexName("tmax")} - anomaly vs neutral` },
+    { value: "tmax_anomaly",        label: `${window.ensoIndexName("tmax")} - anomaly vs neutral-season average` },
     { value: "tmax_absolute",       label: `${window.ensoIndexName("tmax")} - absolute mean` },
-    { value: "hw_days_anomaly",     label: "Daytime heatwave days - anomaly vs neutral" },
+    { value: "hw_days_anomaly",     label: "Daytime heatwave days - anomaly vs neutral-season average" },
     { value: "hw_days_absolute",    label: "Daytime heatwave days - absolute" },
-    { value: "hw_nights_anomaly",   label: "Nighttime heatwave days - anomaly vs neutral" },
+    { value: "hw_nights_anomaly",   label: "Nighttime heatwave days - anomaly vs neutral-season average" },
     { value: "hw_nights_absolute",  label: "Nighttime heatwave days - absolute" },
-    { value: "hw_compound_anomaly", label: "Compound (day+night) heatwave days - anomaly vs neutral" },
+    { value: "hw_compound_anomaly", label: "Compound (day+night) heatwave days - anomaly vs neutral-season average" },
     { value: "hw_compound_absolute",label: "Compound (day+night) heatwave days - absolute" },
     // Fixed-temperature health thresholds (Aug 2026). Grouped after the
     // percentile-based layers, and labelled with the actual cut-off so the
     // reader never has to guess what "strong" means. See methodology.html
     // #heat-thresholds for why the absolute counts are ERA5-first.
     { value: "utci_strong_absolute",      label: "Days with UTCI 32 to 38 °C - absolute" },
-    { value: "utci_strong_anomaly",       label: "Days with UTCI 32 to 38 °C - anomaly vs neutral" },
+    { value: "utci_strong_anomaly",       label: "Days with UTCI 32 to 38 °C - anomaly vs neutral-season average" },
     { value: "utci_vstrong_absolute",     label: "Days with UTCI 38 to 46 °C - absolute" },
-    { value: "utci_vstrong_anomaly",      label: "Days with UTCI 38 to 46 °C - anomaly vs neutral" },
+    { value: "utci_vstrong_anomaly",      label: "Days with UTCI 38 to 46 °C - anomaly vs neutral-season average" },
     { value: "utci_extreme_absolute",     label: "Days with UTCI 46 °C and above - absolute" },
-    { value: "utci_extreme_anomaly",      label: "Days with UTCI 46 °C and above - anomaly vs neutral" },
+    { value: "utci_extreme_anomaly",      label: "Days with UTCI 46 °C and above - anomaly vs neutral-season average" },
     { value: "wbgt_strong_absolute",      label: "Days with WBGT 29 to 31 °C - absolute" },
-    { value: "wbgt_strong_anomaly",       label: "Days with WBGT 29 to 31 °C - anomaly vs neutral" },
+    { value: "wbgt_strong_anomaly",       label: "Days with WBGT 29 to 31 °C - anomaly vs neutral-season average" },
     { value: "wbgt_vstrong_absolute",     label: "Days with WBGT 31 to 32 °C - absolute" },
-    { value: "wbgt_vstrong_anomaly",      label: "Days with WBGT 31 to 32 °C - anomaly vs neutral" },
+    { value: "wbgt_vstrong_anomaly",      label: "Days with WBGT 31 to 32 °C - anomaly vs neutral-season average" },
     { value: "wbgt_extreme_absolute",     label: "Days with WBGT 32 °C and above - absolute" },
-    { value: "wbgt_extreme_anomaly",      label: "Days with WBGT 32 °C and above - anomaly vs neutral" },
+    { value: "wbgt_extreme_anomaly",      label: "Days with WBGT 32 °C and above - anomaly vs neutral-season average" },
     { value: "night_tropical_absolute",   label: "Nights 20 to 25 °C (tropical) - absolute" },
-    { value: "night_tropical_anomaly",    label: "Nights 20 to 25 °C (tropical) - anomaly vs neutral" },
+    { value: "night_tropical_anomaly",    label: "Nights 20 to 25 °C (tropical) - anomaly vs neutral-season average" },
     { value: "night_equatorial_absolute", label: "Nights 25 to 30 °C (equatorial) - absolute" },
-    { value: "night_equatorial_anomaly",  label: "Nights 25 to 30 °C (equatorial) - anomaly vs neutral" },
+    { value: "night_equatorial_anomaly",  label: "Nights 25 to 30 °C (equatorial) - anomaly vs neutral-season average" },
     { value: "night_torrid_absolute",     label: "Nights 30 °C and above (torrid) - absolute" },
-    { value: "night_torrid_anomaly",      label: "Nights 30 °C and above (torrid) - anomaly vs neutral" },
+    { value: "night_torrid_anomaly",      label: "Nights 30 °C and above (torrid) - anomaly vs neutral-season average" },
   ],
   // vector (dengue/malaria suitability) removed 2026-06-23 - teleconnections
   // tab keeps heat + precip metrics only.
@@ -540,7 +544,7 @@ function _markHazardButtons(source) {
     btn.classList.toggle("other-source", !allowed.includes(h));
     btn.title = allowed.includes(h) ? ""
       : `Comes from ${_HAZARD_SOURCES[h][0] === "era5" ? "ERA5 reanalysis"
-         : "the CESM2 ensemble"}; clicking switches the source for you.`;
+         : "the CESM2 climate model"}; clicking switches the source for you.`;
   }
 }
 
@@ -847,6 +851,7 @@ async function _onCountryClick(feature) {
         _drillLevel = 1; _subregionId = sub.id; _countryId = null; _maskFeature = null;
         _rotateTo(sub.center, sub.scale);
         _renderBreadcrumb();
+        _updateAlertPanel();
         return;
       }
     }
@@ -871,6 +876,7 @@ async function _onCountryClick(feature) {
     if (geo) _rotateTo(geo.center, geo.scale);
     _renderBreadcrumb();
     _redraw();
+    _updateAlertPanel();
   }
 }
 
@@ -929,8 +935,17 @@ function _showLoading(on) {
 
 // (prob-ratio tiles removed 2026-06-23, so this set is now empty)
 const _OBS_NO_PROB = new Set();
-// Variables only available for OBS (no CESM2 equivalent)
-const _OBS_ONLY = new Set();
+// Fixed-threshold day counts as ABSOLUTE numbers are not offered from CESM2.
+// A model's warm or cold bias lands directly in a count against a fixed
+// cut-off (a 1 °C bias moves it by as much as the El Niño signal), so the
+// model's band layers are shown only as the change against neutral seasons,
+// where the bias is largely shared. Methodology #heat-thresholds and
+// docs/METHODOLOGY_heat_thresholds.md say the same; keep the three in step.
+const _OBS_ONLY = new Set([
+  "utci_strong_absolute", "utci_vstrong_absolute", "utci_extreme_absolute",
+  "wbgt_strong_absolute", "wbgt_vstrong_absolute", "wbgt_extreme_absolute",
+  "night_tropical_absolute", "night_equatorial_absolute", "night_torrid_absolute",
+]);
 
 // Anomaly-vs-neutral is meaningless for the Neutral phase itself - hide it there.
 const _NEUTRAL_HIDDEN = new Set([
@@ -968,7 +983,10 @@ function _updateVariableOptions() {
   if (probRow) probRow.style.display = _PROB_RATIO_VARS.has(sel.value) ? "" : "none";
 }
 
-// ── Alert panel ───────────────────────────────────────────────────────────────
+// ── Forecast panel: ENSO forecast and what past events did here ──────────────
+//
+// The logic lives in forecast_signal.js (tested under node). This part only
+// fetches and writes the table. See that file for why the panel was rebuilt.
 
 const PHASE_LABEL = {
   extreme_la_nina: "Extreme La Niña", strong_la_nina: "Strong La Niña",
@@ -976,112 +994,165 @@ const PHASE_LABEL = {
   moderate_el_nino: "Moderate El Niño", strong_el_nino: "Strong El Niño",
   extreme_el_nino: "Extreme El Niño",
 };
-const PHASE_FAMILY = phase => phase.includes("el_nino") ? "el_nino" :
-                               phase.includes("la_nina") ? "la_nina" : "neutral";
+const FAMILY_LABEL = { el_nino: "El Niño", la_nina: "La Niña", neutral: "Neutral" };
+const _MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+// Both forecast models, as on the Forecast page. ?v= is bumped with each build;
+// no-store because the files are small and change monthly.
+const _FC_FILES = [
+  { key: "seas5", name: "SEAS5", file: "data/forecast.json?v=20261017a" },
+  { key: "mf9", name: "Météo-France", file: "data/forecast_mf9.json?v=20261017a" },
+];
+const _PANEL_VAR = {
+  wet: { variable: "rx10day_anomaly", units: "mm", up: "heavier", down: "lighter" },
+  dry: { variable: "cdd_anomaly", units: "days", up: "longer", down: "shorter" },
+};
+const _cellsCache = {};   // countryId|grid -> cell indices inside the country
 
 async function _loadForecast() {
   if (_forecastData) return _forecastData;
-  try {
-    // ?v= is the monthly data-build buster (kept in sync with app.js DATA_VERSION)
-    const r = await fetch("data/forecast.json?v=20260731a", {cache: "no-store"});
-    _forecastData = await r.json();
-  } catch(e) { _forecastData = null; }
+  const out = [];
+  for (const m of _FC_FILES) {
+    try {
+      const r = await fetch(m.file, {cache: "no-store"});
+      if (r.ok) out.push(Object.assign({}, m, {fc: await r.json()}));
+    } catch (e) { /* a missing model is left out, not invented */ }
+  }
+  _forecastData = out.length ? out : null;
   return _forecastData;
 }
 
-// Compute dominant phase and its aggregate probability from a forecast lead row
-function _dominantPhase(lead) {
-  const classes = ["extreme_la_nina","strong_la_nina","moderate_la_nina","neutral",
-                   "moderate_el_nino","strong_el_nino","extreme_el_nino"];
-  let best = classes[0], bestP = 0;
-  for (const c of classes) {
-    if ((lead[c] || 0) > bestP) { bestP = lead[c]; best = c; }
+function _fmtMonth(vt) {
+  const [y, m] = (vt || "").split("-").map(Number);
+  return m ? `${_MONTHS[m - 1]} ${y}` : vt;
+}
+
+async function _signalFor(source, season, cls, pv) {
+  if (cls === "neutral") return { text: "Neutral: no change to show", n: null };
+  const t = await loadTile(source, season, cls, pv.variable);
+  const key = `${_countryId}|${t.grid || source}`;
+  if (!_cellsCache[key]) _cellsCache[key] = EnsoSignal.cellsInside(t, _maskFeature.geometry);
+  const cells = _cellsCache[key];
+  if (!cells.length) return { text: "No data cells inside this country", n: null };
+  const mean = EnsoSignal.areaMean(t, cells);
+  const dir = EnsoSignal.direction(mean, pv.variable);
+  const num = `${mean >= 0 ? "+" : ""}${mean.toFixed(1)} ${pv.units}`;
+  const word = dir > 0 ? pv.up : dir < 0 ? pv.down : "no clear signal";
+  const n = t.meta && t.meta.n_events;
+  // Which past events, and how many went the way of the average. Written by the
+  // tile exporter from the event NetCDF, on the same cells and weights as the
+  // mean above (scripts/analysis/finance/map_panel.py); observations only, as
+  // CESM2 counts hundreds of events across its runs.
+  let events = "";
+  const evs = t.meta && t.meta.events;
+  const per = t.meta && t.meta.event_means && t.meta.event_means[_maskFeature.properties.name];
+  if (Array.isArray(evs) && evs.length && evs.length === n) {
+    events = `: ${evs.map(e => e.season).join(", ")}`;
+    if (Array.isArray(per) && per.length === n && per.every(x => typeof x === "number")) {
+      const up = mean >= 0;
+      const k = per.filter(x => (up ? x > 0 : x < 0)).length;
+      events += `; ${up ? pv.up : pv.down} in ${k} of ${n}`;
+    }
   }
-  const fam = PHASE_FAMILY(best);
-  const famP = classes.filter(c => PHASE_FAMILY(c) === fam).reduce((s,c) => s+(lead[c]||0), 0);
-  return { phase: best, prob: bestP, famProb: famP, family: fam };
-}
-
-// Get the composite anomaly sign for the tile's current variable at the dominant phase
-// Returns +1 (wetter/more extreme than neutral), -1 (drier/less), or 0 (no signal)
-function _tileSignForPhase(phase) {
-  if (!_currentTile || !_currentTile.v || _currentTile.v.length === 0) return 0;
-  const vals = _currentTile.v.map(x => x / _currentTile.scale);
-  const mean = vals.reduce((s,v) => s+v, 0) / vals.length;
-  if (Math.abs(mean) < 0.01) return 0;
-  return mean > 0 ? 1 : -1;
-}
-
-function _signalPill(famProb, sign, hazard) {
-  // sign: +1 means anomaly is positive (wetter for wet hazard, drier for dry hazard)
-  // For wet hazard: positive anomaly + high EN prob = Alert; for dry: positive anomaly = drier = Alert
-  const isAdverse = sign !== 0;
-  if (!isAdverse || famProb < 0.25) return `<span class="signal-pill signal-neutral">-</span>`;
-  if (famProb >= 0.5) return `<span class="signal-pill signal-alert">High</span>`;
-  if (famProb >= 0.35) return `<span class="signal-pill signal-watch">Watch</span>`;
-  return `<span class="signal-pill signal-neutral">Low</span>`;
+  return { text: `${num}, ${word}`, n, events };
 }
 
 async function _updateAlertPanel() {
   const panel = document.getElementById("alert-panel");
   const tbody = document.getElementById("alert-tbody");
+  const table = document.getElementById("alert-table");
   const titleEl = document.getElementById("alert-panel-title");
+  const introEl = document.getElementById("alert-intro");
   const noteEl  = document.getElementById("alert-note");
 
   if (_drillLevel === 0) { panel.style.display = "none"; return; }
+  panel.style.display = "block";   // the stylesheet hides it by default, so "" would hide it again
+  const say = (title, msg) => {
+    titleEl.textContent = title; introEl.textContent = msg;
+    table.style.display = "none"; noteEl.innerHTML = "";
+  };
+  const baseTitle = "ENSO forecast and what past events did here";
 
-  const fc = await _loadForecast();
-  if (!fc) { panel.style.display = "none"; return; }
-
-  const geoLabel = _drillLevel === 2
-    ? (_geoById[_countryId]?.label || _countryId)
-    : (_geoById[_subregionId]?.label || _subregionId);
-  const season = document.getElementById("ctrl-season").value.toUpperCase();
-  const hazard = _currentHazard;
-  const hazardLabel = hazard === "wet" ? "Wet extreme signal" : "Drought / dry signal";
-
-  titleEl.textContent = `Forecast × Impact Signal - ${geoLabel} · ${season}`;
-
-  let rows = "";
-  for (const lead of fc.leads) {
-    const { phase, prob, famProb, family } = _dominantPhase(lead);
-    // Get tile signal at the dominant phase's anomaly
-    // Load the anomaly tile for the dominant phase to check sign
-    const anomVar = hazard === "wet" ? "rx10day_anomaly" : "cdd_anomaly";
-    let sign = 0;
-    try {
-      const t = await loadTile(document.getElementById("ctrl-source").value,
-                               season.toLowerCase(), phase, anomVar);
-      if (t && t.v && t.v.length > 0) {
-        const vals = t.v.map(x => x / t.scale);
-        const mean = vals.reduce((s,v) => s+v, 0) / vals.length;
-        sign = mean > 0.5 ? 1 : mean < -0.5 ? -1 : 0;
-      }
-    } catch(e) { sign = 0; }
-
-    const probPct = (famProb * 100).toFixed(0);
-    const signText = sign === 0 ? "No clear signal" :
-                     (hazard === "wet")
-                       ? (sign > 0 ? "↑ Wetter than normal" : "↓ Drier than normal")
-                       : (sign > 0 ? "↓ Drier than normal" : "↑ Wetter than normal");
-    const pill = _signalPill(famProb, sign, hazard);
-
-    rows += `<tr>
-      <td>+${lead.lead}</td>
-      <td>${lead.valid_time}</td>
-      <td>${PHASE_LABEL[phase] || phase}</td>
-      <td>${probPct}%</td>
-      <td style="color:var(--text-muted)">${signText}</td>
-      <td>${pill}</td>
-    </tr>`;
+  if (_drillLevel === 1) {
+    say(baseTitle, "Click a country to see, for each forecast month, what past events of the most likely "
+      + "ENSO class did there. A whole region is not averaged: it can mix opposite changes.");
+    return;
   }
+  const geoLabel = _geoById[_countryId]?.label || _countryId;
+  if (!_maskFeature) {
+    say(`${baseTitle}: ${geoLabel}`, "The country outline is not in this map's basemap, so its cells cannot be "
+      + "picked out here. See the Event replay tab for this country.");
+    return;
+  }
+  const pv = _PANEL_VAR[_currentHazard];
+  if (!pv) {
+    say(`${baseTitle}: ${geoLabel}`, "This panel covers rainfall and dry spells. For heat, read the map "
+      + "layers above for each season and ENSO class.");
+    return;
+  }
+  const models = await _loadForecast();
+  if (!models) { panel.style.display = "none"; return; }
 
+  const source = document.getElementById("ctrl-source").value;
+  const srcText = source === "cesm2" ? "the CESM2 climate model (50 runs, 1850-2014)" : "observed rainfall (CHIRPS)";
+  const idxName = window.ensoIndexName(pv.variable.replace("_anomaly", ""));
+  const idx = idxName.charAt(0).toLowerCase() + idxName.slice(1);   // mid-sentence
+  titleEl.textContent = `${baseTitle}: ${geoLabel}`;
+  introEl.textContent = `For each month of the ENSO forecast: the most likely class from each forecast model, `
+    + `and how past events of that class changed the ${idx} in ${geoLabel} in the season that month falls in. `
+    + `The value is one number per season, the ${idx} over the whole season, averaged over past events of that `
+    + `class (each counted once, in the season it covers most), minus the neutral-season average. `
+    + `Source: ${srcText}. Past events are a guide, not a forecast of rain.`;
+
+  const leadsOf = m => m.fc.leads.slice().sort((a, b) => a.lead - b.lead);
+  const base = leadsOf(models[0]);
+  let rows = "";
+  for (const lead of base) {
+    const month = parseInt(lead.valid_time.split("-")[1], 10);
+    const season = EnsoSignal.seasonOfMonth(month);
+    const per = models.map(m => {
+      const l = leadsOf(m).find(x => x.valid_time === lead.valid_time);
+      if (!l) return null;
+      const cls = EnsoSignal.mostLikelyClass(l);
+      return { name: m.name, cls, chance: EnsoSignal.familyChance(l, cls) };
+    });
+    const classCells = per.map((p, i) => `<td data-label="${models[i].name}">` + (p
+      ? `${PHASE_LABEL[p.cls]}<br><span style="color:var(--text-muted)">${FAMILY_LABEL[EnsoSignal.familyOf(p.cls)]} `
+        + `${Math.round(p.chance * 100)}%</span>`
+      : `<span style="color:var(--text-muted)">no forecast</span>`) + "</td>").join("");
+    const distinct = [...new Set(per.filter(Boolean).map(p => p.cls))];
+    const parts = [];
+    for (const cls of distinct) {
+      let s;
+      try { s = await _signalFor(source, season, cls, pv); }
+      catch (e) { s = { text: "No map for this class and season", n: null }; }
+      const nTxt = s.n != null
+        ? ` <span style="color:var(--text-muted)">(n = ${s.n}${s.events || ""})</span>` : "";
+      const who = distinct.length > 1 ? `${PHASE_LABEL[cls]}: ` : "";
+      parts.push(`${who}${s.text}${nTxt}`);
+    }
+    rows += `<tr><td data-label="Lead">L${lead.lead}</td><td data-label="Month">${_fmtMonth(lead.valid_time)}</td>`
+      + `<td data-label="Season">${season.toUpperCase()}</td>${classCells}`
+      + `<td data-label="Past events here">${parts.join("<br>")}</td></tr>`;
+  }
+  document.getElementById("alert-head").innerHTML = "<th>Lead</th><th>Month</th><th>Season</th>"
+    + models.map(m => `<th>${m.name}: most likely</th>`).join("")
+    + `<th>Past events of that class here</th>`;
   tbody.innerHTML = rows;
-  noteEl.innerHTML = `Forecast vintage: <strong>${fc.vintage}</strong> &nbsp;·&nbsp; `
-    + `Impact signal from ${document.getElementById("ctrl-source").value === "obs" ? "CHIRPS observations" : "CESM2 large ensemble"} `
-    + `composite for dominant phase at each lead. `
-    + `<a href="hindcast_skill.html" style="color:var(--accent)">Skill verification →</a>`;
-  panel.style.display = "";
+  table.style.display = "";
+  const thr = EnsoSignal.THRESHOLD[pv.variable];
+  noteEl.innerHTML = `Forecast issued <strong>${_fmtMonth(models[0].fc.vintage)}</strong>; L1 is that month. `
+    + `Most likely class: the family (El Niño, neutral or La Niña) with the highest chance, then its most likely `
+    + `strength, the rule of the Forecast page; the % is the chance of that family. The change is averaged `
+    + `over the map cells inside ${geoLabel}, weighted by cell area; a change under ${thr} ${pv.units} either way, `
+    + `as printed, reads "no clear signal". n is the number of past events behind the map${source === "cesm2"
+      ? " (counted over all CESM2 runs)"
+      : `, then the season each one gave (its year, or years for December to February) and in how many of `
+        + `them the change went the way of the average`}; few events make a weak guide. `
+    + `The neutral-season average is the mean of past neutral seasons, one per neutral period, chosen by the same `
+    + `full-season rule as the El Niño and La Niña seasons. The Event replay instead shows the ${idx} month by `
+    + `month, inside each calendar month, against the normal of every neutral month in the record, so a season `
+    + `there reads smaller and can differ in sign. `
+    + `<a href="hindcast_skill.html" style="color:var(--accent)">How reliable the ENSO forecast is →</a>`;
 }
 
 // ── Load & render ─────────────────────────────────────────────────────────────
