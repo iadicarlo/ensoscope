@@ -15,6 +15,14 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-10-19",
+    tag: "Fix",
+    title: "One-page summaries: no table text cut off",
+    items: [
+      "In the PDF of some One-page summaries, the end of a long table cell, such as \"(beyond the record)\", was cut off at the bottom of its row, and in the Spanish summaries a column heading ran past the page edge. Rows now grow with their text and headings wrap inside their column. The Excel files were not affected.",
+    ],
+  },
+  {
     date: "2026-10-18",
     tag: "New feature",
     title: "A forecast for every region, and two downloads per country",
