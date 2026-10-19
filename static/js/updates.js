@@ -15,6 +15,14 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-10-20",
+    tag: "New feature",
+    title: "The Full analysis download is now the full country report",
+    items: [
+      "The Full analysis link on Event replay now opens the full country report for analysts: this El Niño month by month against every past El Niño event, for the country and for every region, the regional forecast with its skill, the outbreak record, and a methods annex, with every table in the Excel workbook. Before, it opened the shorter country pack.",
+    ],
+  },
+  {
     date: "2026-10-19",
     tag: "New feature",
     title: "A new look for every page, and outbreaks placed at their start",
