@@ -3,19 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Methodology - ENSOscope</title>
+  <title>Methodology | ENSOscope</title>
   <meta name="description" content="Methodology and open data sources behind the ENSOscope ENSO forecasts, skill verification and teleconnection composites, with DOIs.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/methodology.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261019b">
-  <link rel="icon" type="image/png" href="favicon.png?v=20261019b">
+  <link rel="stylesheet" href="static/css/style.css?v=20261019c">
+  <style>
+    /* Methodology layout. Shared components live in style.css. */
+    .section .prose { max-width: var(--measure); }
+    .section h3 { font-size: var(--fs-h3); font-weight: 600; margin: var(--s5) 0 var(--s2); }
+    .formula { margin: var(--s4) 0; padding: var(--s3) var(--s4); background: var(--card); border: var(--hair);
+      border-radius: var(--r-key); text-align: center; font-size: var(--fs-lead); }
+    /* References with hanging indents */
+    .refs { list-style: none; padding: 0; margin: var(--s2) 0 0; max-width: none; }
+    .refs li { padding-left: 1.5em; text-indent: -1.5em; margin-bottom: var(--s2); }
+    .refs li, table.datasets td, .section .prose { overflow-wrap: anywhere; }   /* long URLs and DOIs wrap on phones */
+    table.datasets { max-width: none; }
+    table.datasets th[scope=row] { font-weight: 600; width: 14rem; vertical-align: top; }
+    table.datasets td { vertical-align: top; line-height: 1.45; }
+    @media (max-width: 600px) { table.datasets th[scope=row] { width: auto; min-width: 8rem; } }
+  </style>
+  <link rel="icon" type="image/png" href="favicon.png?v=20261019c">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="methodology">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019b" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019c" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -48,13 +63,16 @@
   </header>
 
   <main>
-    <h1 class="page-title">Methodology</h1>
-    <p class="page-subtitle">
-      How the forecasts, the ENSO classification, the skill verification, and the teleconnection
-      composites are produced.
-    </p>
+    <div class="page-head" style="padding-top:0">
+      <p class="kicker">About</p>
+      <h1 class="page-title">Methodology</h1>
+      <p class="page-subtitle">
+        How the forecasts, the ENSO classification, the skill verification, and the teleconnection
+        composites are produced.
+      </p>
+    </div>
 
-    <div class="card" id="enso-classes">
+    <section class="section" id="enso-classes">
       <h2>ENSO index &amp; 7-class classification</h2>
       <div class="prose">
         <p>
@@ -102,15 +120,15 @@
           inside the event window, with three consecutive months required at each level. The
           tiers are <em>at or above</em>, so the highest tier reached wins:</p>
         <ul>
-          <li><strong>Extreme</strong> - NINO3 (El Niño) or NINO4 (La Niña) at or
+          <li><strong>Extreme</strong>: NINO3 (El Niño) or NINO4 (La Niña) at or
               beyond <strong>1.75</strong>, and for El Niño also a
               <strong>NINO3 precipitation anomaly ≥ 5 mm/day</strong> of observed (GPCP)
               rainfall; a forecast run's rainfall is first put on this observed scale, see
               <em>Bias &amp; amplitude correction</em> below</li>
-          <li><strong>Strong</strong> - otherwise, at or beyond <strong>1.25</strong>, with no
+          <li><strong>Strong</strong>: otherwise, at or beyond <strong>1.25</strong>, with no
               upper bound</li>
-          <li><strong>Moderate</strong> - an event that clears detection but not the strong tier</li>
-          <li><strong>Neutral</strong> - months inside a catalogued neutral period. The short gaps
+          <li><strong>Moderate</strong>: an event that clears detection but not the strong tier</li>
+          <li><strong>Neutral</strong>: months inside a catalogued neutral period. The short gaps
               between events are transitions and count as neither, and so do the latest months the
               catalogue cannot classify yet (see below)</li>
         </ul>
@@ -162,22 +180,22 @@
           needs a month that does not exist yet.
         </p>
       </div>
-    </div>
+    </section>
 
-    <div class="card">
-      <h2>Bias &amp; amplitude correction - no statistical calibration</h2>
+    <section class="section">
+      <h2>Bias &amp; amplitude correction: no statistical calibration</h2>
       <div class="prose">
         <p>
           Each member's index is corrected to the <strong>1993-2016 common hindcast period</strong>
           with a variance-rescaling bias correction (after <strong>Merryfield &amp; Lee</strong>): the
           hindcast mean is removed and the variance is rescaled to match observations,
         </p>
-        <p style="text-align:center;font-size:1.05rem">
+        <p class="formula">
           <em>z = (anomaly − μ<sub>hindcast</sub>) / σ<sub>hindcast</sub></em>
           &nbsp;for each start month and lead time.
         </p>
         <p>
-          This removes both the mean bias and the model's ENSO <em>amplitude</em> bias - seasonal
+          This removes both the mean bias and the model's ENSO <em>amplitude</em> bias: seasonal
           models typically over-amplify ENSO by ~40% (the cold-tongue bias). Probabilities are then
           the <strong>raw fraction of ensemble members</strong> in each class. <em>No</em> Platt or
           isotonic calibration is applied: the spread of the bias-corrected ensemble <em>is</em> the
@@ -201,22 +219,22 @@
           layer would obscure that.
         </p>
       </div>
-    </div>
+    </section>
 
-    <div class="card">
+    <section class="section">
       <h2>Skill verification</h2>
       <div class="prose">
         <p>
           Skill is shown directly as the <strong>temporal correlation</strong> between the hindcast
           <em>ensemble-mean</em> NINO index and observations, as a function of start month and lead
-          time, for each NINO region including NINO3 precipitation - the standard anomaly-correlation
+          time, for each NINO region including NINO3 precipitation, the standard anomaly-correlation
           metric used in seasonal-forecast verification. Correlation falls at longer leads and across
           the boreal-spring predictability barrier. See the <a href="hindcast_skill.html">Skill tab</a>.
         </p>
       </div>
-    </div>
+    </section>
 
-    <div class="card">
+    <section class="section">
       <h2>Teleconnection composites</h2>
       <div class="prose">
         <p>
@@ -284,9 +302,9 @@
           period).
         </p>
       </div>
-    </div>
+    </section>
 
-    <div class="card" id="heat-thresholds">
+    <section class="section" id="heat-thresholds">
       <h2>Absolute heat-stress thresholds</h2>
       <div class="prose">
         <p>
@@ -296,13 +314,13 @@
           the local 90th percentile". These were added at the request of the humanitarian teams.
         </p>
         <ul>
-          <li><strong>UTCI</strong> - days in three bands: <strong>32 to 38 °C</strong> (strong heat
+          <li><strong>UTCI</strong>: days in three bands: <strong>32 to 38 °C</strong> (strong heat
               stress), <strong>38 to 46 °C</strong> (very strong) and <strong>46 °C and above</strong>
               (extreme), following the standard UTCI thermal-stress scale (Bröde et al. 2012, Table 3).</li>
-          <li><strong>WBGT</strong> - days in <strong>29 to 31 °C</strong>, <strong>31 to 32 °C</strong>
+          <li><strong>WBGT</strong>: days in <strong>29 to 31 °C</strong>, <strong>31 to 32 °C</strong>
               and <strong>32 °C and above</strong>, approximately the US National Weather Service
               category edges (29.4, 31.1 and 32.2 °C).</li>
-          <li><strong>Nighttime heat</strong> - nights whose minimum is <strong>20 to 25 °C</strong>
+          <li><strong>Nighttime heat</strong>: nights whose minimum is <strong>20 to 25 °C</strong>
               (tropical night), <strong>25 to 30 °C</strong> (equatorial night) or
               <strong>30 °C and above</strong> (torrid night).</li>
         </ul>
@@ -333,9 +351,9 @@
           using actual radiation and wind, is the more reliable of the two for this purpose.
         </p>
       </div>
-    </div>
+    </section>
 
-    <div class="card" id="event-replay">
+    <section class="section" id="event-replay">
       <h2>Event replay</h2>
       <div class="prose">
         <p>
@@ -380,7 +398,7 @@
           thermometer on land would. The country zoom shows these cells at 0.25° rather than 1°.
         </p>
         <p>
-          <strong>Normal.</strong> The dashed green line on each panel is normal, what an
+          <strong>Normal.</strong> The dashed grey line on each panel is normal, what an
           <em>ordinary</em> year looks like in that country: the average of the catalogued neutral
           years for the same calendar month, between 15 and 22 years per calendar month since 1981. Comparing an event
           only against other events answers "was this El Niño worse than the last one"; it cannot
@@ -517,9 +535,9 @@
           forecast itself, which would be a considerably larger claim than that forecast supports.
         </p>
       </div>
-    </div>
+    </section>
 
-    <div class="card" id="regional-forecast">
+    <section class="section" id="regional-forecast">
       <h2>Regional forecast</h2>
       <div class="prose">
         <p>
@@ -602,95 +620,57 @@
           forecasts cannot be checked and no forecast is shown.
         </p>
       </div>
-    </div>
+    </section>
 
-    <div class="card" id="data-sources">
+    <section class="section" id="data-sources">
       <h2>Data sources and references</h2>
-      <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:0.8rem">
+      <p class="prose">
         ENSOscope builds on the datasets below. Each keeps its own licence and terms. Please cite the original sources if you reuse this material.
       </p>
       <div class="prose">
-        <ul style="font-size:0.9rem">
-          <li><strong>ECMWF SEAS5</strong> (System 51) - seasonal forecasts and hindcasts.
-              Johnson et al. (2019), <em>Geosci. Model Dev.</em> 12, 1087-1117.
-              <a href="https://doi.org/10.5194/gmd-12-1087-2019" target="_blank" rel="noopener">doi:10.5194/gmd-12-1087-2019</a>.
-              Accessed via the <a href="https://cds.climate.copernicus.eu" target="_blank" rel="noopener">Copernicus Climate Data Store (C3S)</a>.</li>
-          <li><strong>Météo-France System 9</strong> - seasonal forecasts and hindcasts, via the
-              <a href="https://cds.climate.copernicus.eu" target="_blank" rel="noopener">Copernicus C3S multi-system seasonal service</a>.</li>
-          <li><strong>ERA5 reanalysis</strong> - basis for the heat-stress indices (WBGT, UTCI), maximum
-              temperature and warm nights. Daily maximum and minimum temperature are the highest and lowest
-              of ERA5's hourly maximum and minimum 2 m temperature over the whole day, 00 to 24 UTC.
-              Hersbach et al. (2020), <em>Q. J. R. Meteorol. Soc.</em> 146, 1999-2049.
-              <a href="https://doi.org/10.1002/qj.3803" target="_blank" rel="noopener">doi:10.1002/qj.3803</a>.</li>
-          <li><strong>CHIRPS v2.0</strong> - daily precipitation (1981-present) for the rainfall teleconnection composites.
-              Funk et al. (2015), <em>Sci. Data</em> 2, 150066.
-              <a href="https://doi.org/10.1038/sdata.2015.66" target="_blank" rel="noopener">doi:10.1038/sdata.2015.66</a>.</li>
-          <li><strong>CESM2 Large Ensemble (LENS2)</strong> - ~50 members for the model teleconnection composites.
-              Rodgers et al. (2021), <em>Earth Syst. Dynam.</em> 12, 1393-1411.
-              <a href="https://doi.org/10.5194/esd-12-1393-2021" target="_blank" rel="noopener">doi:10.5194/esd-12-1393-2021</a>.</li>
-          <li><strong>COBE-SST 2</strong> - observed SST for the ENSO indices.
-              Hirahara et al. (2014), <em>J. Climate</em> 27, 57-75.
-              <a href="https://doi.org/10.1175/JCLI-D-12-00837.1" target="_blank" rel="noopener">doi:10.1175/JCLI-D-12-00837.1</a>.
-              Data provided by the NOAA PSL, Boulder, Colorado, USA, from
-              <a href="https://psl.noaa.gov" target="_blank" rel="noopener">psl.noaa.gov</a>; months from November 2025
-              come directly from its producer, the Japan Meteorological Agency
-              (<a href="https://www.data.jma.go.jp/goos/data/pub/JMA-product/cobe2_sst_glb_M/" target="_blank" rel="noopener">JMA</a>).</li>
-          <li><strong>GPCP</strong> (Global Precipitation Climatology Project, Monthly Analysis Product) - observed precipitation for the ENSO precipitation index.
-              Adler et al. (2003), <em>J. Hydrometeorol.</em> 4, 1147-1167.
-              <a href="https://doi.org/10.1175/1525-7541(2003)004%3C1147:TVGPCP%3E2.0.CO;2" target="_blank" rel="noopener">doi:10.1175/1525-7541(2003)004&lt;1147:TVGPCP&gt;2.0.CO;2</a>.
-              Data provided by the NOAA PSL, Boulder, Colorado, USA, from
-              <a href="https://psl.noaa.gov" target="_blank" rel="noopener">psl.noaa.gov</a>; months from January 2026
-              come from <a href="https://www.ncei.noaa.gov/data/global-precipitation-climatology-project-gpcp-monthly/" target="_blank" rel="noopener">NOAA NCEI</a> (GPCP version 2.3).</li>
-          <li><strong>Relative Niño index</strong> - the definition used to classify every event here.
-              L'Heureux et al. (2024), <em>A relative sea surface temperature index for classifying
-              ENSO events in a changing climate</em>, <em>J. Climate</em> 37, 1197-1211.
-              See also NOAA CPC's
-              <a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/" target="_blank" rel="noopener">RONI page</a>,
-              from which the episode rule and its 0.5 °C variance-adjusted threshold are taken.</li>
-          <li><strong>Berkeley Earth</strong> - global mean temperature. No longer used to classify
-              events; kept for the archived runs that predate 14 September 2026.
-              Rohde &amp; Hausfather (2020), <em>Earth Syst. Sci. Data</em> 12, 3469-3479.
-              <a href="https://doi.org/10.5194/essd-12-3469-2020" target="_blank" rel="noopener">doi:10.5194/essd-12-3469-2020</a>.</li>
-          <li><strong>UTCI</strong> heat-stress index - Bröde et al. (2012), <em>Int. J. Biometeorol.</em> 56, 481-494.
-              <a href="https://doi.org/10.1007/s00484-011-0454-1" target="_blank" rel="noopener">doi:10.1007/s00484-011-0454-1</a>.</li>
-          <li><strong>Heatwave-day framework</strong> (daytime / nighttime / compound) - Zhang et al. (2025), <em>J. Geophys. Res. Atmos.</em>
-              <a href="https://doi.org/10.1029/2024JD042446" target="_blank" rel="noopener">doi:10.1029/2024JD042446</a>.</li>
-          <li><strong>UTCI heat-stress thresholds</strong> (32 / 38 / 46 °C) applied to population exposure -
-              Emerton et al. (2026), <em>Global heat stress intensification and its expanding footprint on the
-              human population</em>, <em>Nature Climate Change</em>.
-              <a href="https://doi.org/10.1038/s41558-026-02670-5" target="_blank" rel="noopener">doi:10.1038/s41558-026-02670-5</a>.</li>
-          <li><strong>WBGT heat-stress categories</strong> -
-              <a href="https://www.weather.gov/tsa/wbgt" target="_blank" rel="noopener">US National Weather Service</a>,
-              and the <a href="https://www.arcgis.com/home/item.html?id=46b9e553197a4e7681f23c2e2bdd68cc" target="_blank" rel="noopener">ArcGIS Living Atlas</a> WBGT layer.</li>
-          <li><strong>Simplified WBGT formula</strong> - Australian Bureau of Meteorology approximation,
-              <a href="http://www.bom.gov.au/info/thermal_stress/" target="_blank" rel="noopener">bom.gov.au/info/thermal_stress</a>.</li>
-          <li><strong>Tropical / equatorial / torrid nights</strong> (20 / 25 / 30 °C) - Correa et al. (2024),
-              <em>Int. J. Climatology</em>.
-              <a href="https://doi.org/10.1002/joc.8510" target="_blank" rel="noopener">doi:10.1002/joc.8510</a>.</li>
-          <li><strong>Country and coastline boundaries</strong> -
-              <a href="https://www.naturalearthdata.com" target="_blank" rel="noopener">Natural Earth</a> (public domain).
-              Made with Natural Earth. Free vector and raster map data @ naturalearthdata.com.</li>
-        </ul>
-        <h3 style="font-size:1rem;margin-top:1.2rem">Disasters and outbreaks (event replay timeline)</h3>
-        <ul style="font-size:0.9rem" id="outbreak-sources-list">
-          <li><strong>EM-DAT</strong> - Emergency Events Database (EM-DAT), UCLouvain / CRED, Brussels, Belgium,
+        <p class="caption"><b>Table 1.</b> The datasets and methods ENSOscope builds on, what each is used for, and how to cite it.</p>
+        <div class="table-wrap">
+          <table class="data datasets">
+            <thead><tr><th>Dataset or method</th><th>Use and citation</th><th>Period</th><th>Resolution</th><th>Licence</th></tr></thead>
+            <tbody>
+            <tr><th scope="row">ECMWF SEAS5</th><td>(System 51): seasonal forecasts and hindcasts. Johnson et al. (2019), <em>Geosci. Model Dev.</em> 12, 1087-1117. <a href="https://doi.org/10.5194/gmd-12-1087-2019" target="_blank" rel="noopener">doi:10.5194/gmd-12-1087-2019</a>. Accessed via the <a href="https://cds.climate.copernicus.eu" target="_blank" rel="noopener">Copernicus Climate Data Store (C3S)</a>.</td><td>see source</td><td>see source</td><td>CC BY 4.0 (C3S, since 2 July 2025)</td></tr>
+            <tr><th scope="row">Météo-France System 9</th><td>seasonal forecasts and hindcasts, via the <a href="https://cds.climate.copernicus.eu" target="_blank" rel="noopener">Copernicus C3S multi-system seasonal service</a>.</td><td>see source</td><td>see source</td><td>CC BY 4.0 (C3S, since 2 July 2025)</td></tr>
+            <tr><th scope="row">ERA5 reanalysis</th><td>basis for the heat-stress indices (WBGT, UTCI), maximum temperature and warm nights. Daily maximum and minimum temperature are the highest and lowest of ERA5's hourly maximum and minimum 2 m temperature over the whole day, 00 to 24 UTC. Hersbach et al. (2020), <em>Q. J. R. Meteorol. Soc.</em> 146, 1999-2049. <a href="https://doi.org/10.1002/qj.3803" target="_blank" rel="noopener">doi:10.1002/qj.3803</a>.</td><td>see source</td><td>see source</td><td>CC BY 4.0</td></tr>
+            <tr><th scope="row">CHIRPS v2.0</th><td>daily precipitation (1981-present) for the rainfall teleconnection composites. Funk et al. (2015), <em>Sci. Data</em> 2, 150066. <a href="https://doi.org/10.1038/sdata.2015.66" target="_blank" rel="noopener">doi:10.1038/sdata.2015.66</a>.</td><td>1981-present</td><td>see source</td><td>Public domain</td></tr>
+            <tr><th scope="row">CESM2 Large Ensemble (LENS2)</th><td>~50 members for the model teleconnection composites. Rodgers et al. (2021), <em>Earth Syst. Dynam.</em> 12, 1393-1411. <a href="https://doi.org/10.5194/esd-12-1393-2021" target="_blank" rel="noopener">doi:10.5194/esd-12-1393-2021</a>.</td><td>see source</td><td>see source</td><td>CC BY 4.0</td></tr>
+            <tr><th scope="row">COBE-SST 2</th><td>observed SST for the ENSO indices. Hirahara et al. (2014), <em>J. Climate</em> 27, 57-75. <a href="https://doi.org/10.1175/JCLI-D-12-00837.1" target="_blank" rel="noopener">doi:10.1175/JCLI-D-12-00837.1</a>. Data provided by the NOAA PSL, Boulder, Colorado, USA, from <a href="https://psl.noaa.gov" target="_blank" rel="noopener">psl.noaa.gov</a>; months from November 2025 come directly from its producer, the Japan Meteorological Agency (<a href="https://www.data.jma.go.jp/goos/data/pub/JMA-product/cobe2_sst_glb_M/" target="_blank" rel="noopener">JMA</a>).</td><td>see source</td><td>see source</td><td>No usage restrictions (NOAA PSL); JMA terms compatible with CC BY 4.0</td></tr>
+            <tr><th scope="row">GPCP</th><td>(Global Precipitation Climatology Project, Monthly Analysis Product): observed precipitation for the ENSO precipitation index. Adler et al. (2003), <em>J. Hydrometeorol.</em> 4, 1147-1167. <a href="https://doi.org/10.1175/1525-7541(2003)004%3C1147:TVGPCP%3E2.0.CO;2" target="_blank" rel="noopener">doi:10.1175/1525-7541(2003)004&lt;1147:TVGPCP&gt;2.0.CO;2</a>. Data provided by the NOAA PSL, Boulder, Colorado, USA, from <a href="https://psl.noaa.gov" target="_blank" rel="noopener">psl.noaa.gov</a>; months from January 2026 come from <a href="https://www.ncei.noaa.gov/data/global-precipitation-climatology-project-gpcp-monthly/" target="_blank" rel="noopener">NOAA NCEI</a> (GPCP version 2.3).</td><td>see source</td><td>see source</td><td>No usage restrictions (NOAA PSL, NCEI)</td></tr>
+            <tr><th scope="row">Relative Niño index</th><td>the definition used to classify every event here. L'Heureux et al. (2024), <em>A relative sea surface temperature index for classifying ENSO events in a changing climate</em>, <em>J. Climate</em> 37, 1197-1211. See also NOAA CPC's <a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/" target="_blank" rel="noopener">RONI page</a>, from which the episode rule and its 0.5 °C variance-adjusted threshold are taken.</td><td>see source</td><td>see source</td><td>Public domain (NOAA NWS)</td></tr>
+            <tr><th scope="row">Berkeley Earth</th><td>global mean temperature. No longer used to classify events; kept for the archived runs that predate 14 September 2026. Rohde &amp; Hausfather (2020), <em>Earth Syst. Sci. Data</em> 12, 3469-3479. <a href="https://doi.org/10.5194/essd-12-3469-2020" target="_blank" rel="noopener">doi:10.5194/essd-12-3469-2020</a>.</td><td>see source</td><td>see source</td><td>CC BY-NC 4.0</td></tr>
+            <tr><th scope="row">UTCI</th><td>heat-stress index: Bröde et al. (2012), <em>Int. J. Biometeorol.</em> 56, 481-494. <a href="https://doi.org/10.1007/s00484-011-0454-1" target="_blank" rel="noopener">doi:10.1007/s00484-011-0454-1</a>.</td><td>see source</td><td>see source</td><td>see source</td></tr>
+            <tr><th scope="row">Heatwave-day framework</th><td>(daytime / nighttime / compound): Zhang et al. (2025), <em>J. Geophys. Res. Atmos.</em> <a href="https://doi.org/10.1029/2024JD042446" target="_blank" rel="noopener">doi:10.1029/2024JD042446</a>.</td><td>see source</td><td>see source</td><td>see source</td></tr>
+            <tr><th scope="row">UTCI heat-stress thresholds</th><td>(32 / 38 / 46 °C) applied to population exposure: Emerton et al. (2026), <em>Global heat stress intensification and its expanding footprint on the human population</em>, <em>Nature Climate Change</em>. <a href="https://doi.org/10.1038/s41558-026-02670-5" target="_blank" rel="noopener">doi:10.1038/s41558-026-02670-5</a>.</td><td>see source</td><td>see source</td><td>see source</td></tr>
+            <tr><th scope="row">WBGT heat-stress categories</th><td><a href="https://www.weather.gov/tsa/wbgt" target="_blank" rel="noopener">US National Weather Service</a>, and the <a href="https://www.arcgis.com/home/item.html?id=46b9e553197a4e7681f23c2e2bdd68cc" target="_blank" rel="noopener">ArcGIS Living Atlas</a> WBGT layer.</td><td>see source</td><td>see source</td><td>see source</td></tr>
+            <tr><th scope="row">Simplified WBGT formula</th><td>Australian Bureau of Meteorology approximation, <a href="http://www.bom.gov.au/info/thermal_stress/" target="_blank" rel="noopener">bom.gov.au/info/thermal_stress</a>.</td><td>see source</td><td>see source</td><td>see source</td></tr>
+            <tr><th scope="row">Tropical / equatorial / torrid nights</th><td>(20 / 25 / 30 °C): Correa et al. (2024), <em>Int. J. Climatology</em>. <a href="https://doi.org/10.1002/joc.8510" target="_blank" rel="noopener">doi:10.1002/joc.8510</a>.</td><td>see source</td><td>see source</td><td>see source</td></tr>
+            <tr><th scope="row">Country and coastline boundaries</th><td><a href="https://www.naturalearthdata.com" target="_blank" rel="noopener">Natural Earth</a> (public domain). Made with Natural Earth. Free vector and raster map data @ naturalearthdata.com.</td><td>see source</td><td>see source</td><td>Public domain (Natural Earth)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-notes">Licences as each provider states them, from the project's data licence check of
+          14 October 2026. "See source": no value checked by the project yet; the dataset's own page or paper,
+          cited in the table, has it.</p>
+        <h3>Disasters and outbreaks (event replay timeline)</h3>
+        <ul class="refs" id="outbreak-sources-list">
+          <li><strong>EM-DAT</strong>: Emergency Events Database (EM-DAT), UCLouvain / CRED, Brussels, Belgium,
               accessed on 2026-08-25, <a href="https://www.emdat.be/" target="_blank" rel="noopener">www.emdat.be</a>.
               Delforge et al. (2025), <em>Int. J. Disaster Risk Reduct.</em> 124, 105509, <a href="https://doi.org/10.1016/j.ijdrr.2025.105509" target="_blank" rel="noopener">doi:10.1016/j.ijdrr.2025.105509</a>.</li>
-          <li class="src-static"><strong>Cholera in sub-Saharan Africa</strong> - Perez-Saez et al. (2022), <em>Lancet Glob. Health</em> 10, e831-e839, <a href="https://doi.org/10.1016/S2214-109X(22)00007-9" target="_blank" rel="noopener">doi:10.1016/S2214-109X(22)00007-9</a>,
-              data from the <a href="https://github.com/HopkinsIDD" target="_blank" rel="noopener">HopkinsIDD</a> repository.</li>
-          <li class="src-static"><strong>Meningitis</strong> - WHO Inter-country Support Team for West Africa, weekly meningitis bulletins, via
-              <a href="https://www.menafrinet.org" target="_blank" rel="noopener">MenAfriNet</a>.</li>
-          <li class="src-static"><strong>Chikungunya, Zika and dengue in Brazil</strong> - InfoDengue, Codeço et al. (2018),
-              <a href="https://info.dengue.mat.br" target="_blank" rel="noopener">info.dengue.mat.br</a>.</li>
-          <li class="src-static"><strong>Leptospirosis, leishmaniasis and hantavirus in Brazil</strong> - Ministério da Saúde, SINAN, via
-              <a href="https://datasus.saude.gov.br" target="_blank" rel="noopener">DATASUS</a> (CC BY).</li>
-          <li class="src-static"><strong>Dengue worldwide</strong> - WHO global dengue surveillance,
-              <a href="https://worldhealthorg.shinyapps.io/dengue_global/" target="_blank" rel="noopener">worldhealthorg.shinyapps.io/dengue_global</a>.</li>
-          <li class="src-static"><strong>WHO Disease Outbreak News</strong> - as compiled by Torres Munguía et al. (2022), <em>Sci. Data</em> 9, 683,
-              <a href="https://doi.org/10.6084/m9.figshare.17207183" target="_blank" rel="noopener">doi:10.6084/m9.figshare.17207183</a> (CC BY 4.0).</li>
+          <li class="src-static"><strong>Cholera in sub-Saharan Africa</strong>: Perez-Saez et al. (2022), Lancet Glob. Health 10, e831-e839, doi:10.1016/S2214-109X(22)00007-9, <a href="https://github.com/HopkinsIDD/cholera_seasonality_ssa" target="_blank" rel="noopener">github.com/HopkinsIDD/cholera_seasonality_ssa</a>.</li>
+          <li class="src-static"><strong>Meningitis</strong>: WHO Inter-country Support Team for West Africa, weekly meningitis bulletins, via MenAfriNet, <a href="https://www.menafrinet.org/who-meningitis-bulletins" target="_blank" rel="noopener">www.menafrinet.org/who-meningitis-bulletins</a>.</li>
+          <li class="src-static"><strong>Chikungunya, Zika and dengue in Brazil</strong>: Codeço et al. (2018), InfoDengue, <a href="https://info.dengue.mat.br" target="_blank" rel="noopener">info.dengue.mat.br</a>.</li>
+          <li class="src-static"><strong>Leptospirosis, leishmaniasis and hantavirus in Brazil</strong>: Ministério da Saúde, SINAN, via DATASUS (CC BY), <a href="https://datasus.saude.gov.br/informacoes-de-saude-tabnet/" target="_blank" rel="noopener">datasus.saude.gov.br/informacoes-de-saude-tabnet</a>.</li>
+          <li class="src-static"><strong>Dengue worldwide</strong>: WHO global dengue surveillance, <a href="https://worldhealthorg.shinyapps.io/dengue_global/" target="_blank" rel="noopener">worldhealthorg.shinyapps.io/dengue_global</a>.</li>
+          <li class="src-static"><strong>Yellow fever, dated reports</strong>: Shearer et al. (2018), Lancet Glob. Health 6, e270-e278, and the reports linked from each marker.</li>
+          <li class="src-static"><strong>Yellow fever, onset months</strong>: Lim et al. (2025), Nat. Commun. 16, 3418; Shearer et al. (2018), Lancet Glob. Health 6, e270-e278.</li>
+          <li class="src-static"><strong>WHO Disease Outbreak News</strong>: Torres Munguía et al. (2022), Sci. Data 9, 683, doi:10.6084/m9.figshare.17207183 (CC BY 4.0), <a href="https://www.who.int/emergencies/disease-outbreak-news" target="_blank" rel="noopener">www.who.int/emergencies/disease-outbreak-news</a>.</li>
         </ul>
-        <h3 style="font-size:1rem;margin-top:1.2rem">Required credits</h3>
-        <p style="font-size:0.9rem">Contains modified Copernicus Climate Change Service information [2026]. Neither the
+        <h3>Required credits</h3>
+        <p>Contains modified Copernicus Climate Change Service information [2026]. Neither the
           European Commission nor ECMWF is responsible for any use that may be made of the Copernicus information
           or data it contains. The seasonal forecasts come from the C3S multi-system seasonal forecast
           (<a href="https://doi.org/10.24381/cds.181d637e" target="_blank" rel="noopener">doi:10.24381/cds.181d637e</a>).
@@ -700,9 +680,9 @@
           CESM2: we acknowledge the CESM2 Large Ensemble Community Project and supercomputing resources provided by
           the IBS Center for Climate Physics in South Korea.</p>
       </div>
-    </div>
+    </section>
   </main>
 
-  <script src="static/js/site.js?v=20261019b"></script>
+  <script src="static/js/site.js?v=20261019c"></script>
 </body>
 </html>

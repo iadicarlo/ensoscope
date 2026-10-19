@@ -1,6 +1,6 @@
 {
   "vintage": "2026-10",
-  "model": "Meteo-France System 9",
+  "model": "M\u00e9t\u00e9o-France System 9",
   "source": "mf9",
   "calibrated": false,
   "method": "raw_ensemble_fraction",

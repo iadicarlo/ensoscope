@@ -32,13 +32,24 @@ const RP = {
   thr: { heat: "utci_strong_days", night: "night_equatorial" },
 };
 
+// Colours come from the tokens in style.css (read once the stylesheet is in).
+const _tok = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const RP_COLOR = {
-  el_nino: "#E64A19",   // --en-strong in style.css: one ENSO palette site-wide
-  la_nina: "#1565C0",   // --ln-strong
-  neutral: "#78909C",   // --neutral
-  other:   "rgba(120,134,148,0.28)",   // the comparison band
-  zero:    "#C7CED6",
+  get el_nino() { return _tok("--en-strong"); },   // one ENSO palette site-wide
+  get la_nina() { return _tok("--ln-strong"); },
+  get neutral() { return _tok("--neutral"); },
+  get other()   { return _tok("--other"); },        // the comparison lines
+  get zero()    { return _tok("--mid"); },
 };
+// The selected event in its own class colour (1997-98 extreme: --en-extreme);
+// a developing event has no class yet and takes its family's colour.
+const RP_CLASS_VAR = {
+  extreme_el_nino: "--en-extreme", strong_el_nino: "--en-strong", moderate_el_nino: "--en-moderate",
+  extreme_la_nina: "--ln-extreme", strong_la_nina: "--ln-strong", moderate_la_nina: "--ln-moderate",
+};
+function _eventColour(sel) {
+  return RP_CLASS_VAR[sel.phase] ? _tok(RP_CLASS_VAR[sel.phase]) : RP_COLOR[_fam(sel.phase, sel)];
+}
 
 function _fam(phase, entry) {
   // The synthetic "current conditions" entry has no catalogued phase, so it
@@ -135,7 +146,7 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
   // Comparison events first so they render underneath the highlighted one.
   for (const o of others) {
     ds.push({ data: o.values, borderColor: RP_COLOR.other, borderWidth: 1,
-              pointRadius: 0, tension: 0.25, spanGaps: true, fill: false,
+              pointRadius: 0, tension: 0, spanGaps: false, fill: false, directLabel: false,
               // _start is this event's OWN window start. The axis and the
               // tooltip title both speak in the SELECTED event's calendar, so
               // without this a grey line pointed at in month 1 was captioned
@@ -144,37 +155,37 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
               label: o.label, _isOther: true, _start: o.start });
   }
   // The ordinary year, under the event but over the grey comparison band, so it
-  // reads as a baseline rather than as one more event. Dashed and green so it
-  // cannot be confused with either the grey events or the blue forecast.
+  // reads as a baseline rather than as one more event. Dashed and muted, as in
+  // the figures, so it cannot be confused with the solid grey events.
   if (opts.neutral) {
-    ds.push({ data: opts.neutral, borderColor: "#2E7D5B", borderWidth: 1.6,
-              borderDash: [3, 3], pointRadius: 0, tension: 0.25, spanGaps: true,
-              fill: false, label: "Normal (average of neutral years)" });
+    ds.push({ data: opts.neutral, borderColor: _tok("--muted"), borderWidth: 1.5,
+              borderDash: [5, 4], pointRadius: 0, tension: 0, spanGaps: false,
+              fill: false, directLabel: false, label: "Normal (average of neutral years)" });
   }
 
-  ds.push({ data: main.values, borderColor: opts.color, borderWidth: 2.4,
-            pointRadius: 0, tension: 0.25, spanGaps: true, fill: false,
-            label: main.label });
+  ds.push({ data: main.values, borderColor: opts.color, borderWidth: 2.25,
+            pointRadius: 0, tension: 0, spanGaps: false, fill: false,
+            label: main.label, directText: opts.direct || null });
 
   // Live forecast, only when it overlaps this window (i.e. the event is running).
   // Dashed so it can never be mistaken for something that has happened.
   for (const f of (opts.forecasts || [])) {
     if (f.band) {
       // 10 to 90% of the runs as a shaded band: the upper edge fills down to the lower.
-      ds.push({ data: f.hi, borderWidth: 0, pointRadius: 0, tension: 0.25, spanGaps: false,
+      ds.push({ data: f.hi, borderWidth: 0, pointRadius: 0, tension: 0, spanGaps: false, directLabel: false,
                 backgroundColor: f.faint, fill: "+1", label: `${f.label} 10-90%`, _isOther: true,
                 _isMember: true });
-      ds.push({ data: f.lo, borderWidth: 0, pointRadius: 0, tension: 0.25, spanGaps: false,
+      ds.push({ data: f.lo, borderWidth: 0, pointRadius: 0, tension: 0, spanGaps: false, directLabel: false,
                 fill: false, label: `${f.label} 10-90% low`, _isOther: true, _isMember: true });
     }
     for (const m of f.members) {
       ds.push({ data: m, borderColor: f.faint, borderWidth: 1,
-                pointRadius: 0, tension: 0.25, spanGaps: true, fill: false,
+                pointRadius: 0, tension: 0, spanGaps: false, fill: false, directLabel: false,
                 label: `${f.label} run`, _isOther: true, _isMember: true });
     }
-    ds.push({ data: f.mean, borderColor: f.color, borderWidth: 2.2,
-              borderDash: f.dash, pointRadius: 0, tension: 0.25, spanGaps: true,
-              fill: false, label: `${f.label} (${f.vintage})` });
+    ds.push({ data: f.mean, borderColor: f.color, borderWidth: 2,
+              borderDash: f.dash, pointRadius: 0, tension: 0, spanGaps: false,
+              fill: false, directLabel: false, label: `${f.label} (${f.vintage})` });
   }
 
   // Marks the month the maps above are showing. Without it the reader has to
@@ -190,7 +201,7 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
       const { top, bottom } = chart.chartArea;
       const c = chart.ctx;
       c.save();
-      c.strokeStyle = "rgba(11,33,56,0.55)";
+      c.strokeStyle = _tok("--muted");
       c.lineWidth = 1.2;
       c.setLineDash([4, 3]);
       c.beginPath(); c.moveTo(x, top); c.lineTo(x, bottom); c.stroke();
@@ -207,22 +218,27 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
         // that sets it; repeating "Jan 1997:" in all six panels tripled the
         // width of every box to restate something already on screen.
         const txt = `${Math.round(v * 10) / 10}${opts.unit || ""}`;
-        c.font = "600 10px system-ui, sans-serif";
+        c.font = "600 12px " + _tok("--font");
         const wd = c.measureText(txt).width + 8;
         const bx = Math.min(Math.max(x - wd / 2, chart.chartArea.left), chart.chartArea.right - wd);
         // ABOVE the plot, in the padding reserved for it, so it never covers data.
         const by = top - 15;
-        c.fillStyle = "rgba(255,255,255,0.92)";
-        c.fillRect(bx, by, wd, 13);
-        c.strokeStyle = "rgba(11,33,56,0.25)"; c.lineWidth = 1;
-        c.strokeRect(bx, by, wd, 13);
-        c.fillStyle = "#0B2138";
-        c.fillText(txt, bx + 4, by + 9.5);
+        c.fillStyle = "#fff";
+        c.fillRect(bx, by, wd, 14);
+        c.strokeStyle = _tok("--hairline"); c.lineWidth = 1;
+        c.strokeRect(bx, by, wd, 14);
+        c.fillStyle = _tok("--ink");
+        c.fillText(txt, bx + 4, by + 11);
       }
       c.restore();
     },
   };
 
+  // The unit sits above the y axis at its left, not rotated (spec 4.8).
+  const unitEl = document.querySelector(`.rp-yunit[data-for="${canvasId}"]`);
+  if (unitEl) unitEl.textContent = opts.yTitle || "";
+  ctx.setAttribute("aria-label", `${opts.yTitle || ""}: ${main.label}, month by month, `
+    + `against ${others.length} other event${others.length === 1 ? "" : "s"}`);
   RP.charts[key] = new Chart(ctx, {
     type: "line",
     plugins: [monthMarker],
@@ -232,7 +248,7 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
       // Room above the plot for the month readout, which used to sit INSIDE the
       // plot and cover the first months of the series. Six panels each hiding
       // their own top-left corner is a lot of chart to lose to a label.
-      layout: { padding: { top: 16 } },
+      layout: { padding: { top: 18 } },
       interaction: { mode: "index", intersect: false },
       // Name the grey line you are pointing at. A band of a dozen anonymous
       // greys answers "was this unusual" and refuses to answer "unusual
@@ -257,7 +273,7 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
           chart._rpNear = next;
           chart.data.datasets.forEach((d, k) => {
             if (!d._isOther || d._isMember) return;
-            d.borderColor = k === next ? "#5A6B7A" : RP_COLOR.other;
+            d.borderColor = k === next ? _tok("--muted") : RP_COLOR.other;
             d.borderWidth = k === next ? 2 : 1;
           });
           // Rebuild the tooltip, or it names the line you started on and keeps
@@ -277,13 +293,10 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
       },
       plugins: {
         legend: { display: false },
+        directLabels: { enabled: !!opts.direct },
         tooltip: {
-          // Compact on purpose. At the default sizing this box covered a
-          // quarter of a 200px-tall panel, so pointing at a line hid the very
-          // curve you were reading. Smaller type, tighter padding, a slimmer
-          // colour swatch and no outsized title.
-          titleFont: { size: 10.5, weight: "600" },
-          bodyFont: { size: 10.5 },
+          // Compact on purpose: at the default sizing this box covered a quarter
+          // of a panel, so pointing at a line hid the very curve being read.
           padding: { top: 5, bottom: 5, left: 7, right: 7 },
           boxPadding: 3,
           boxWidth: 7,
@@ -338,10 +351,8 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
         },
       },
       scales: {
-        x: { title: { display: !!opts.xTitle, text: opts.xTitle || "",
-                      color: "#6B7B8A", font: { size: 10 } },
+        x: { title: { display: false },
              ticks: { autoSkip: false, maxRotation: 0, minRotation: 0,
-                      font: { size: 9 }, color: "#6B7B8A",
                       callback: function (v, i) {
                         const step = _tickStep(labels.length, this.width);
                         const l = labels[i];
@@ -349,10 +360,8 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
                         return (isJan || i % step === 0) ? l : "";
                       } },
              grid: { display: false } },
-        y: { title: { display: !!opts.yTitle, text: opts.yTitle || "",
-                      color: "#6B7B8A", font: { size: 10 } },
-             ticks: { font: { size: 10 } },
-             grid: { color: "rgba(0,0,0,0.05)" },
+        y: { title: { display: false },
+             border: { display: false },
              beginAtZero: !!opts.beginAtZero },
       },
     },
@@ -453,7 +462,8 @@ function _forecastsForWindow(sel, nMonths) {
 // draws nothing until it is there, so the page never waits on it.
 const RPFC = { index: undefined, country: null, docs: {}, cmp: null, key: "pr_total" };
 const RP_FC_KEYS = ["pr_total", "rx10day", "cdd", "dry_days", "tmax", "utci_strong_days",
-  "utci_vstrong_days", "utci_extreme_days", "night_tropical", "night_equatorial", "night_torrid"];
+  "utci_vstrong_days", "utci_extreme_days", "night_tropical", "night_equatorial", "night_torrid",
+  "heat_days"];   // heat_days: only for the range column of its table
 
 async function _fcLoad(id) {
   if (RPFC.index === undefined) {
@@ -556,7 +566,7 @@ function _renderOutlook() {
   document.getElementById("rp-outlook-sent").innerHTML =
     c.sentences.map(x => `<li>${_impEsc(x)}</li>`).join("");
   const tabs = document.getElementById("rp-outlook-tabs");
-  tabs.innerHTML = keys.map(k => `<button type="button" data-k="${k}"`
+  tabs.innerHTML = keys.map(k => `<button type="button" data-k="${k}" aria-pressed="${k === RPFC.key}"`
     + `${k === RPFC.key ? ' class="on"' : ""}>${_impEsc(c.tables[k].title)}</button>`).join("");
   tabs.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
     RPFC.key = b.dataset.k; _renderOutlook();
@@ -571,20 +581,88 @@ function _renderOutlook() {
     return "";
   };
   const fc = new Set(t.columns.map((col, j) => /SEAS5|Météo-France/.test(col) ? j : -1));
+  const rng = _olRanges(RPFC.key, t);
   document.getElementById("rp-outlook-table").innerHTML =
-    `<thead><tr>${t.columns.map(h => `<th>${_impEsc(h)}</th>`).join("")}</tr></thead><tbody>`
-    + t.rows.map(r => `<tr>${r.map((v, j) => `<td class="${fc.has(j) ? cls(v) : ""}">`
-      + `${_impEsc(v === null ? "" : String(v))}</td>`).join("")}</tr>`).join("") + `</tbody>`;
+    `<thead><tr>${t.columns.map(h => `<th>${_impEsc(h)}</th>`).join("")}`
+    + (rng ? `<th class="rp-ol-rng">${rng.head}</th>` : "") + `</tr></thead><tbody>`
+    + t.rows.map((r, i) => `<tr>${r.map((v, j) => `<td class="${fc.has(j) ? cls(v) : ""}">`
+      + `${_impEsc(v === null ? "" : String(v))}</td>`).join("")}`
+      + (rng ? `<td class="rp-ol-rng">${rng.rows[i]}</td>` : "") + `</tr>`).join("") + `</tbody>`;
+  const rk = document.getElementById("rp-outlook-rngkey");
+  if (rk) { rk.hidden = !rng; if (rng) rk.innerHTML = rng.key; }
   document.getElementById("rp-outlook-summary").textContent =
     `Regional forecast, by region (${c.label}, ${pd_month(c.init)} forecast)`;
   box.hidden = false;
   _renderOutlookMap();
 }
 
+// The table's range column, drawn as in Fig 1 d of the paper: for each model the
+// 10th to 90th percentile of its runs as a line and a mark at the value the table
+// prints (the runs' average), SEAS5 a circle, Météo-France a square; filled where
+// the model has useful skill there (r >= 0.6), open where its skill is weak, and no
+// mark where no skill is shown or in dry months. Only published fields are used
+// (anom, q10, q90, skill, r); one scale per table so rows can be compared.
+function _olRanges(key, t) {
+  const doc = RPFC.docs[key];
+  if (!doc || !RPFC.index || !t.columns[3]) return null;
+  const F = {}; doc.fields.forEach((f, i) => { F[f] = i; });
+  const months = String(t.columns[3]).split(", ").slice(1).join(", ");
+  const per = (RPFC.index.periods || []).find(p => p.id[0] === "N"
+    && p.label.replace(/ \d{4}/g, "") === months);
+  if (!per) return null;
+  const rain = key === "pr_total", ref = rain ? 100 : 0;
+  const unitOf = name => /^whole country$/i.test(name)
+    ? doc.units_list.find(u => u.kind === "country")
+    : doc.units_list.find(u => u.kind !== "country" && u.name === name);
+  const SYS = [["seas5", "--seas5", "c"], ["mf9", "--mf9", "s"]];
+  const rows = t.rows.map(r => {
+    const u = unitOf(String(r[0]));
+    return SYS.map(([k]) => {
+      const row = u && u.v[k] && u.v[k][per.id];
+      if (!row || row[F.skill] !== 1 || (u.dry || []).includes(per.id)) return null;
+      const lk = (u.like || {})[per.id];
+      if (lk && lk[2] === false) return null;
+      return { v: row[F.anom], lo: row[F.q10], hi: row[F.q90], useful: row[F.r] >= 0.6 };
+    });
+  });
+  let lo = ref, hi = ref;
+  for (const pair of rows) for (const m of pair) if (m) { lo = Math.min(lo, m.lo, m.v); hi = Math.max(hi, m.hi, m.v); }
+  if (hi === lo) return null;
+  const pad = (hi - lo) * 0.06; lo -= pad; hi += pad;
+  const W = 170, L = 6, R = 6, x = v => L + (v - lo) / (hi - lo) * (W - L - R);
+  const fmt = v => rain ? `${Math.round(v)}%` : `${v > 0 ? "+" : v < 0 ? "\u2212" : ""}${Math.abs(v).toFixed(key === "tmax" ? 1 : 0)}`;
+  const ticks = [ref, lo + pad, hi - pad].filter((v, i, a) => a.findIndex(w => Math.abs(w - v) < (hi - lo) * 0.28) === i);   // keep labels apart
+  const head = `<svg class="rp-ol-axis" viewBox="0 0 ${W} 30" width="${W}" height="30" role="img" aria-label="Scale of the range column">`
+    + ticks.map(v => `<text x="${x(v).toFixed(1)}" y="12" text-anchor="middle">${fmt(v)}</text>`
+      + `<line x1="${x(v).toFixed(1)}" x2="${x(v).toFixed(1)}" y1="16" y2="22"/>`).join("")
+    + `<line x1="${L}" x2="${W - R}" y1="22" y2="22"/></svg>`;
+  const svgRows = rows.map(pair => `<svg class="rp-ol-range" viewBox="0 0 ${W} 30" width="${W}" height="30" role="img" aria-label="`
+    + pair.map((m, j) => `${j ? "Météo-France" : "SEAS5"}: ${m ? fmt(m.v) + ", runs " + fmt(m.lo) + " to " + fmt(m.hi)
+        + (m.useful ? ", useful skill" : ", weak skill") : "no skill shown"}`).join("; ") + `">`
+    + `<line class="ref" x1="${x(ref).toFixed(1)}" x2="${x(ref).toFixed(1)}" y1="2" y2="28"/>`
+    + pair.map((m, j) => {
+        if (!m) return "";
+        const y = j ? 21 : 9, c = `var(${SYS[j][1]})`, fill = m.useful ? c : "#fff";
+        const line = `<line x1="${x(m.lo).toFixed(1)}" x2="${x(m.hi).toFixed(1)}" y1="${y}" y2="${y}" style="stroke:${c};stroke-width:3;stroke-opacity:${m.useful ? 1 : 0.45}"/>`;
+        const cx = x(m.v);
+        const mark = SYS[j][2] === "c"
+          ? `<circle cx="${cx.toFixed(1)}" cy="${y}" r="4.5" style="fill:${fill};stroke:${m.useful ? "#fff" : c};stroke-width:${m.useful ? 1 : 1.5}"/>`
+          : `<rect x="${(cx - 4.2).toFixed(1)}" y="${y - 4.2}" width="8.4" height="8.4" style="fill:${fill};stroke:${m.useful ? "#fff" : c};stroke-width:${m.useful ? 1 : 1.5}"/>`;
+        return line + mark;
+      }).join("") + `</svg>`);
+  const key_ = `<span class="k"><i class="mk-c" style="background:var(--seas5)"></i>SEAS5</span>`
+    + `<span class="k"><i class="mk-s" style="background:var(--mf9)"></i>Météo-France</span>`
+    + `<span class="k"><i class="mk-line" style="border-color:var(--ink);border-top-width:3px"></i>10th to 90th percentile of the runs</span>`
+    + `<span class="k">filled: useful skill; open: weak skill; no mark: no skill shown</span>`
+    + `<span class="k"><i class="mk-dash"></i>${rain ? "normal (100%)" : "normal"}</span>`
+    + `<span class="note">${_impEsc(per.label)}.</span>`;
+  return { head, rows: svgRows, key: key_ };
+}
+
 // The forecast map in the regional forecast block: one country, one index, one model, one
 // period. Its own colour bar, because the zoom pair above is in mm or days against
 // neutral years while the forecast is % of normal (rain) or the difference from normal.
-// Every cell is coloured; rain in dry months is grey; one model at a time, so no dots.
+// Every cell is coloured; rain in dry months is hatched; one model at a time, so no dots.
 const RP_OL_CMAP = { pr_total: "BrBG", dry_days: "BrBG_r", cdd: "BrBG_r", rx10day: "BrBG" };
 
 async function _fcCells(countryId, key) {
@@ -694,9 +772,9 @@ async function _renderOutlookMap() {
     const v = anom(i);
     if (v === null) continue;
     const isDry = dryF && dryF(i) !== null && dryF(i) > 0.5;
-    if (isDry) {                                // dry months: grey, no number implied
+    if (isDry) {                                // dry months: the hatched no-data look, no number implied
       const p0 = proj([d.lons[i] - 0.5, d.lats[i] + 0.5]), p1 = proj([d.lons[i] + 0.5, d.lats[i] - 0.5]);
-      ctx.fillStyle = "#D5DBE1";
+      ctx.fillStyle = window.ENSO_HATCH(ctx);
       ctx.fillRect(p0[0], p0[1], Math.max(1, p1[0] - p0[0]), Math.max(1, p1[1] - p0[1]));
       continue;
     }
@@ -720,9 +798,8 @@ async function _renderOutlookMap() {
   document.getElementById("rp-ol-mapnote").textContent =
     `${sysSel.options[sysSel.selectedIndex].text}, ${per.options[per.selectedIndex].text}: the average of the runs, `
     + "as % of normal (rain) or difference from normal, on the same normal as the observations; one degree cells, "
-    + "corrected day by day against CHIRPS rainfall (observed) and ERA5 (reanalysis). Colours show the forecast "
-    + "in every cell; how well each model did in the past is in the table, region by region (cells are judged "
-    + "one by one, and a region's average is often more skilful)." + (d.rain_based ? " Grey: dry months." : "");
+    + "corrected day by day against CHIRPS rainfall (observed) and ERA5 (reanalysis). Past skill, region by "
+    + "region, is in the table." + (d.rain_based ? " Hatched: dry months." : "");
 }
 
 const RP_MON_LONG = ["January", "February", "March", "April", "May", "June", "July", "August",
@@ -772,19 +849,33 @@ function _seriesFor(evt, nMonths, times, values) {
 // Everything below the picker describes ONE event. With no event chosen there
 // is nothing for it to describe, so it is hidden rather than left showing the
 // last thing drawn or an empty frame.
-function _setChosen(on) {
+function _setChosen(evOn, ctyOn) {
+  const on = evOn && ctyOn;
   const empty = document.getElementById("rp-empty");
   if (empty) empty.hidden = on;
-  ["rp-mapwrap", "rp-zoom-head", "rp-zoom", "rp-legend", "rp-grid",
-   "rp-meta", "rp-zoom-note", "rp-chartbar", "rp-impacts"].forEach(id => {
+  const ec = document.getElementById("rp-empty-country"), ee = document.getElementById("rp-empty-event");
+  if (ec) ec.hidden = ctyOn;
+  if (ee) ee.hidden = !ctyOn || evOn;
+  // The world map shows with an event alone, so it can be used to pick the country.
+  ["rp-fig-map", "rp-mapwrap"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.hidden = !evOn;
+  });
+  ["rp-zoom-head", "rp-fig-zoom", "rp-zoom", "rp-grid", "rp-meta", "rp-zoom-note", "rp-chartbar", "rp-impacts"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.hidden = !on;
   });
-  if (!on) {                                  // region selection cannot outlive the event
+  if (!on) {                                  // region selection cannot outlive the event or country
     const b = document.getElementById("rp-region-banner");
     const r = document.getElementById("rp-regions");
+    const o = document.getElementById("rp-outlook");
     if (b) b.hidden = true;
     if (r) r.hidden = true;
+    if (o) o.hidden = true;
+  }
+  if (!ctyOn) {                               // the page head names nothing yet
+    const h1 = document.getElementById("rp-h1");
+    if (h1) h1.textContent = "Event replay";
   }
 }
 
@@ -792,7 +883,7 @@ function render() {
   const evSel = document.getElementById("rp-event");
   const cmpSel = document.getElementById("rp-compare");
   const sel = RP.events.events.find(e => e.id === evSel.value);
-  _setChosen(!!sel);
+  _setChosen(!!sel, !!RP.country);
   if (!sel || !RP.country) return;
 
   // "Same type and intensity only" needs an intensity, and a developing event
@@ -817,7 +908,8 @@ function render() {
   const labels = _monthLabels(sel.window_start, nMonths);
   const xTitle = _xAxisTitle(sel);
   const others = _comparisonEvents(sel, cmpMode);
-  const colour = RP_COLOR[_fam(sel.phase, sel)];
+  const colour = _eventColour(sel);
+  const direct = sel.is_current ? "This event" : _shortEventName(sel.label);
 
   // Nino3.4 comes from the index file, not the country file: it is the same
   // everywhere and is what the event was classified from.
@@ -826,7 +918,7 @@ function render() {
     { label: sel.label, values: _seriesFor(sel, nMonths, nt, nv) },
     others.map(o => ({ label: o.label, start: o.window_start,
                        values: _seriesFor(o, nMonths, nt, nv) })),
-    { color: colour, unit: " σ", yTitle: "Niño 3.4 (σ)", xTitle,
+    { color: colour, unit: " σ", yTitle: "Relative Niño 3.4 (σ)", xTitle, direct,
       forecasts: _forecastsForWindow(sel, nMonths) });
 
   // A selected sub-national region replaces the country's series wholesale, in
@@ -854,11 +946,12 @@ function render() {
       { label: sel.label, values: _seriesFor(sel, nMonths, ct, vals) },
       others.map(o => ({ label: o.label, start: o.window_start,
                          values: _seriesFor(o, nMonths, ct, vals) })),
-      { color: colour, unit, yTitle, xTitle, beginAtZero: zero,
+      { color: colour, unit, yTitle, xTitle, beginAtZero: zero, direct,
         neutral: _neutralFor(sel, nMonths, series),
         forecasts: _indexForecasts(sel, nMonths, series) });
   }
   _renderThresholdUI();
+  for (const x of document.querySelectorAll(".rp-xnote")) x.textContent = xTitle + ".";
   _renderLegend(sel, others.length, _forecastsForWindow(sel, nMonths));
   _renderMeta(sel, others.length);
   _renderImpacts(sel, nMonths);
@@ -923,7 +1016,10 @@ function _xAxisTitle(sel) {
 // January always survives the thinning, or the year markers disappear with it.
 function _tickStep(n, pxWide) {
   const per = (pxWide || 700) / Math.max(n, 1);
-  return Math.max(1, Math.ceil(20 / per));
+  // 12 px labels ("Sep") need about 28 px each; under 600 px the spec asks for
+  // every third month at most.
+  const step = Math.max(1, Math.ceil(28 / per));
+  return (typeof window !== "undefined" && window.innerWidth < 600) ? Math.max(3, step) : step;
 }
 
 // ── the ordinary year ────────────────────────────────────────────────────────
@@ -961,15 +1057,15 @@ function _neutralFor(sel, nMonths, key) {
 // says what the next band up is so the reader knows where the rest went.
 const RP_THR_TEXT = {
   utci_strong_days:  "Days in the strong heat-stress band, UTCI 32 to 38 °C. Hotter days are "
-                   + "counted in the bands above, not here, so the three add up.",
+                   + "counted in the bands above.",
   utci_vstrong_days: "Days in the very strong heat-stress band, UTCI 38 to 46 °C, where outdoor "
                    + "work becomes hazardous. Days above 46 °C are counted separately.",
   utci_extreme_days: "Days at UTCI 46 °C and above, the top of the scale and the only open-ended "
                    + "band.",
   night_tropical:    "Nights with a minimum of 20 to 25 °C. Hotter nights are counted in the "
                    + "bands above.",
-  night_equatorial:  "Nights with a minimum of 25 to 30 °C, when the body gets no overnight "
-                   + "recovery. Nights above 30 °C are counted separately.",
+  night_equatorial:  "Nights with a minimum of 25 to 30 °C. Nights above 30 °C are counted "
+                   + "separately.",
   night_torrid:      "Nights at 30 °C and above, the rarest and most dangerous category, and the "
                    + "only open-ended night band. Confined to a small part of the land surface; "
                    + "over that area an El Niño still shifts it by about three nights in June "
@@ -1194,29 +1290,24 @@ function _impMonthIndex(ym, start, n) {
 
 // Anyamba et al. 2019 reads outbreaks as discrete events in time, not as
 // magnitudes: what matters is which disease, and when it started relative to
-// the anomaly. So each event is a dot at its onset month, coloured by what it
-// actually was, with its duration trailing behind as a thin line rather than a
-// heavy bar that swamps the axis. One colour per hazard and per named disease,
-// stable across countries so the legend means the same thing everywhere.
-const RP_IMP_COLOUR = {
-  // water
-  "Flood": "#2E74B5", "Drought": "#B5822E",
-  // heat. EM-DAT's subtype is the label now, so "Heat wave" is what arrives;
-  // the bare type is kept for any older build still carrying it.
-  "Heat wave": "#C2603F", "Extreme temperature": "#C2603F",
-  // disease, named
-  "cholera": "#1B8A8F", "meningitis": "#E08A2E", "yellow fever": "#C9A227",
-  "dengue": "#C0392B", "ebola": "#5B2C6F", "lassa fever": "#8A5A2B",
-  "hepatitis": "#4B8B3B", "rift valley fever": "#B03A82",
-  "leishmaniasis": "#7A8B2B", "marburg": "#7B241C", "plague": "#3B3B3B",
-  "chikungunya": "#D4649B", "zika": "#7E5BA6", "malaria": "#2F7D5B",
-  "leptospirosis": "#3C6E91", "hantavirus": "#9C6B4F",
-  // EM-DAT records 95 disease events with no pathogen named at all
-  "Epidemic": "#8A97A3",
-};
+// the anomaly. So each event is a mark at its onset month, with its duration
+// trailing behind as a thin line rather than a heavy bar that swamps the axis.
 
+// Markers by shape as well as colour (spec 6.1): floods an up-triangle in the
+// wet colour, droughts a down-triangle in the dry colour, heat a dot in the El
+// Nino colour, every outbreak an ink dot. The kind is also named in the list.
+function _impKind(label) {
+  const l = String(label || "").toLowerCase();
+  if (/flood|storm|landslide/.test(l)) return "wet";
+  if (/drought|wildfire/.test(l)) return "dry";
+  if (/heat|extreme temperature/.test(l)) return "heat";
+  return "outbreak";
+}
 function _impColour(label) {
-  return RP_IMP_COLOUR[label] || RP_IMP_COLOUR[String(label || "").toLowerCase()] || "#8A97A3";
+  return { wet: "var(--wet)", dry: "var(--dry)", heat: "var(--en-strong)", outbreak: "var(--ink)" }[_impKind(label)];
+}
+function _impShape(label) {
+  return { wet: " mk-up", dry: " mk-down" }[_impKind(label)] || "";
 }
 
 function _impLabel(e) {
@@ -1252,13 +1343,13 @@ function _impDrawRain(sel, nMonths, px, trackW) {
   // month keeps the same diverging shape the rainfall row has.
   const DRIVER = {
     water:   {keys: ["pr_anom_mm"], name: "Rainfall vs normal", unit: "mm", dp: 0,
-              hi: "#2E74B5", lo: "#A9713A"},
+              hi: _tok("--wet"), lo: _tok("--dry")},
     disease: {keys: ["pr_anom_mm"], name: "Rainfall vs normal", unit: "mm", dp: 0,
-              hi: "#2E74B5", lo: "#A9713A"},
+              hi: _tok("--wet"), lo: _tok("--dry")},
     heat:    {keys: ["utci_strong_days", "utci_vstrong_days", "utci_extreme_days"],
               vsNeutral: true, unit: "days", dp: 1,
               name: "Days above UTCI 32 \u00B0C, vs normal",
-              hi: "#C0392B", lo: "#4A7FB5"},
+              hi: _tok("--en-strong"), lo: _tok("--ln-strong")},
   };
   const drv = DRIVER[RPIMP.theme] || DRIVER.water;
   const S = RP.country && RP.country.series;
@@ -1581,7 +1672,7 @@ function _renderImpacts(sel, nMonths) {
   for (const g of geo) {
     const e = g.e;
     const bar = document.createElement("div");
-    bar.className = "rp-imp-ev" + (e.regions.length ? "" : " unplaced")
+    bar.className = "rp-imp-ev" + _impShape(_impLabel(e)) + (e.regions.length ? "" : " unplaced")
                   + (g.overruns ? " overruns" : "");
     bar.style.setProperty("--c", _impColour(_impLabel(e)));
     bar.style.left = (100 * (g.x - DOT / 2) / trackW) + "%";
@@ -1594,14 +1685,16 @@ function _renderImpacts(sel, nMonths) {
     const span = (g.before ? "\nbegan before this window" : "")
                + (g.overruns ? "\ncontinues past the end of this window" : "")
                + (e.end_month_estimated ? "\nend month estimated" : "");
-    bar.title = `${_impTitle(_impLabel(e))} - ${_impWhen(e)}\n${where.full}\n${_impBy(e)}` + span;
+    bar.title = `${_impTitle(_impLabel(e))}, ${_impWhen(e)}\n${where.full}\n${_impBy(e)}` + span;
     bar.dataset.id = e.id;
     bar.addEventListener("click", () => _selectImpact(e, sel, nMonths));
     track.appendChild(bar);
 
     const li = document.createElement("li");
     li.innerHTML = `<span class="rp-imp-when">${_impWhen(e)}</span>`
-      + `<span class="rp-imp-what"><i class="rp-imp-dot" style="--c:${_impColour(_impLabel(e))}"></i>`
+      + `<span class="rp-imp-what">${e.regions.length
+          ? `<i class="rp-imp-dot${_impShape(_impLabel(e))}" style="--c:${_impColour(_impLabel(e))}"></i>`
+          : _impHollowGlyph(_impShape(_impLabel(e)), _impColour(_impLabel(e)))}`
       + `${_impEsc(_impTitle(_impLabel(e)))}</span>`
       + `<span class="rp-imp-where${e.regions.length ? "" : " none"}">`
       + `${_impEsc(where.short)}</span>`
@@ -1623,6 +1716,7 @@ function _renderImpacts(sel, nMonths) {
   const legend = document.getElementById("rp-imp-legend");
   if (legend) {
     const seen = [];
+    const unplacedShapes = [...new Set(geo.filter(g => !g.e.regions.length).map(g => _impShape(_impLabel(g.e))))];
     for (const g of geo) {
       const L = _impLabel(g.e);
       if (!seen.includes(L)) seen.push(L);
@@ -1631,10 +1725,11 @@ function _renderImpacts(sel, nMonths) {
     // caption under the figure, away from the other keys, which is why nobody
     // connected the sentence to the grey block it described.
     legend.innerHTML = seen.map(L =>
-      `<span class="rp-imp-key"><i class="rp-imp-dot" style="--c:${_impColour(L)}"></i>`
+      `<span class="rp-imp-key"><i class="rp-imp-dot${_impShape(L)}" style="--c:${_impColour(L)}"></i>`
       + `${_impEsc(_impTitle(L))}</span>`).join("")
-      + (geo.some(g => !g.e.regions.length)
-          ? `<span class="rp-imp-key"><i class="rp-imp-dot hollow"></i>not placed on a map</span>`
+      // Hollow in the same shapes the track draws, one per shape that is unplaced here.
+      + (unplacedShapes.length
+          ? `<span class="rp-imp-key">${unplacedShapes.map(s => _impHollowGlyph(s)).join("")}not placed on a map</span>`
           : "")
       + (RPIMP.band
           ? `<span class="rp-imp-key"><i class="rp-imp-swatch"></i>`
@@ -1645,11 +1740,18 @@ function _renderImpacts(sel, nMonths) {
 
   document.getElementById("rp-imp-foot").textContent =
     `${inWindow.length} recorded in this window. `
-    + (unplaced ? `${unplaced} of them have no place we can draw, so they are shown as `
-                + `hollow rings and listed but never put on a map. ` : "")
+    + (unplaced ? `${unplaced} of them have no place we can draw: hollow markers, listed but not mapped. ` : "")
     + `Across the whole record this country has ${d.n_mapped} of ${d.n_events} events we can `
     + `place, using the ${d.admin1_units_held} admin-1 units we hold. `
     + `${_impSources(d)}`;
+}
+
+// The legend glyph for "not placed on a map": the track's marker shape, outlined.
+// Ink in the key; in the list, the kind's colour, as on the track.
+function _impHollowGlyph(shape, colour) {
+  const d = shape === " mk-up" ? "M6 1.5 L11 11 L1 11 Z" : shape === " mk-down" ? "M1 1 L11 1 L6 10.5 Z" : null;
+  return `<svg class="rp-imp-hollow" viewBox="0 0 12 12" aria-hidden="true"${colour ? ` style="stroke:${colour}"` : ""}>`
+    + (d ? `<path d="${d}"/>` : `<circle cx="6" cy="6" r="5"/>`) + `</svg>`;
 }
 
 // EM-DAT's location field is free text and can name twenty districts in one
@@ -1748,6 +1850,7 @@ function _wireImpacts() {
       RPIMP.theme = b.dataset.theme;
       for (const o of document.querySelectorAll("[data-theme]")) {
         o.classList.toggle("on", o === b);
+        o.setAttribute("aria-pressed", o === b ? "true" : "false");
       }
       render();
     });
@@ -1788,43 +1891,24 @@ function _cellsChip(c) {
  *  key is read where the lines are rather than in grey text at the foot of a
  *  long page, which nobody reaches. */
 function _renderLegend(sel, nOthers, fcs) {
-  const el = document.getElementById("rp-legend");
-  if (!el) return;
-  const colour = RP_COLOR[_fam(sel.phase, sel)];
+  const colour = _eventColour(sel);
   const items = [
-    [colour, "solid", 2.6, sel.is_current ? "This event (developing)" : sel.label],
-    ["#8A99A8", "solid", 1.4,
+    [colour, "solid", 2.25, sel.is_current ? "This event (developing)" : sel.label],
+    [RP_COLOR.other, "solid", 1,
      `${nOthers} other observed event${nOthers === 1 ? "" : "s"} of the same type`],
-    ["#2E7D5B", "dashed", 2, "Normal (average of neutral years)"],
+    [_tok("--muted"), "dashed", 1.5, "Normal (average of neutral years)"],
   ].concat((fcs || []).map(f => [f.color, "dashed", 2, `${f.label} forecast`]));
   const html = (list) => list.map(([c, style, w, txt]) =>
     `<span class="rp-lg"><i style="border-top-color:${c};border-top-style:${style};`
     + `border-top-width:${w}px"></i>${txt}</span>`).join("");
-  el.innerHTML = html(items);
-
-  // The same key inside every panel. One legend above a two-column grid means
-  // that by the fourth chart down you are scrolling back up to remember which
-  // line is which, and the enlarge dialog had no key at all: the one view where
-  // a reader is studying a single chart closely was the one view that did not
-  // say what its lines were. Short labels here, because a panel is half the
-  // page wide and the full event name pushed the key onto three rows.
-  const short = [
-    [colour, "solid", 2.6, sel.is_current ? "This event" : _shortEventName(sel.label)],
-    ["#8A99A8", "solid", 1.4, "Other events"],
-    ["#2E7D5B", "dashed", 2, "Normal"],
-  ].concat((fcs || []).map(f => [f.color, "dashed", 2, f.label]));
-  const compact = html(short);
-  for (const panel of document.querySelectorAll(".rp-panel")) {
-    if (!panel.querySelector("canvas")) continue;
-    let slot = panel.querySelector(".rp-panel-lg");
-    if (!slot) {
-      slot = document.createElement("div");
-      slot.className = "rp-legend rp-panel-lg";
-      const sub = panel.querySelector(".rp-sub");
-      (sub || panel.querySelector("h3")).insertAdjacentElement("afterend", slot);
-    }
-    slot.innerHTML = compact;
+  // One key per figure, inside its card under the plots (spec 4.4). The pair
+  // figures carry no SST forecast, so they get the key without it.
+  const base = html(items.slice(0, 3));
+  for (const slot of document.querySelectorAll("[data-key-for]")) {
+    slot.innerHTML = slot.dataset.keyFor === "nino" ? html(items) : base;
   }
+  const el = document.getElementById("rp-legend");
+  if (el) el.innerHTML = html(items);
   const mslot = document.getElementById("rp-modal-lg");
   if (mslot) mslot.innerHTML = html(items);
 }
@@ -1865,10 +1949,9 @@ function _mapSeasonNote(sel) {
 
 // "1997-98 El Nino (extreme)" is wider than a half-page panel can spare, and
 // the intensity is already on the event selector and the meta chips.
-function _shortEventName(label) {
-  return String(label || "")
-    .replace(/\s*\((extreme|strong|moderate)\)\s*$/i, "")
-    .replace(/\s+El Ni.o|\s+La Ni.a/i, "");
+function _shortEventName(label, keepFamily) {
+  const s = String(label || "").replace(/\s*\((extreme|strong|moderate)\)\s*$/i, "");
+  return keepFamily ? s : s.replace(/\s+El Ni.o|\s+La Ni.a/i, "");
 }
 
 function _renderMeta(sel, nOthers) {
@@ -1886,12 +1969,17 @@ function _renderMeta(sel, nOthers) {
     ["Country", `${c.label} (${c.n_cells} grid cells)`],
   ]) : [
     ["Window", `${sel.window_start} to ${sel.window_end}`],
-    ["Length", `${sel.duration_months || "?"} months`],
+    ["Event length", `${sel.duration_months || "?"} months`],
     ["Country", _cellsChip(c)],
     ["Compared against", `${nOthers} other event${nOthers === 1 ? "" : "s"}`],
   ];
   document.getElementById("rp-meta").innerHTML = chips
-    .map(([k, v]) => `<span class="rp-chip">${k} <strong>${v}</strong></span>`).join("");
+    .map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
+  // The page title names the selection ("Kenya in the 1997-98 El Nino").
+  const h1 = document.getElementById("rp-h1");
+  if (h1) h1.textContent = sel.is_current
+    ? `${c.label}: ${String(sel.label).replace(/^Current:\s*/, "").split(";")[0]}`
+    : `${c.label} in the ${_shortEventName(sel.label, true)}`;
 
   // The footnote is now the exceptions only: things true of THIS selection that
   // the reader cannot see. Everything general moved to the legend above the
@@ -1958,37 +2046,18 @@ function _renderMeta(sel, nOthers) {
 const RPMAP = { geo: null, byName: null, svg: null, path: null, proj: null,
                 drawn: false, index: null, tileCache: {} };
 
-// Diverging ramps, matching the Teleconnections map so the same colour means
-// the same thing across the site. RdBu: blue = more. RdBu_r: red = more.
-// Rainfall uses BrBG instead, on both tabs, for the reason below.
-const RP_CMAPS = {
-  RdBu:   [[0,[178,24,43]],[0.25,[244,165,130]],[0.5,[247,247,247]],
-           [0.75,[146,197,222]],[1,[33,102,172]]],
-  RdBu_r: [[0,[33,102,172]],[0.25,[146,197,222]],[0.5,[247,247,247]],
-           [0.75,[244,165,130]],[1,[178,24,43]]],
-  // Rainfall is brown and green, not red and blue. Red reads as hot, which is
-  // the wrong instinct for a rainfall deficit, and brown-dry green-wet is the
-  // long-standing convention for precipitation.
-  // BrBG: green = more rain. BrBG_r: brown = more dry.
-  BrBG:   [[0,[140,81,10]],[0.25,[216,179,101]],[0.5,[245,245,245]],
-           [0.75,[90,180,172]],[1,[1,102,94]]],
-  BrBG_r: [[0,[1,102,94]],[0.25,[90,180,172]],[0.5,[245,245,245]],
-           [0.75,[216,179,101]],[1,[140,81,10]]],
-};
-
+// The ramps come from ramps.js, the one file every map on the site reads, so the
+// same colour means the same thing on every tab. Rainfall is brown and teal, not
+// red and blue: red reads as hot, the wrong instinct for a rainfall deficit.
+// Every map on this page is an anomaly (against normal). The world map is a gridded
+// field and draws on the continuous ramps (near-white middle); the country pair and the
+// regional forecast map follow the packs (grey middle). A name prefixed "cont:" asks
+// for the continuous ramp.
+const _cont = name => "cont:" + name;
 function _rampColor(name, t) {
-  const stops = RP_CMAPS[name] || RP_CMAPS.RdBu_r;
-  t = Math.max(0, Math.min(1, t));
-  for (let i = 1; i < stops.length; i++) {
-    if (t <= stops[i][0]) {
-      const [t0, c0] = stops[i - 1], [t1, c1] = stops[i];
-      const f = (t - t0) / (t1 - t0);
-      return [Math.round(c0[0] + f * (c1[0] - c0[0])),
-              Math.round(c0[1] + f * (c1[1] - c0[1])),
-              Math.round(c0[2] + f * (c1[2] - c0[2]))];
-    }
-  }
-  return stops[stops.length - 1][1];
+  const cont = String(name).startsWith("cont:");
+  const base = cont ? String(name).slice(5) : name;
+  return window.ENSO_RAMP_COLOR(window.ENSO_ANOMALY(base, cont ? "continuous" : "region"), t);
 }
 
 /** The event's impact field, drawn under the country outlines. */
@@ -2012,10 +2081,10 @@ async function _drawEventLayer() {
       if (cb) {
         cb.hidden = false;
         document.getElementById("rp-cb-title").textContent =
-          `${_varLabel(gm.meta)} (${gm.meta.units}) - ${_monthLabelAt(selEv, RPZ.monthIdx)}`;
+          `${_varLabel(gm.meta)} (${gm.meta.units}), ${_monthLabelAt(selEv, RPZ.monthIdx)}`;
         _paintColorbar(document.getElementById("rp-cb-bar"),
                        document.getElementById("rp-cb-ticks"),
-                       gm.meta.cmap, gm.meta.vmax);
+                       _cont(gm.meta.cmap), gm.meta.vmax);
       }
       return;
     }
@@ -2070,7 +2139,7 @@ async function _drawEventLayer() {
     cb.hidden = false;
     document.getElementById("rp-cb-title").textContent = `${_varLabel(meta)} (${meta.units})`;
     _paintColorbar(document.getElementById("rp-cb-bar"),
-                   document.getElementById("rp-cb-ticks"), cmap, vmax);
+                   document.getElementById("rp-cb-ticks"), _cont(cmap), vmax);
   }
 
 }
@@ -2161,7 +2230,7 @@ function _repaintWorld() {
   const vmax = Math.abs(meta.vmax);
   for (let i = 0; i < v.length; i++) {
     _fillCell(ctx, RPMAP.proj, lats[ri[i]], lons[ci[i]], dLat, dLon, v[i] / scale,
-              meta.cmap, vmax, b);
+              _cont(meta.cmap), vmax, b);   // the world map: continuous
   }
   ctx.restore();
 }
@@ -2272,7 +2341,7 @@ function _highlightSelected() {
   const hint = document.getElementById("rp-map-hint");
   if (hint) {
     const c = RP.countries.countries.find(x => x.id === id);
-    hint.textContent = c ? `${c.label} - click another country to change` : "Click a country";
+    hint.textContent = c ? `${c.label}: click another country to change` : "Click a country";
   }
 }
 
@@ -2332,17 +2401,18 @@ function _updatePack(id) {
   document.querySelectorAll(".rp-pack-lang").forEach(g => {
     g.hidden = ![...g.querySelectorAll("a")].some(a => !a.hidden);
   });
-  document.querySelectorAll(".rp-pack-tier").forEach(t => {
-    const g = t.nextElementSibling;
-    let any = false;
-    for (let n = g; n && !n.classList.contains("rp-pack-tier"); n = n.nextElementSibling) any = any || !n.hidden;
-    t.hidden = !any;
+  document.querySelectorAll(".rp-pack .dl").forEach(cell => {
+    cell.hidden = ![...cell.querySelectorAll("a")].some(a => !a.hidden);
   });
 }
 
 // ── boot ─────────────────────────────────────────────────────────────────────
 async function _loadCountry(id) {
   _updatePack(id);
+  // Step 2 appears as soon as a country is chosen.
+  const dl = document.getElementById("rp-downloads"), wait = document.getElementById("rp-downloads-wait");
+  if (dl) dl.hidden = false;
+  if (wait) wait.hidden = true;
   RP.country = await _getJSON(`data/replay/${id}.json`);
   _fcLoad(id);            // in the background: render() draws without it, then again with it
 }
@@ -2378,26 +2448,21 @@ async function init() {
       .sort((a, b) => b.window_start.localeCompare(a.window_start)));
   evSel.innerHTML = '<option value="" selected>Choose an event...</option>'
     + ordered.map(e => `<option value="${e.id}">${e.label}</option>`).join("");
-  // NOTHING is selected on load.
-  //
-  // This used to default to the developing event, on the reasoning that the
-  // most recent catalogued event can be months stale. The reasoning was right
-  // and the result was still wrong: the monthly map fields end at the last
-  // COMPLETE source year, and a developing event's window starts after it. In
-  // August 2026 the default window was 2026-01 to 2027-12 against maps ending
-  // 2025-12, so the two did not overlap by a single month. Every panel was
-  // blank at all 24 slider positions and the only thing that changed as you
-  // dragged was a year label, which is exactly how it was reported to us.
-  //
-  // A blank page that says "choose an event" is honest and takes one click.
-  // Picking a different default would only move the problem: whichever event
-  // is chosen for the reader is the one nobody chose deliberately.
-  evSel.value = "";
+  // The current El Niño is the default event (Isma, 19 Oct 2026: country first, then
+  // downloads, then "to replay a particular event, choose one; the default is the
+  // current El Niño"). This page used to open on no event because in August 2026 the
+  // developing event's window started after the last month of map data, which left
+  // every panel blank; the monthly fields now reach into 2026, so the current window
+  // has maps. If that stops being true the maps say so, the charts still draw.
+  // check_consistency.check_replay_default_has_maps verifies this default overlaps the map months.
+  evSel.value = (ordered.find(e => e.is_current) || { id: "" }).id;
 
   const cSel = document.getElementById("rp-country");
   const cs = RP.countries.countries.slice().sort((a, b) => a.label.localeCompare(b.label));
-  cSel.innerHTML = cs.map(c => `<option value="${c.id}">${c.label}</option>`).join("");
-  cSel.value = cs.some(c => c.id === "kenya") ? "kenya" : cs[0].id;
+  // Step 1: no country is chosen for the reader; a link may name one.
+  cSel.innerHTML = '<option value="">Choose a country...</option>'
+    + cs.map(c => `<option value="${c.id}">${c.label}</option>`).join("");
+  cSel.value = "";
 
   // A link can open a chosen event and country (?event=...&country=...), so the
   // front page and the guide can point at a worked example and a reader can
@@ -2408,15 +2473,17 @@ async function init() {
   const syncUrl = () => {
     const p = new URLSearchParams();
     if (evSel.value) p.set("event", evSel.value);
-    p.set("country", cSel.value);
+    if (cSel.value) p.set("country", cSel.value);
     history.replaceState(null, "", "?" + p.toString() + location.hash);
   };
 
   const packIdx = await _getJSON("data/packs_index.json").catch(() => null);
   RP.packs = packIdx ? new Set(packIdx.countries) : null;
   RP.packFiles = packIdx && packIdx.files ? packIdx.files : null;
-  await _loadCountry(cSel.value);
-  await _loadImpacts(cSel.value);
+  if (cSel.value) {
+    await _loadCountry(cSel.value);
+    await _loadImpacts(cSel.value);
+  }
   _wireThresholds();
   _wireEnlarge();
   _wireImpacts();
@@ -2435,6 +2502,13 @@ async function init() {
   document.getElementById("rp-compare").addEventListener("change", render);
   cSel.addEventListener("change", async () => {
     syncUrl();
+    if (!cSel.value) {                     // back to "Choose a country..."
+      RP.country = null;
+      document.getElementById("rp-downloads").hidden = true;
+      document.getElementById("rp-downloads-wait").hidden = false;
+      render();
+      return;
+    }
     await _loadCountry(cSel.value);
     await _loadImpacts(cSel.value);
     _highlightSelected();
@@ -2626,9 +2700,9 @@ async function _drawZoom() {
   const ta = document.getElementById("rp-zoom-title-a");
   const tb = document.getElementById("rp-zoom-title-b");
   const when = RPZ.monthIdx >= 0 ? _monthLabelAt(sel, RPZ.monthIdx) : "whole window";
-  if (ta) ta.textContent = `${_shortEv(sel)} - ${when}`;
+  if (ta) ta.textContent = `${_shortEv(sel)}, ${when}`;
   if (tb) tb.textContent = cmp
-    ? `${_shortEv(cmp)} - ${RPZ.monthIdx >= 0 ? _monthLabelAt(cmp, RPZ.monthIdx) : "whole window"}`
+    ? `${_shortEv(cmp)}, ${RPZ.monthIdx >= 0 ? _monthLabelAt(cmp, RPZ.monthIdx) : "whole window"}`
     : "Pick an event to compare";
 
   await _drawZoomPanel("rp-zoom-canvas", "rp-zoom-svg", "rp-zoomwrap", feat, sel, varKey,
@@ -2661,17 +2735,13 @@ async function _drawZoom() {
     note.textContent = scale
       ? `${scale.label} (${scale.units}), against normal (the average of ${RP.country.climatology || "neutral years"}) `
         + `for the same calendar month${RPZ.monthIdx >= 0 ? "" : "s"}. Both panels share one `
-        + "colour scale, so a stronger colour really is a stronger anomaly"
-        + (RPZ.monthIdx >= 0
-            ? ", set from the two months shown so the comparison uses the full range; it "
-              + "rescales as you move the slider"
-            : "")
+        + "colour scale"
+        + (RPZ.monthIdx >= 0 ? ", set from the two months shown; it rescales as you move the slider" : "")
         + (monthly && monthly.mask_method && monthly.mask_method !== "centres"
             ? ". The islands are smaller than one grid cell, so the 0.25 degree cells that "
               + "overlap them are shown whole, sea included. "
             : ". Values are clipped to the country; neighbours are outlined for orientation only. "
-              + "One degree, the resolution of the "
-              + (RPZ.monthIdx >= 0 ? "monthly fields." : "per-event maps."))
+              + "One-degree cells.")
         // Asked for by MSF, 2026-08-20. A single month is one draw from a noisy
         // distribution, and the pattern can move between neighbouring months
         // within the same event. Saying so is not a hedge: without it a reader
@@ -2679,9 +2749,8 @@ async function _drawZoom() {
         // month's different pattern as a contradiction rather than as ordinary
         // month-to-month variability.
         + (RPZ.monthIdx >= 0
-            ? "  This is a single month. Patterns commonly shift between "
-              + "neighbouring months of the same event; a different month "
-              + "looking different does not make either one wrong."
+            ? " This is a single month: patterns commonly shift between "
+              + "neighbouring months of the same event."
             : "")
       : "No map for this variable and event.";
     if (monthMissing) {
@@ -2905,9 +2974,8 @@ async function _renderRegions(countryId, varKey, sel, cmp) {
   document.getElementById("rp-regions-note").textContent =
     `${data.var_label} (${data.units}) averaged over the 0.25 degree cells inside each `
     + `${data.admin} admin-1 boundary, against normal (the average of ${data.climatology}) for the same calendar `
-    + `month. Same cells as the maps above. The figure after ± is the spread of those `
-    + `cells within the region, so it says whether the region moved as one: a spread `
-    + `larger than the mean means part of it went the other way. A region holding fewer `
+    + `month. The figure after ± is the spread of those cells within the region; a spread `
+    + `larger than the mean means part of the region went the other way. A region holding fewer `
     + `than ${RPRG.index.min_cells} cell centres is averaged over every cell that overlaps `
     + `it, weighted by the overlap ("part" in the cells column); a small island no cell `
     + `overlaps takes the nearest cell ("nearest"); "none" means no data cell reaches `
@@ -2964,7 +3032,7 @@ function _prefetchNeighbours() {
 function _shortEv(e) {
   if (!e) return "";
   if (e.is_current) return "Now (developing)";
-  return String(e.label).replace(/\s*(El Nino|La Nina)\s*/i, " ").replace(/[()]/g, "").trim();
+  return String(e.label).replace(/\s*(El Ni[nñ]o|La Ni[nñ]a)\s*/i, " ").replace(/[()]/g, "").trim();
 }
 
 /** Real calendar month at offset i of THIS event's window. */
@@ -3265,7 +3333,7 @@ function _wireReadout(canvasOrSvg, boxId, getField, getProj, getMeta, getTransfo
     const meta = getMeta() || {};
     box.hidden = false;
     box.textContent = hit.value == null
-      ? `${_fmtLatLon(hit.lat, hit.lon)} - no data`
+      ? `${_fmtLatLon(hit.lat, hit.lon)}: no data`
       : `${_fmtLatLon(hit.lat, hit.lon)}  ${_varLabel(meta) || "value"} `
         + `${hit.value > 0 ? "+" : ""}${_fmtV(Math.abs(hit.value)) * (hit.value < 0 ? -1 : 1)}`
         + `${meta.units ? " " + meta.units : ""}`;

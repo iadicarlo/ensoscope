@@ -3,36 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About &amp; Contact - ENSOscope</title>
+  <title>About &amp; Contact | ENSOscope</title>
   <meta name="description" content="About ENSOscope and its author, Isma Abdelkader Di Carlo (PhD), Utrecht University: contact and code.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/about.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261019b">
+  <link rel="stylesheet" href="static/css/style.css?v=20261019c">
   <style>
-    .about-hero {
-      background: var(--header-bg);
-      color: #ECEFF1;
-      border-radius: var(--radius);
-      padding: 1.8rem 1.6rem;
-      margin-bottom: 1.5rem;
-    }
-    .about-hero h1 { font-size: 1.7rem; margin-bottom: 0.25rem; color: #fff; }
-    .about-hero .role { color: #9FB6CE; font-size: 1rem; }
-    .about-hero .affil { color: #B6C4CF; font-size: 0.9rem; margin-top: 0.4rem; }
-    .contact-list { list-style: none; margin: 0; padding: 0; }
-    .contact-list li { padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
-    .contact-list li:last-child { border-bottom: none; }
-    .contact-list strong { display: inline-block; min-width: 130px; color: var(--text-muted); font-weight: 600; }
-    .contact-list a { color: var(--accent); text-decoration: none; }
-    .contact-list a:hover { text-decoration: underline; }
+    /* About layout. Shared components live in style.css. */
+    .contact-list { list-style: none; margin: 0; padding: 0; max-width: none; border-top: 1px solid var(--ink); }
+    .contact-list li { padding: var(--s2) 0; font-size: var(--fs-ui); }
+    .contact-list li + li { border-top: var(--hair); }
+    .contact-list strong { display: inline-block; min-width: 150px; color: var(--muted); font-weight: 400; }
   </style>
-  <link rel="icon" type="image/png" href="favicon.png?v=20261019b">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261019c">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="about">
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019b" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019c" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -65,13 +54,14 @@
   </header>
 
   <main>
-    <div class="about-hero">
-      <h1>Isma Abdelkader Di Carlo (PhD)</h1>
-      <div class="role">Postdoctoral Researcher, climate variability and its impacts</div>
-      <div class="affil">Utrecht University, The Netherlands</div>
+    <div class="page-head" style="padding-top:0">
+      <p class="kicker">About</p>
+      <h1 class="page-title">Isma Abdelkader Di Carlo (PhD)</h1>
+      <p class="page-subtitle">Postdoctoral Researcher, climate variability and its impacts</p>
+      <p class="page-meta">Utrecht University, The Netherlands</p>
     </div>
 
-    <section class="card prose">
+    <section class="section prose">
       <h2>About</h2>
       <p>
         I am a postdoctoral researcher at Utrecht University working on the El Niño-Southern
@@ -91,16 +81,16 @@
 
       <h3>What you can do here</h3>
       <ul>
-        <li><strong><a href="index.html">Forecast</a></strong> - the latest ENSO forecast and the
+        <li><strong><a href="index.html">Forecast</a></strong>: the latest ENSO forecast and the
           probability of a strong or extreme event in the months ahead.</li>
-        <li><strong><a href="map_explorer.html">Teleconnections</a></strong> - where past El Niño and
+        <li><strong><a href="map_explorer.html">Teleconnections</a></strong>: where past El Niño and
           La Niña phases shifted rainfall, drought and heat stress.</li>
-        <li><strong><a href="hindcast_skill.html">Skill</a></strong> - how trustworthy the forecasts
+        <li><strong><a href="hindcast_skill.html">Skill</a></strong>: how trustworthy the forecasts
           are, by season and lead time, verified against observations.</li>
       </ul>
     </section>
 
-    <section class="card">
+    <section class="section">
       <h2>Contact</h2>
       <ul class="contact-list">
         <li><strong>Current affiliation</strong> Utrecht University, The Netherlands</li>
@@ -108,12 +98,12 @@
         <li><strong>Email</strong> <a href="mailto:i.r.d.abdelkaderdicarlo@uu.nl">i.r.d.abdelkaderdicarlo@uu.nl</a></li>
         <li><strong>Code</strong> <a href="https://github.com/iadicarlo" target="_blank" rel="noopener">github.com/iadicarlo</a></li>
       </ul>
-      <p style="font-size:0.84rem;color:var(--text-muted);margin-top:0.9rem">
+      <p class="source" style="margin-top:var(--s3)">
         For data or methodological questions, please get in touch through the channels above.
       </p>
     </section>
   </main>
 
-  <script src="static/js/site.js?v=20261019b"></script>
+  <script src="static/js/site.js?v=20261019c"></script>
 </body>
 </html>

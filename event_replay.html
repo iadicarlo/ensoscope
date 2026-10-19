@@ -3,450 +3,310 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event replay - ENSOscope</title>
-  <meta name="description" content="Replay a past El Nino or La Nina month by month for any country: sea surface temperature, rainfall, drought and heat, against every other observed event.">
+  <title>Event replay | ENSOscope</title>
+  <meta name="description" content="Replay a past El Niño or La Niña month by month for any country: sea surface temperature, rainfall, drought and heat, against every other observed event.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/event_replay.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261019b">
-  <link rel="icon" type="image/png" href="favicon.png?v=20261019b">
+  <link rel="stylesheet" href="static/css/style.css?v=20261019c">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261019c">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
-    /* Page-local, following the house convention (map_explorer.html does the
-       same): shared classes live in style.css, page specifics stay here. */
+    /* Event replay page layout. Shared components (cards, key boxes, tables,
+       figures, segmented controls) live in style.css; colours, type and radii
+       come from its tokens. Page specifics only here. */
 
-    /* [hidden] MUST win, and by default it does not.
-       The browser's own rule is `[hidden] { display: none }`, but an author
-       rule beats the browser's whatever the specificity, so every class here
-       that sets display (.rp-grid is grid, .rp-region-banner is flex, and so
-       on) silently cancelled it. `el.hidden = true` set the attribute and the
-       element kept rendering: the empty region banner showed as a bare pink
-       strip, and with no event chosen the eight chart panels and both map
-       panels were still on the page under the "choose an event" message.
-       One rule fixes every element rather than each class re-stating it. */
+    /* [hidden] MUST win. An author rule that sets display beats the browser's
+       own [hidden] rule whatever the specificity, so without this every class
+       here that sets display (.rp-grid, .rp-region-banner, ...) kept rendering
+       elements the script had hidden. One rule fixes them all. */
     [hidden] { display: none !important; }
-    .rp-controls{display:flex;flex-wrap:wrap;gap:1.1rem;align-items:flex-end;margin-bottom:1rem}
-    .rp-ctrl{display:flex;flex-direction:column;gap:.3rem;min-width:0;max-width:100%}
-    .rp-ctrl label{font-size:.78rem;font-weight:600;color:var(--text-muted);
-      text-transform:uppercase;letter-spacing:.04em}
-    .rp-ctrl select{padding:.45rem .6rem;border:1px solid var(--border);border-radius:6px;
-      background:#fff;font-size:.92rem;min-width:210px;max-width:100%;color:var(--text)}
-    .rp-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin:.2rem 0 1rem}
-    .rp-chip{font-size:.8rem;padding:.22rem .6rem;border-radius:999px;
-      background:var(--surface-2,#f0f4f8);color:var(--text-muted);border:1px solid var(--border)}
-    .rp-chip strong{color:var(--text);font-weight:600}
-    .rp-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:1.1rem}
-    @media(min-width:700px){.rp-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    /* min-width:0 is load-bearing. A grid track of 1fr will not shrink below its
-       item's min-content, and a Chart.js canvas keeps the width it last rendered
-       at, so without this the panels pinned the page to ~1100px and the whole
-       layout scrolled sideways on a narrow window. */
-    .rp-panel{border:1px solid var(--border);border-radius:var(--radius);padding:.8rem .9rem .4rem;
-      background:#fff;min-width:0;overflow:hidden}
-    .rp-panel h3{margin:0 0 .1rem;font-size:.98rem;color:#0B2138;display:flex;
-      align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
-    .rp-panel .rp-sub{margin:0 0 .35rem;font-size:.79rem;color:var(--text-muted);line-height:1.35}
-    /* Per-panel key. Smaller and tighter than the page-level one: it repeats
-       eight times, so it has to cost almost no vertical space. */
-    .rp-panel-lg{margin:0 0 .3rem;font-size:.7rem;gap:.25rem .7rem}
-    .rp-panel-lg i{width:14px}
-    /* Threshold selector. Aina asked to see the extreme end of heat stress and
-       warm nights. Three permanent panels each would be mostly blank, because
-       UTCI >=46 never occurs in most of the 89 countries; a selector keeps the
-       comparison lines uncluttered and lets her step up to the extreme. */
-    .rp-thr{display:inline-flex;border:1px solid var(--border);border-radius:6px;overflow:hidden}
-    .rp-thr button{padding:.16rem .44rem;border:0;border-left:1px solid var(--border);
-      background:#fff;font-size:.72rem;font-weight:600;color:var(--text-muted);cursor:pointer;
-      font-family:inherit;line-height:1.5}
-    .rp-thr button:first-child{border-left:0}
-    .rp-thr button:hover{background:var(--surface-2,#f0f4f8)}
-    .rp-thr button.on{background:var(--accent);color:#fff}
-    .rp-thr button.empty{color:#B4BEC7}
-    /* Two spatial panels, equal width, on ONE shared colour scale. Equal width
-       is not cosmetic: unequal panels make the same anomaly look different in
-       each, which defeats the comparison. */
-    .rp-zoom{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:1rem;margin:0 0 .4rem}
-    @media (max-width:760px){.rp-zoom{grid-template-columns:1fr}}
-    .rp-zoom-map{border:1px solid var(--border);border-radius:var(--radius);
-      background:#fff;padding:.7rem .8rem .6rem;min-width:0;overflow:hidden}
-    /* Index codes keep their own casing: Rx10day is a name, not a word, and
-       the heading's uppercase styling was rendering it RX10DAY. */
-    /* h3 is a flex row (the threshold selector sits in it), so a bare span
-       would be pushed to the far edge by space-between. Keep the code beside
-       the words it belongs to. */
-    .rp-panel h3 .code{text-transform:none;letter-spacing:0;margin-right:auto;
-      margin-left:-.15em;font-weight:600;color:var(--text-muted)}
-    .rp-zoom-map h3{font-size:.82rem;letter-spacing:.01em;text-transform:none;
-      font-weight:700;color:#0B2138;justify-content:flex-start}
-    .rp-zoom-head{display:flex;flex-wrap:wrap;gap:1.1rem;align-items:flex-end;
-      margin:.2rem 0 .8rem;padding:.7rem .9rem;border:1px solid var(--border);
-      border-radius:var(--radius);background:var(--surface-2,#F7F9FB)}
-    .rp-zc-ctrl{display:flex;flex-direction:column;gap:.25rem}
-    .rp-zc-ctrl label{font-size:.72rem;font-weight:600;color:var(--text-muted);
-      text-transform:uppercase;letter-spacing:.04em}
-    .rp-zc-ctrl select{padding:.32rem .5rem;border:1px solid var(--border);border-radius:6px;
-      background:#fff;font-size:.84rem;color:var(--text);max-width:280px}
-    .rp-zc-month{flex:1;min-width:260px}
-    .rp-zc-month input[type=range]{width:100%;accent-color:var(--accent);margin:.15rem 0}
+
+    /* Controls card */
+    .rp-controls { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-end; }
+    .rp-ctrl { display: flex; flex-direction: column; gap: var(--s1); min-width: 0; max-width: 100%; }
+    .rp-ctrl label, .rp-zc-ctrl label { font-size: var(--fs-sm); color: var(--muted); }
+    .rp-ctrl select, .rp-zc-ctrl select, .rp-map-var select {
+      font: inherit; font-size: var(--fs-ui); color: var(--ink);
+      background: var(--page) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235F6B76' stroke-width='1.4'/%3E%3C/svg%3E") no-repeat right 12px center;
+      border: 1px solid var(--rule); border-radius: var(--r-ctl);
+      padding: 8px 32px 8px 10px; min-height: 40px;
+      appearance: none; -webkit-appearance: none; cursor: pointer;
+    }
+    .rp-ctrl select { min-width: 210px; max-width: 100%; }
+    .rp-zc-ctrl select { max-width: 280px; }
+    .rp-ctrl select:hover, .rp-zc-ctrl select:hover, .rp-map-var select:hover { border-color: var(--ink); }
+    /* Numbered steps: country, downloads, event */
+    .rp-step + .rp-step { margin-top: var(--s5); padding-top: var(--s4); border-top: var(--hair); }
+    .rp-step-h { font-size: var(--fs-h3); font-weight: 600; color: var(--ink); margin: 0 0 var(--s3); }
+    .rp-step-h label { color: inherit; font-size: inherit; }
+    .rp-empty span { display: block; }
+    .rp-dl-langs { display: block; font-size: var(--fs-sm); color: var(--muted); line-height: 1.5; }
+    .rp-pack-lang { display: inline; margin-right: var(--s3); white-space: nowrap; }
+    .rp-pack-lang a { font-weight: 600; }
+    .rp-pack-lname { color: var(--muted); }
+
+    .rp-empty { padding: var(--s6) var(--s4); text-align: center; color: var(--muted); font-size: var(--fs-ui); }
+    .rp-empty strong { display: block; font-size: var(--fs-h3); color: var(--ink); margin-bottom: var(--s2); }
+
+    /* Fig. 1: the world map */
+    .rp-mapwrap { position: relative; background: var(--map-ocean); overflow: hidden; }   /* the ocean, as on Teleconnections */
+    #rp-map-canvas { position: absolute; inset: 0; width: 100%; height: 330px; }
+    #rp-map { display: block; width: 100%; height: 330px; position: relative; cursor: grab; }
+    #rp-map:active { cursor: grabbing; }
+    /* Outlines only: the fill stays transparent or it would hide the data on the
+       canvas underneath. Countries without data are drawn but inert. */
+    .rp-c { fill: transparent; stroke: var(--ink); stroke-opacity: .4; stroke-width: .5px; }
+    .rp-c.has-data { cursor: pointer; }
+    .rp-c.has-data:hover { fill: rgba(21, 101, 192, .18); }
+    .rp-c.sel { stroke: var(--ink); stroke-opacity: 1; stroke-width: 1.5px; fill: transparent; }
+    .rp-map-var { position: absolute; top: var(--s2); right: var(--s2); }
+    .rp-map-var select { max-width: 240px; }
+    .rp-map-hint { font-size: var(--fs-sm); color: var(--muted); margin: var(--s2) 0 0; }
+    /* Pointer readout: bottom-left, clear of the variable selector. */
+    .rp-readout { position: absolute; bottom: var(--s2); left: var(--s2); background: var(--page);
+      border: var(--hair); border-radius: var(--r-ctl); padding: 2px var(--s2);
+      font-size: var(--fs-sm); color: var(--ink); pointer-events: none;
+      font-variant-numeric: tabular-nums; max-width: 60%; }
+
+    /* Colour bars, each inside a key box under the map(s) it serves */
+    .rp-colorbar, .rp-panel-cb { width: 300px; max-width: 100%; }
+    .rp-cb-title, .rp-cb-cap { font-size: var(--fs-sm); color: var(--ink); margin-bottom: 2px; }
+    #rp-cb-bar, .rp-panel-cb canvas { width: 100%; height: 10px; display: block; }
+    /* Ticks sit at the value they name, not spread evenly. */
+    .rp-cb-ticks { position: relative; height: 1.3em; font-size: var(--fs-xs); color: var(--tick);
+      margin-top: 2px; font-variant-numeric: tabular-nums; }
+    .rp-cb-ticks span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+
+    /* Fig. 2: two country panels, equal width, on ONE shared colour scale.
+       Equal width matters: unequal panels make one anomaly look different. */
+    .rp-zoom-head { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-end; margin: 0 0 var(--s4); }
+    .rp-zc-ctrl { display: flex; flex-direction: column; gap: var(--s1); }
+    .rp-zc-month { flex: 1; min-width: 260px; }
+    .rp-zc-month input[type=range] { width: 100%; accent-color: var(--link); margin: var(--s1) 0; min-height: 24px; }
     /* Fixed height so the row does not jump between "Whole window" and a date. */
-    .rp-zc-month output{font-size:.8rem;font-weight:600;color:var(--text);
-      min-height:1.15em;display:block}
-    /* A bar under EACH panel. One shared bar in the header sat too far from the
-       maps to read against, and being a .rp-colorbar it inherited that class's
-       position:absolute from a later rule and escaped over the world map. */
-    .rp-zoom-empty{font-size:11px;fill:#8A99A8}
-    .rp-panel-cb{margin:.15rem 0 0}
-    .rp-panel-cb canvas{width:100%;height:9px;border-radius:2px;display:block}
-    .rp-cb-cap{font-size:.66rem;font-weight:600;color:var(--text);margin-bottom:2px}
-    /* Ticks are positioned along the bar, not distributed, so each label sits
-       over the value it names. */
-    .rp-cb-ticks{position:relative;height:1.05em;font-size:.62rem;
-      color:var(--text-muted);margin-top:1px;font-variant-numeric:tabular-nums}
-    .rp-cb-ticks span{position:absolute;transform:translateX(-50%);white-space:nowrap}
-    .rp-zoom-foot{font-size:.79rem;color:var(--text-muted);line-height:1.45;margin:0 0 1rem}
-    .rp-zoom h3{margin:0 0 .1rem;font-size:.98rem;color:#0B2138;display:flex;
-      align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
-    .rp-zoomwrap{position:relative;height:250px;background:#F7F9FB;border-radius:6px;
-      overflow:hidden;margin:.35rem 0 .3rem}
-    #rp-zoom-canvas,#rp-zoom-canvas-b{position:absolute;inset:0;width:100%;height:250px}
-    #rp-zoom-svg,#rp-zoom-svg-b{display:block;width:100%;height:250px;position:relative}
-    /* Neighbours stay thin and grey; the selected country gets a heavy outline,
-       because the data is now clipped to it and the reader needs to see exactly
-       where that clip runs. */
-    .rp-zc{fill:none;stroke:#94A3AF;stroke-width:.7px;vector-effect:non-scaling-stroke}
-    .rp-zc-sel{stroke:#0B2138;stroke-width:2.6px}
-    /* Admin-1 divisions: visible enough to locate a table row on the map, faint
-       enough not to compete with the data underneath or the country edge. */
-    .rp-zr{fill:transparent;stroke:#5A6B7A;stroke-width:.6px;stroke-dasharray:2 1.6;
-      vector-effect:non-scaling-stroke;opacity:.75;cursor:pointer}
-    .rp-zr:hover{stroke:#0B2138;stroke-width:1.4px;opacity:1}
-    .rp-zr-on{stroke:#B03A2E;stroke-width:2px;stroke-dasharray:none;opacity:1}
-    .rp-region-banner{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
-      margin:0 0 .6rem;padding:.4rem .7rem;border-radius:6px;font-size:.86rem;
-      background:#FDF3F1;border:1px solid #E8C4BD;color:#0B2138}
-    .rp-region-banner button{padding:.18rem .55rem;border:1px solid #C9D2D9;border-radius:5px;
-      background:#fff;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit}
-    /* Sub-national table. Collapsed by default: most readers want the map, and
-       the people who want 43 numbered provinces of Burkina Faso really want
-       them, so it opens rather than being cut to a top ten. */
-    .rp-regions{margin:.4rem 0 .2rem;border:1px solid #E2E8EC;border-radius:6px;
-      background:#FBFCFD}
-    .rp-regions>summary{cursor:pointer;padding:.5rem .7rem;font-weight:600;
-      font-size:.86rem;color:#0B2138;list-style:revert}
-    .rp-regions[open]>summary{border-bottom:1px solid #E2E8EC}
-    .rp-regions-body{padding:.5rem .7rem .7rem}
-    /* Match the caption directly above this block. .rp-sub carries no global
-       size, so this paragraph was inheriting the 16px body text and rendering a
-       third larger than the note it sits under, which made an explanatory
-       aside read as the loudest thing on the page. */
-    #rp-regions-note{font-size:.79rem;color:var(--text-muted);line-height:1.45;
-      margin:0 0 .55rem}
-    .rp-regions-tablewrap{max-height:340px;overflow-y:auto;overflow-x:auto}
-    .rp-regions-table{border-collapse:collapse;width:100%;font-size:.82rem}
-    .rp-regions-table th{position:sticky;top:0;background:#FBFCFD;text-align:right;
-      padding:.3rem .5rem;border-bottom:1px solid #D7E0E6;font-weight:600;white-space:nowrap}
-    .rp-regions-table th:first-child{text-align:left}
-    .rp-regions-table td{padding:.25rem .5rem;border-bottom:1px solid #EEF2F5;
-      text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-    .rp-regions-table td:first-child{text-align:left;font-weight:500}
-    .rp-regions-table tr:last-child td{border-bottom:none}
-    /* Regional outlook: observed / past El Nino / the two forecast models, per region */
-    .rp-ol-table th,.rp-ol-table td{text-align:left!important;vertical-align:top}
-    .rp-ol-table td{min-width:7.5rem}
-    .rp-ol-table td.na{color:#8A96A3}
-    .rp-ol-table td.wet{background:#E3F3F0}.rp-ol-table td.dry{background:#F5EBD8}
-    .rp-ol-table td.hot{background:#FBE5E5}.rp-ol-table td.cool{background:#E5EEF8}
-    .rp-ol-tabs{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0}
-    .rp-ol-tabs button{padding:.2rem .6rem;border:1px solid #C9D2D9;border-radius:5px;background:#fff;
-      font-size:.8rem;cursor:pointer}
-    .rp-ol-tabs button.on{background:#0B2138;color:#fff;border-color:#0B2138}
-    .rp-ol-sent{margin:.3rem 0 .5rem 1.1rem;padding:0;font-size:.82rem;line-height:1.45}
-    #rp-outlook-intro{font-size:.79rem;color:var(--text-muted);line-height:1.45;margin:.1rem 0 .4rem}
-    .rp-ol-mapbox{max-width:520px;margin:.3rem 0 .7rem}
-    #rp-ol-canvas{position:absolute;inset:0;width:100%;height:250px}
-    #rp-ol-svg{display:block;width:100%;height:250px;position:relative}
-    .rp-ol-mapbar{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.35rem}
-    .rp-ol-mapnote{font-size:.74rem;color:var(--text-muted);line-height:1.4;margin:.25rem 0 0}
-    .rp-rg-na{color:#93A2AC}
-    /* The spread sits with its value but must not compete with it: the mean is
-       the number being read, the spread is context. */
-    .rp-rg-sd{color:#8A98A4;font-weight:400;font-size:.92em}
-    .rp-canvas-wrap{position:relative;height:200px;min-width:0}
-    .rp-wide{grid-column:1/-1}
-    .rp-wide .rp-canvas-wrap{height:280px}
-    /* Nothing is selected until the reader chooses. The page used to open on
-       the developing event, whose window starts after the last month of map
-       data, so every panel was blank and the only thing that moved as you
-       dragged the slider was a year label. An empty page that says so beats a
-       full one that shows nothing. */
-    /* Sits directly above the charts it controls, styled like the month bar so
-       the two comparison controls read as the same kind of thing. */
-    .rp-chartbar{display:flex;flex-wrap:wrap;gap:1.1rem;align-items:flex-end;
-      margin:.2rem 0 .8rem;padding:.7rem .9rem;border:1px solid var(--border);
-      border-radius:var(--radius);background:var(--surface-2,#F7F9FB)}
-    /* Impact timeline. Markers say THAT something was recorded and WHEN.
-       Never how big: EM-DAT's casualty figures reflect reporting capacity as
-       much as severity, so sizing by them would rank countries by how well
-       they report. See build_impact_timeline.py. */
-    .rp-impacts{border:1px solid var(--border);border-radius:var(--radius);
-      background:#fff;padding:.8rem .9rem .7rem;margin:0 0 1.1rem}
-    .rp-imp-head{display:flex;align-items:center;justify-content:space-between;
-      gap:.6rem;flex-wrap:wrap;margin-bottom:.15rem}
-    .rp-imp-head h3{margin:0;font-size:.98rem;color:#0B2138}
-    /* Height and each bar's top are set in JS: overlapping events are packed
-       into lanes, so the track grows with however many lanes a window needs. */
-    /* One figure, one border, one background. Previously the driver row, the
-       marker row and the axis each carried their own rules and the result read
-       as three boxes that happened to be the same width. */
-    .rp-imp-fig{position:relative;margin:.5rem 0 0;border:1px solid #E4E9ED;
-      border-radius:var(--radius,6px);background:#FCFDFE;overflow:hidden}
-    .rp-imp-rules{position:absolute;left:0;right:0;top:0;bottom:38px;z-index:0;
-      pointer-events:none}
-    .rp-imp-grid{position:absolute;top:0;bottom:0;width:1px;background:#EDF1F5}
-    .rp-imp-grid.year{background:#D3DBE2}
-    /* Months this event was classified active. A tint, not a slab: it has to
-       sit behind a curve without washing it out. */
-    .rp-imp-band{position:absolute;top:0;bottom:0;background:#EDF2F7;
-      box-shadow:inset 2px 0 0 #B9C6D2,inset -2px 0 0 #B9C6D2}
-    .rp-imp-drivers{position:relative;z-index:1;padding:.15rem 0 0}
-    .rp-imp-dlab{position:absolute;left:8px;top:3px;z-index:2;font-size:.68rem;
-      color:var(--text-muted);letter-spacing:.01em;pointer-events:none;
-      text-shadow:0 1px 2px #FCFDFE,0 -1px 2px #FCFDFE}
-    .rp-imp-spark{display:block;width:100%}
-    .rp-imp-track{position:relative;z-index:1;height:34px;
-      border-top:1px solid #EDF1F5;background:transparent}
-    .rp-imp-ev{position:absolute;height:12px;cursor:pointer;background:none;border:0;z-index:2}
-    .rp-imp-ev::after{content:"";position:absolute;left:6px;right:1px;top:5px;
-      height:2px;background:var(--c);opacity:.45;border-radius:1px}
-    .rp-imp-ev::before{content:"";position:absolute;left:0;top:0;width:12px;height:12px;
-      border-radius:50%;background:var(--c);box-shadow:0 0 0 2px #FCFDFE;z-index:1}
-    .rp-imp-ev.unplaced::before{background:#FCFDFE;border:2px solid var(--c)}
-    .rp-imp-ev.overruns::after{-webkit-mask-image:linear-gradient(90deg,#000 70%,transparent 100%);
-      mask-image:linear-gradient(90deg,#000 70%,transparent 100%)}
-    .rp-imp-ev:hover::before{box-shadow:0 0 0 2px #FCFDFE,0 0 0 4px rgba(11,33,56,.18)}
-    .rp-imp-ev.on::before{box-shadow:0 0 0 2px #FCFDFE,0 0 0 3.5px #0B2138}
-    /* A January tick is two lines ("Jan" over the year), so 26px clipped every
-       year label in the figure. */
-    .rp-imp-axis{position:relative;z-index:1;height:38px;font-size:.66rem;
-      color:var(--text-muted);font-variant-numeric:tabular-nums;
-      border-top:1px solid #EDF1F5;background:#F7F9FB}
-    .rp-imp-tick{position:absolute;top:3px;transform:translateX(-50%);white-space:nowrap}
-    .rp-imp-tick.year{color:#0B2138;font-weight:600}
-    .rp-imp-tick b{display:block;font-weight:600;text-align:center}
-    .rp-modal-fig .rp-imp-fig{margin:.6rem 0 0}
-    .rp-modal-fig .rp-imp-list{max-height:34vh}
-    /* This one lives in the card header rather than over a canvas, and the
-       card is not a .rp-panel, so it never inherited the hover reveal. */
-    /* Two classes, so this beats .rp-zoombtn's opacity:0 regardless of source
-       order. That button is revealed by .rp-panel:hover; this one sits in a
-       card header that is not a .rp-panel, so it would never have appeared. */
-    .rp-impacts .rp-imp-zoom{position:static;opacity:1;margin-left:.1rem}
-    /* The shading's key, sitting with the marker keys rather than in a caption
-       below the figure. Rectangular so it never reads as another marker. */
-    .rp-imp-swatch{width:20px;height:10px;border-radius:2px;flex:none;
-      display:inline-block;background:#EDF2F7;border:1px solid #B9C6D2}
-    .rp-imp-legend{display:flex;flex-wrap:wrap;gap:.15rem .85rem;margin:.4rem 0 0;
-      font-size:.74rem;color:var(--text-muted)}
-    .rp-imp-key{display:inline-flex;align-items:center;gap:.3rem}
-    .rp-imp-dot{width:9px;height:9px;border-radius:50%;background:var(--c,#8A97A3);
-      display:inline-block;flex:none}
-    .rp-imp-dot.hollow{background:#fff;border:2px solid #8A97A3}
-    /* Tall enough for the common case (most windows hold under seven events)
-       so the list is not cut mid-row; longer ones still scroll. */
-    .rp-imp-list{list-style:none;margin:.45rem 0 0;padding:0;font-size:.8rem;
-      max-height:190px;overflow-y:auto}
-    .rp-imp-list li{padding:.22rem .3rem;border-bottom:1px solid #F0F3F5;
-      display:flex;gap:.5rem;align-items:baseline;cursor:pointer}
-    .rp-imp-list li:hover{background:var(--surface-2,#F3F7FA)}
-    .rp-imp-list li.on{background:#EEF4F9}
-    .rp-imp-when{font-variant-numeric:tabular-nums;color:var(--text-muted);
-      min-width:5.6em;flex:none}
-    .rp-imp-what{font-weight:600;color:#0B2138;min-width:9.2em;flex:none;
-      display:inline-flex;align-items:center;gap:.35rem}
-    .rp-imp-where{color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;
-      white-space:nowrap;min-width:0}
-    .rp-imp-src{margin-left:auto;flex:none;font-size:.75rem;color:var(--text-muted);
-      text-decoration:underline}
-    .rp-imp-src:hover{color:#0B2138}
-    .rp-imp-where.none{font-style:italic;color:#94A3AF}
-    /* The empty-state sentence explains why a theme is blank, so unlike a
-       location it must wrap rather than be clipped to one line. */
-    .rp-imp-empty{color:var(--text-muted);line-height:1.5;white-space:normal;
-      display:block;padding:.15rem .1rem}
-    .rp-imp-foot{margin:.45rem 0 0;font-size:.75rem}
-    /* Set apart from the footnote above it, which counts what IS here. This
-       one is about what is not, and a reader who skims has to still catch it. */
-    .rp-imp-caveat{display:block;margin:.6rem 0 .1rem;padding:.55rem .7rem;
-      border-left:3px solid #C9A227;background:#FDFBF3;border-radius:0 4px 4px 0;
-      font-size:.76rem;line-height:1.5;color:var(--text)}
-    .rp-imp-caveat strong{color:#0B2138}
-    .rp-empty strong{display:block;font-size:1.05rem;color:var(--text);margin-bottom:.35rem}
-    /* Enlarge. The panels are small so eight fit on one screen; reading one
-       closely is a different job from comparing all eight. */
-    .rp-zoombtn{position:absolute;top:2px;right:2px;z-index:2;border:1px solid var(--border);
-      background:#fff;border-radius:5px;cursor:pointer;font-size:.72rem;line-height:1;
-      padding:.22rem .4rem;color:var(--text-muted);opacity:0;transition:opacity .12s}
-    .rp-panel:hover .rp-zoombtn,.rp-zoombtn:focus{opacity:1}
-    .rp-zoombtn:hover{color:var(--accent);border-color:var(--accent)}
-    .rp-modal{position:fixed;inset:0;z-index:900;background:rgba(16,26,34,.62);
-      display:flex;align-items:center;justify-content:center;padding:2vmin}
-    .rp-modal[hidden]{display:none}
-    .rp-modal-box{background:var(--surface,#fff);border-radius:10px;width:min(1100px,96vw);
-      max-height:94vh;overflow:auto;padding:1.1rem 1.3rem 1.3rem;position:relative}
-    .rp-modal-box h3{margin:0 0 .15rem;font-size:1.05rem}
-    .rp-modal-wrap{position:relative;height:min(66vh,560px);margin-top:.6rem}
-    .rp-modal-close{position:absolute;top:.5rem;right:.6rem;border:1px solid var(--border);
-      background:#fff;border-radius:6px;cursor:pointer;font-size:1rem;line-height:1;
-      padding:.25rem .55rem;color:var(--text-muted)}
-    .rp-modal-close:hover{color:var(--accent);border-color:var(--accent)}
-    .rp-btn{padding:.45rem .8rem;border:1px solid var(--border);border-radius:6px;background:#fff;
-      font-size:.88rem;font-weight:600;color:var(--accent);cursor:pointer}
-    .rp-btn:hover{background:var(--surface-2,#f0f4f8)}
-    .rp-mapwrap{position:relative;border:1px solid var(--border);border-radius:var(--radius);
-      background:#F7F9FB;margin-bottom:1rem;overflow:hidden}
-    #rp-map-canvas{position:absolute;inset:0;width:100%;height:330px}
-    #rp-map{display:block;width:100%;height:330px;position:relative;cursor:grab}
-    #rp-map:active{cursor:grabbing}
-    /* Outlines only: the fill has to stay transparent or it would hide the
-       event data drawn on the canvas underneath. Countries WITHOUT data are
-       still drawn but inert, so the map never invites a click that does
-       nothing; the selected one gets a heavy stroke rather than a fill. */
-    .rp-c{fill:transparent;stroke:#8A99A8;stroke-width:.4px}
-    .rp-c.has-data{cursor:pointer}
-    .rp-c.has-data:hover{fill:rgba(21,101,192,.18)}
-    .rp-c.sel{stroke:#0B2138;stroke-width:1.6px;fill:transparent}
-    .rp-map-var{position:absolute;top:8px;right:10px}
-    .rp-map-var select{padding:.25rem .45rem;border:1px solid var(--border);border-radius:6px;
-      background:rgba(255,255,255,.94);font-size:.78rem;color:var(--text);max-width:230px}
-    .rp-colorbar{position:absolute;bottom:10px;right:10px;background:rgba(255,255,255,.93);
-      border:1px solid var(--border);border-radius:6px;padding:.35rem .5rem;min-width:150px}
-    .rp-cb-title{font-size:.68rem;font-weight:600;color:var(--text);margin-bottom:3px}
-    #rp-cb-bar{width:100%;height:10px;border-radius:2px;display:block}
-    .rp-cb-labels{display:flex;justify-content:space-between;font-size:.64rem;
-      color:var(--text-muted);margin-top:2px}
-    /* Pointer readout. Bottom-left so it never sits under the variable selector
-       or the colour bar, both of which are on the right. */
-    .rp-readout{position:absolute;bottom:10px;left:10px;background:rgba(255,255,255,.94);
-      border:1px solid var(--border);border-radius:6px;padding:.2rem .5rem;
-      font-size:.72rem;color:var(--text);pointer-events:none;
-      font-variant-numeric:tabular-nums;max-width:60%}
-    .rp-zoomwrap .rp-readout{bottom:6px;left:6px;font-size:.68rem}
-    .rp-map-hint{position:absolute;top:8px;left:10px;background:rgba(255,255,255,.9);
-      border:1px solid var(--border);border-radius:14px;padding:.18rem .6rem;
-      font-size:.76rem;color:var(--text-muted);pointer-events:none}
-    .rp-empty{padding:2rem;text-align:center;color:var(--text-muted);font-size:.9rem}
-    .rp-legend{display:flex;flex-wrap:wrap;gap:.4rem .95rem;align-items:center;
-      margin:.1rem 0 .7rem;font-size:.76rem;color:var(--text)}
-    .rp-lg{display:inline-flex;align-items:center;gap:.34rem;white-space:nowrap}
-    .rp-lg i{display:inline-block;width:17px;height:0;border-top-width:2.4px;
-      border-top-style:solid;flex:none}
-    .rp-legend-note{font-size:.76rem;color:var(--text-muted);margin:.7rem 0 0;
-      line-height:1.5;border-top:1px solid var(--border);padding-top:.5rem}
-    .rp-legend-note a{color:var(--accent);font-weight:600}
-    .rp-btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-    .rp-pack{display:inline-flex;flex-wrap:wrap;gap:.35rem}
-    .rp-pack a.rp-btn{text-decoration:none;color:inherit}
-    .rp-pack a[hidden]{display:none}
-    .rp-pack-lang{display:inline-flex;align-items:center;gap:.25rem}.rp-pack-lang[hidden]{display:none}
-    .rp-pack-tier{font-weight:600;font-size:.8rem;align-self:center;margin-left:.2rem}.rp-pack-tier[hidden]{display:none}
-    .rp-pack-lname{font-size:.78rem;color:var(--text-muted)}
-    .rp-btn-primary:hover{background:#0f4c8f;color:#fff}
-    /* Print-only masthead: on screen it would duplicate the page title. */
-    .rp-print-head{display:none}
+    .rp-zc-month output { font-size: var(--fs-ui); font-weight: 600; color: var(--ink); min-height: 1.2em; display: block; }
+    .rp-zoom { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gutter); }
+    .rp-zoom-map { min-width: 0; }
+    .rp-zoom-map .panel-head { margin-bottom: var(--s2); }
+    .rp-zoom-map h3 { font-size: 15px; font-weight: 400; color: var(--ink); margin: 0; }
+    .rp-zoomwrap { position: relative; height: 250px; background: var(--neighbour); overflow: hidden; }
+    #rp-zoom-canvas, #rp-zoom-canvas-b { position: absolute; inset: 0; width: 100%; height: 250px; }
+    #rp-zoom-svg, #rp-zoom-svg-b { display: block; width: 100%; height: 250px; position: relative; }
+    .rp-zoom-empty { font-size: 12px; fill: var(--muted); }
+    /* Neighbours thin, the selected country heavy: the data is clipped to it. */
+    .rp-zc { fill: none; stroke: var(--ink); stroke-opacity: .4; stroke-width: .5px; vector-effect: non-scaling-stroke; }
+    .rp-zc-sel { stroke: var(--ink); stroke-opacity: 1; stroke-width: 1.5px; }
+    /* Admin-1 divisions: enough to find a table row on the map, not enough to compete. */
+    .rp-zr { fill: transparent; stroke: var(--ink); stroke-opacity: .55; stroke-width: .6px; stroke-dasharray: 2 1.6;
+      vector-effect: non-scaling-stroke; cursor: pointer; }
+    .rp-zr:hover { stroke-opacity: 1; stroke-width: 1.4px; }
+    .rp-zr-on { stroke: var(--ink); stroke-opacity: 1; stroke-width: 2px; stroke-dasharray: none; }
+    .rp-zoomwrap .rp-readout { bottom: 6px; left: 6px; }
+    #rp-zoom-cb-b { display: none !important; }   /* one shared scale, one bar, in the key */
 
-    /* ── Print / Save as PDF ────────────────────────────────────────────────
-       Deliberately CSS rather than a PDF library. The charts and the map are
-       already on the page; printing them keeps the text as real vector text
-       instead of rasterising everything into an image, and adds no dependency
-       to vendor. The layout below is a designed sheet, not a screenshot of the
-       app: navigation, controls and the explainer are dropped, a masthead and a
-       provenance footer appear, and panels are kept off page breaks. */
+    /* The area the charts below describe, when a region is selected */
+    .rp-region-banner { display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap;
+      margin: var(--s4) 0; padding: var(--s2) var(--s4); border-radius: var(--r-key);
+      background: var(--key); font-size: var(--fs-ui); color: var(--ink); }
+    .rp-region-banner button { font: inherit; font-size: var(--fs-ui); font-weight: 600; min-height: 36px;
+      padding: 4px 12px; border: 1px solid var(--rule); border-radius: var(--r-ctl); background: var(--page); color: var(--ink); cursor: pointer; }
+
+    /* Sub-national tables and the regional forecast block */
+    .rp-regions { margin: var(--s5) 0 0; border-top: 1px solid var(--ink); }
+    .rp-regions > summary { cursor: pointer; padding: var(--s3) 0; font-weight: 600; font-size: var(--fs-h3);
+      color: var(--ink); list-style: revert; min-height: 40px; }
+    .rp-regions-body { padding: 0 0 var(--s3); }
+    #rp-regions-note, #rp-outlook-intro { font-size: var(--fs-sm); color: var(--muted); line-height: 1.45; margin: 0 0 var(--s3); max-width: none; }
+    .rp-regions-tablewrap { max-height: 340px; overflow: auto; }
+    .rp-regions-table { border-collapse: collapse; width: 100%; font-size: var(--fs-ui); line-height: var(--lh-tight);
+      border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); font-variant-numeric: tabular-nums; }
+    .rp-regions-table th { position: sticky; top: 0; z-index: 1; background: var(--page); text-align: right;
+      padding: 7px var(--s3); border-bottom: 1px solid var(--rule); font-weight: 600; color: var(--ink); white-space: nowrap; vertical-align: bottom; }
+    .rp-regions-table th:first-child { text-align: left; padding-left: 0; }
+    .rp-regions-table td { padding: 6px var(--s3); text-align: right; white-space: nowrap; }
+    .rp-regions-table tr + tr td { border-top: var(--hair); }
+    .rp-regions-table td:first-child { text-align: left; padding-left: 0; }
+    .rp-ol-table th, .rp-ol-table td { text-align: left !important; vertical-align: top; white-space: normal; }
+    .rp-ol-table td { min-width: 7.5rem; }
+    .rp-ol-table td.na { color: var(--muted); }
+    /* Direction tints, light, with the words in the cell carrying the meaning */
+    .rp-ol-table td.wet  { background: color-mix(in srgb, var(--wet) 12%, var(--page)); }
+    .rp-ol-table td.dry  { background: color-mix(in srgb, var(--dry) 12%, var(--page)); }
+    .rp-ol-table td.hot  { background: color-mix(in srgb, var(--en-strong) 10%, var(--page)); }
+    .rp-ol-table td.cool { background: color-mix(in srgb, var(--ln-strong) 10%, var(--page)); }
+    .rp-ol-tabs { margin: var(--s3) 0; }
+    .rp-ol-sent { margin: 0 0 var(--s3) 1.2em; padding: 0; font-size: var(--fs-ui); line-height: 1.5; max-width: none; }
+    .rp-ol-mapbox { max-width: 540px; margin: var(--s3) 0 var(--s4); }
+    #rp-ol-canvas { position: absolute; inset: 0; width: 100%; height: 250px; }
+    #rp-ol-svg { display: block; width: 100%; height: 250px; position: relative; }
+    .rp-ol-mapbar { display: flex; gap: var(--s4); flex-wrap: wrap; margin-bottom: var(--s2); }
+    .rp-ol-mapnote { font-size: var(--fs-sm); color: var(--muted); line-height: 1.45; margin: var(--s2) 0 0; }
+    .rp-rg-na { color: var(--muted); }
+    /* Range column, as in Fig 1 d of the paper */
+    .rp-ol-table .rp-ol-rng { min-width: 0; width: 176px; padding-right: 0; }
+    .rp-ol-table th.rp-ol-rng { vertical-align: bottom; }
+    .rp-ol-axis text { font-size: 12px; fill: var(--tick); font-variant-numeric: tabular-nums; }
+    .rp-ol-axis line { stroke: var(--axis); stroke-width: 1; }
+    .rp-ol-range { display: block; }
+    .rp-ol-range .ref { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
+    /* The spread sits with its value but must not compete with it. */
+    .rp-rg-sd { color: var(--muted); font-weight: 400; font-size: .92em; }
+
+    /* Facts row and the chart comparison control */
+    .rp-meta { margin: var(--s6) 0 0; }
+    .rp-chartbar { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-end; margin: var(--s5) 0 0; }
+
+    /* Charts: two panels per figure from 700 px. min-width:0 is load-bearing: a
+       grid track will not shrink below its item's min-content, and a Chart.js
+       canvas keeps the width it last rendered at. */
+    .rp-grid { display: block; }
+    .rp-pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gutter); align-items: start; }
+    @media (min-width: 700px) { .rp-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .rp-panel { position: relative; min-width: 0; }
+    .rp-panel .panel-head { flex-wrap: wrap; }
+    .rp-panel .panel-title .code { color: var(--muted); }
+    .rp-panel .panel-sub { min-height: 2.9em; }
+    .rp-yunit { display: block; font-size: var(--fs-xs); color: var(--muted); margin: 0 0 2px; }
+    .rp-canvas-wrap { position: relative; height: 240px; min-width: 0; }
+    .rp-wide .rp-canvas-wrap { height: 280px; }
+    .rp-panel .seg { margin: 0 0 var(--s2) calc(1em + var(--s2)); }
+    .rp-panel .seg button.empty { color: var(--muted); }
+
+    /* Enlarge: the panels are small so pairs fit; reading one closely is another job. */
+    .rp-zoombtn { position: absolute; top: 0; right: 0; z-index: 2; font: inherit; font-size: var(--fs-sm);
+      border: 1px solid var(--rule); background: var(--page); border-radius: var(--r-ctl); cursor: pointer;
+      min-height: 28px; padding: 2px 8px; color: var(--ink); opacity: 0; }
+    .rp-panel:hover .rp-zoombtn, .rp-zoombtn:focus, .rp-zoombtn:focus-visible { opacity: 1; }
+    .rp-zoombtn:hover { border-color: var(--ink); }
+    .rp-impacts .rp-imp-zoom { position: static; opacity: 1; margin-left: var(--s1); }
+    .rp-modal { position: fixed; inset: 0; z-index: 900; background: rgba(11, 33, 56, .55);
+      display: flex; align-items: center; justify-content: center; padding: 2vmin; }
+    .rp-modal-box { background: var(--page); border-radius: var(--r-card); width: min(1100px, 96vw);
+      max-height: 94vh; overflow: auto; padding: var(--s5); position: relative; }
+    .rp-modal-box h3 { margin: 0 0 var(--s1); font-size: var(--fs-h3); font-weight: 600; }
+    .rp-modal-wrap { position: relative; height: min(66vh, 560px); margin-top: var(--s3); }
+    .rp-modal-close { position: absolute; top: var(--s3); right: var(--s3); font: inherit; font-size: var(--fs-body);
+      border: 1px solid var(--rule); background: var(--page); border-radius: var(--r-ctl); cursor: pointer;
+      min-width: 40px; min-height: 40px; color: var(--ink); }
+    .rp-modal-close:hover { border-color: var(--ink); }
+
+    /* Key items drawn by the script (one key per figure) */
+    .rp-legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); align-items: center; }
+    .rp-lg { display: inline-flex; align-items: center; gap: var(--s2); white-space: nowrap; }
+    .rp-lg i { display: inline-block; width: 22px; height: 0; border-top-style: solid; flex: none; }
+
+    /* Fig. 4: reported disasters and outbreaks. Markers say THAT something was
+       recorded and WHEN, never how big: EM-DAT's casualty figures reflect
+       reporting capacity as much as severity. See build_impact_timeline.py. */
+    .rp-imp-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; margin-bottom: var(--s2); }
+    .rp-imp-head h3 { margin: 0; font-size: 15px; font-weight: 400; color: var(--ink); }
+    #rp-imp-sub { font-size: var(--fs-sm); color: var(--muted); margin: 0 0 var(--s2); }
+    /* One figure: month rules and the active band sit behind the rain row, the
+       marker row and the axis, so the figure reads as one object. */
+    .rp-imp-fig { position: relative; margin: var(--s2) 0 0; background: var(--page); overflow: hidden; }
+    .rp-imp-rules { position: absolute; left: 0; right: 0; top: 0; bottom: 38px; z-index: 0; pointer-events: none; }
+    .rp-imp-grid { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--grid); }
+    .rp-imp-grid.year { background: var(--rule); }
+    /* Months this event was active: a tinted band, edged, the same as its key swatch. */
+    .rp-imp-band { position: absolute; top: 0; bottom: 0; background: var(--grid);
+      box-shadow: inset 1px 0 0 var(--rule), inset -1px 0 0 var(--rule); }
+    .rp-imp-drivers { position: relative; z-index: 1; padding: 2px 0 0; }
+    .rp-imp-dlab { position: absolute; left: var(--s2); top: 3px; z-index: 2; font-size: var(--fs-xs); color: var(--muted); pointer-events: none; }
+    .rp-imp-spark { display: block; width: 100%; }
+    .rp-imp-track { position: relative; z-index: 1; height: 34px; border-top: var(--hair); }
+    .rp-imp-ev { position: absolute; height: 12px; cursor: pointer; background: none; border: 0; padding: 0; z-index: 2; }
+    .rp-imp-ev::after { content: ""; position: absolute; left: 6px; right: 1px; top: 5px; height: 2px; background: var(--c); opacity: .5; }
+    .rp-imp-ev::before { content: ""; position: absolute; left: 0; top: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--c); z-index: 1; }
+    /* Shape by kind, so colour is never the only cue: flood up, drought down. */
+    .rp-imp-ev.mk-up::before   { border-radius: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+    .rp-imp-ev.mk-down::before { border-radius: 0; clip-path: polygon(0 0, 100% 0, 50% 100%); }
+    .rp-imp-ev.unplaced::before { background: var(--page); border: 2px solid var(--c); box-sizing: border-box; }
+    /* Not placed on a map: hollow, whatever the shape. */
+    .rp-imp-ev.mk-up.unplaced::before, .rp-imp-ev.mk-down.unplaced::before { clip-path: none; border: 0; background: var(--c);
+      -webkit-mask: var(--hollow) center / 100% 100% no-repeat; mask: var(--hollow) center / 100% 100% no-repeat; }
+    .rp-imp-ev.mk-up.unplaced::before { --hollow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1.5 L11 11 L1 11 Z' fill='none' stroke='black' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+    .rp-imp-ev.mk-down.unplaced::before { --hollow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1 1 L11 1 L6 10.5 Z' fill='none' stroke='black' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+    .rp-imp-ev.overruns::after { -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent 100%); mask-image: linear-gradient(90deg, #000 70%, transparent 100%); }
+    .rp-imp-ev.on { outline: 2px solid var(--ink); outline-offset: 1px; }
+    .rp-imp-axis { position: relative; z-index: 1; height: 38px; font-size: var(--fs-xs); color: var(--tick);
+      font-variant-numeric: tabular-nums; border-top: 1px solid var(--axis); }
+    .rp-imp-tick { position: absolute; top: 3px; transform: translateX(-50%); white-space: nowrap; }
+    .rp-imp-tick.year { color: var(--ink); font-weight: 600; }
+    .rp-imp-tick b { display: block; font-weight: 600; text-align: center; }
+    .rp-modal-fig .rp-imp-fig { margin: var(--s3) 0 0; }
+    .rp-modal-fig .rp-imp-list { max-height: 34vh; }
+    .rp-imp-swatch { width: 22px; height: 12px; flex: none; display: inline-block; background: var(--grid); border: 1px solid var(--rule); }
+    .rp-imp-legend { margin-top: var(--s3); }
+    .rp-imp-key { display: inline-flex; align-items: center; gap: var(--s2); }
+    .rp-imp-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c, var(--ink)); display: inline-block; flex: none; }
+    .rp-imp-dot.mk-up   { border-radius: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); width: 11px; height: 10px; }
+    .rp-imp-dot.mk-down { border-radius: 0; clip-path: polygon(0 0, 100% 0, 50% 100%); width: 11px; height: 10px; }
+    .rp-imp-hollow { width: 11px; height: 11px; flex: none; fill: none; stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; overflow: visible; }
+    /* The records, ruled like a table */
+    .rp-imp-list { list-style: none; margin: var(--s4) 0 0; padding: 0; font-size: var(--fs-ui);
+      max-height: 220px; overflow-y: auto; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+    .rp-imp-list li { padding: 6px 0; display: flex; gap: var(--s3); align-items: baseline; cursor: pointer; }
+    .rp-imp-list li + li { border-top: var(--hair); }
+    .rp-imp-list li:hover { background: var(--card); }
+    .rp-imp-list li.on { background: var(--key); }
+    .rp-imp-when { font-variant-numeric: tabular-nums; color: var(--muted); min-width: 5.6em; flex: none; }
+    .rp-imp-what { font-weight: 600; color: var(--ink); min-width: 9.2em; flex: none; display: inline-flex; align-items: center; gap: var(--s2); }
+    .rp-imp-where { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+    .rp-imp-src { margin-left: auto; flex: none; font-size: var(--fs-sm); }
+    .rp-imp-where.none { font-style: italic; }
+    /* The empty-state sentence explains why a theme is blank, so it wraps. */
+    .rp-imp-empty { color: var(--muted); line-height: 1.5; white-space: normal; display: block; padding: 2px 0; }
+    .rp-imp-foot { margin: var(--s2) 0 0; font-size: var(--fs-sm); color: var(--muted); }
+    .rp-impacts .callout.limits { margin: var(--s4) 0 0; }
+
+    /* Print-only masthead: on screen it would duplicate the page head. */
+    .rp-print-head { display: none; }
+
+    @media (max-width: 760px) { .rp-zoom { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) {
+      .rp-ctrl, .rp-ctrl select { width: 100%; min-width: 0; }
+      .rp-zc-ctrl, .rp-zc-ctrl select { width: 100%; max-width: none; }
+      .rp-map-var { position: static; padding: var(--s2) var(--s2) 0; }
+      .rp-map-var select { width: 100%; max-width: none; }
+      .rp-canvas-wrap, .rp-wide .rp-canvas-wrap { height: 230px; }
+      .rp-panel .panel-sub { min-height: 0; }
+      .rp-zoombtn { opacity: 1; }
+      .rp-imp-list li { flex-wrap: wrap; gap: 2px var(--s3); }
+      .rp-imp-src { margin-left: 0; }
+    }
+
+    /* Print / Save as PDF: CSS rather than a PDF library, so text stays vector.
+       Navigation and controls go, the print head appears, figures stay whole. */
     @media print {
-      @page { size: A4 portrait; margin: 14mm 12mm; }
-      header, nav, .rp-controls, .site-footer, .rp-map-hint { display: none !important; }
-      /* The "What am I looking at?" card is orientation for a first-time
-         reader on screen; on a printed sheet it buries the data. */
-      main > .card:first-of-type { display: none !important; }
-      body { background: #fff !important; }
-      main { max-width: none !important; margin: 0 !important; padding: 0 !important; }
-      .card { border: none !important; box-shadow: none !important;
-              padding: 0 !important; margin: 0 !important; }
-      .page-title, .page-subtitle { display: none !important; }
-
-      .rp-print-head { display: block; margin-bottom: 6mm;
-        border-bottom: 1.5pt solid #0B2138; padding-bottom: 3mm; }
-      .rp-print-head .ph-title { font-size: 15pt; font-weight: 700; color: #0B2138; margin: 0; }
-      .rp-print-head .ph-sub { font-size: 9.5pt; color: #40566B; margin: 1.5mm 0 0; }
-
-      .rp-meta { margin: 0 0 4mm !important; gap: 3mm !important; }
-      .rp-chip { font-size: 8pt !important; border-color: #C7CED6 !important;
-                 background: #fff !important; }
-
-      .rp-mapwrap { break-inside: avoid; page-break-inside: avoid;
-                    border-color: #C7CED6 !important; margin-bottom: 5mm !important; }
-      #rp-map { height: 62mm !important; }
-
-      /* The zoom and the strip both survive to paper, stacked. The strip's
-         horizontal scroll cannot exist on a printed page, so the renderer is
-         told to lay it out at page width instead of clipping it. */
-      .rp-zoom { grid-template-columns: repeat(2, 1fr) !important;
-                 gap: 5mm !important; margin-bottom: 5mm !important; }
-      .rp-zoom-map { border: 1pt solid #E0E3E8 !important;
-                 padding: 3mm 3mm 2mm !important; break-inside: avoid;
-                 page-break-inside: avoid; }
-      .rp-zoom-head input[type=range] { display: none !important; }
-      .rp-zoom-head select,
-      .rp-chartbar select { border: none !important; font-weight: 600; }
-      /* On paper a dropdown is not a control, it is a statement of what the
-         charts below show, so it stays and prints as plain text. */
-      .rp-chartbar { padding: 2mm 0 !important; border: none !important;
-                     background: none !important; }
-      .rp-zoom h3 { font-size: 10.5pt !important; }
-      .rp-zoomwrap, #rp-zoom-canvas, #rp-zoom-svg,
-      #rp-zoom-canvas-b, #rp-zoom-svg-b { height: 50mm !important; }
-
-      /* One column: two side-by-side charts at A4 width are unreadable. */
-      .rp-grid { grid-template-columns: 1fr !important; gap: 5mm !important; }
-      .rp-panel { break-inside: avoid; page-break-inside: avoid;
-                  border: 1pt solid #E0E3E8 !important; padding: 3mm 3mm 1mm !important; }
-      .rp-panel h3 { font-size: 10.5pt !important; }
-      .rp-panel .rp-sub { font-size: 7.8pt !important; }
-      /* On paper the unselected thresholds are noise, and a printed button
-         suggests something clickable. Keep only the chosen one, as plain text. */
-      .rp-thr { border: none !important; }
-      .rp-thr button { display: none !important; }
-      .rp-thr button.on { display: inline !important; background: none !important;
-        color: #40566B !important; border: none !important; padding: 0 !important;
-        font-size: 8.5pt !important; font-weight: 600 !important; }
-      .rp-canvas-wrap { height: 52mm !important; }
-      .rp-wide .rp-canvas-wrap { height: 60mm !important; }
-      .rp-zoombtn, .rp-modal, .rp-empty { display: none !important; }
-      .rp-legend-note { font-size: 7.5pt !important; margin-top: 4mm !important;
-                        border-top: .5pt solid #E0E3E8; padding-top: 2mm; }
-
-      /* Sub-national table on paper.
-         Three things have to be undone or the numbers do not reach the page at
-         all. A <details> prints exactly as it sits on screen, so a reader who
-         never expanded it gets a PDF with the section heading and nothing under
-         it. The scroll box clips to 340px, which on paper means the visible
-         rows print and the rest are simply gone, silently. And a sticky header
-         repeats oddly across a page break. */
-      .rp-regions { break-inside: auto; border: 1pt solid #E0E3E8 !important;
-                    background: #fff !important; margin-top: 4mm !important; }
-      .rp-regions > summary { list-style: none; font-size: 10.5pt !important;
-                    padding: 2mm 3mm !important; border-bottom: .5pt solid #E0E3E8; }
+      .rp-controls, .rp-downloads, .rp-map-var, .rp-zoombtn, .rp-modal, .rp-empty, .rp-zoom-head input[type=range],
+      .callout.howto { display: none !important; }
+      .page-head { display: none !important; }   /* the print head names event and country */
+      .rp-print-head { display: block; margin-bottom: 6mm; border-bottom: .5pt solid #000; padding-bottom: 2mm; }
+      .rp-print-head .ph-title { font-size: 12pt; font-weight: 700; color: #000; margin: 0; }
+      .rp-print-head .ph-sub { font-size: 8pt; color: #333; margin: 1mm 0 0; }
+      #rp-map, #rp-map-canvas { height: 62mm !important; }
+      .rp-zoom { grid-template-columns: repeat(2, 1fr) !important; gap: 5mm !important; }
+      .rp-zoomwrap, #rp-zoom-canvas, #rp-zoom-svg, #rp-zoom-canvas-b, #rp-zoom-svg-b { height: 50mm !important; }
+      /* On paper a dropdown is a statement of what is shown, so it prints as text. */
+      .rp-zoom-head select, .rp-chartbar select { border: none !important; background: none !important; font-weight: 600; padding: 0 !important; min-height: 0 !important; }
+      .rp-pair { grid-template-columns: 1fr 1fr !important; gap: 4mm !important; }
+      .rp-panel { break-inside: avoid; }
+      /* Only the chosen threshold prints, as plain text. */
+      .rp-panel .seg { border: none !important; }
+      .rp-panel .seg button { display: none !important; }
+      .rp-panel .seg button[aria-pressed="true"] { display: inline !important; background: none !important; box-shadow: none !important; padding: 0 !important; min-height: 0 !important; font-size: 8pt !important; }
+      .rp-canvas-wrap { height: 48mm !important; }
+      .rp-wide .rp-canvas-wrap { height: 56mm !important; }
+      /* Sub-national tables: a <details> prints as it sits, and the scroll box
+         clips to 340px, so both are undone or rows silently vanish. */
+      .rp-regions > summary { list-style: none; }
       .rp-regions > summary::-webkit-details-marker { display: none; }
-      .rp-regions-body { padding: 2mm 3mm 3mm !important; }
-      .rp-regions-note, #rp-regions-note { font-size: 7.5pt !important; }
-      /* Undo the scroll box: every row prints, across page breaks if needed. */
-      .rp-regions-tablewrap { max-height: none !important; overflow: visible !important; }
-      .rp-regions-table { font-size: 8pt !important; }
-      .rp-regions-table th { position: static !important; background: #fff !important;
-                    border-bottom: .75pt solid #A9B4BE !important; padding: 1.2mm 2mm !important; }
-      .rp-regions-table td { padding: 1mm 2mm !important;
-                    border-bottom: .25pt solid #EDF1F4 !important; }
-      .rp-regions-table tr { break-inside: avoid; page-break-inside: avoid; }
-      .rp-rg-na { color: #7A8894 !important; }
+      .rp-regions:not([open]) > .rp-regions-body { display: block !important; }
+      .rp-regions-tablewrap, .rp-imp-list { max-height: none !important; overflow: visible !important; }
+      .rp-regions-table th { position: static !important; }
+      .rp-regions-table tr { break-inside: avoid; }
+      .rp-ol-table td.wet, .rp-ol-table td.dry, .rp-ol-table td.hot, .rp-ol-table td.cool,
+      .rp-imp-ev, .rp-imp-dot, .rp-cb-ticks, #rp-map-canvas { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
   </style>
 </head>
@@ -454,7 +314,7 @@
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019b" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019c" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -487,68 +347,38 @@
   </header>
 
   <main>
-    <h1 class="page-title">Event replay</h1>
-    <p class="page-subtitle">
-      Walk through a past El Niño or La Niña month by month for one country, and see how it
-      compared with every other observed event.
-    </p>
-
-    <div class="card">
-      <h2>What am I looking at?</h2>
-      <div class="prose">
-        <p>
-          The <a href="map_explorer.html">Teleconnections maps</a> answer "what does an El Niño
-          typically do?" by averaging every past event into one seasonal picture. This page asks the
-          opposite question: <strong>what actually happened during one particular event?</strong>
-          Nothing is averaged into seasons here. You get the real monthly sequence, from January of
-          the year the event began through December of the year it ended, which puts the peak in the
-          middle and shows the build-up and the decay either side.
-        </p>
-        <p>
-          The faint grey lines behind each chart are <strong>every other observed event of the same
-          type</strong>, lined up so that month 0 is January of each one's own first year. That is
-          what makes "was this one unusual?" answerable: if the coloured line sits outside the grey
-          band, this event was doing something the others did not. The dates along the bottom belong
-          to the <em>selected</em> event, the coloured line; each grey line is running through its
-          own years at the same point in its own sequence.
-        </p>
-        <p>
-          The past on this page comes from the <strong>record</strong>: sea surface temperature from
-          the ENSO indices and rainfall from CHIRPS are observed, heat comes from the ERA5
-          reanalysis. Two things are forecasts, both drawn dashed so they cannot be mistaken for
-          the record. Where the selected event is still running, the sea-surface-temperature panel
-          carries the live ENSO <strong>forecast</strong> from ECMWF SEAS5 and Météo-France System 9,
-          in their own colours; and the rainfall and temperature charts carry the
-          <strong>regional forecast</strong> from the same two models, corrected day by day against
-          CHIRPS rainfall and the ERA5 reanalysis: the median of the runs and the middle 80% of them,
-          drawn only in months where that model's past forecasts show skill for that region.
-        </p>
-      </div>
+    <div class="page-head" style="padding-top:0">
+      <p class="kicker">Event replay</p>
+      <h1 class="page-title" id="rp-h1">Event replay</h1>
+      <p class="page-subtitle">
+        Walk through a past El Niño or La Niña month by month for one country, and see how it
+        compared with every other observed event.
+      </p>
     </div>
 
-    <div class="card">
-      <div class="rp-controls">
-        <div class="rp-ctrl">
-          <label for="rp-event">Event</label>
-          <select id="rp-event"></select>
+    <p class="callout howto"><b>How to read this page.</b> The faint grey lines behind each chart are every other observed event of the same
+      type, lined up so that month 0 is January of each one's own first year. If the coloured line sits outside the grey
+      band, this event was doing something the others did not. <a href="guide.html#replay">More in the Guide</a>.</p>
+
+    <!-- Country first, as numbered steps (Isma, 19 Oct 2026). A link can still name both
+         (?event=...&country=...) or the country alone (?country=...). -->
+    <div class="card rp-steps">
+      <div class="rp-step">
+        <h2 class="rp-step-h"><label for="rp-country">1. Choose a country</label></h2>
+        <div class="rp-controls">
+          <div class="rp-ctrl">
+            <select id="rp-country"></select>
+          </div>
+          <div class="rp-ctrl">
+            <button type="button" id="rp-map-toggle" class="btn">Pick on map</button>
+          </div>
         </div>
-        <div class="rp-ctrl">
-          <label for="rp-country">Country</label>
-          <select id="rp-country"></select>
-        </div>
-        <div class="rp-ctrl">
-          <label>&nbsp;</label>
-          <button type="button" id="rp-map-toggle" class="rp-btn">Pick on map</button>
-        </div>
-        <div class="rp-ctrl">
-          <label>&nbsp;</label>
-          <button type="button" id="rp-pdf" class="rp-btn rp-btn-primary">Save as PDF</button>
-        </div>
-        <div class="rp-ctrl">
-          <label>Downloads for this country</label>
-          <span class="rp-pack">
-            <span class="rp-pack-tier" title="For hospital and field teams">One-page summary</span>
-            <span class="rp-pack-lang" data-l="en"><span class="rp-pack-lname">English</span>
+      </div>
+      <div class="rp-step rp-ctrl rp-downloads">
+        <h2 class="rp-step-h">2. Download</h2>
+        <p class="source" id="rp-downloads-wait">The downloads for the country appear here once it is chosen.</p>
+        <div class="downloads rp-pack" id="rp-downloads" hidden>
+          <div class="dl"><svg viewBox="0 0 34 40" aria-hidden="true"><path d="M10 1.5h20v29" fill="none" style="stroke:var(--ink)" stroke-width="1.1"/><path d="M7 4.5h20v29" fill="none" style="stroke:var(--ink)" stroke-width="1.1"/><path d="M4 7.5h20v31H4z" fill="#fff" style="stroke:var(--ink)" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 14h12M8 18h12M8 22h12M8 26h8" style="stroke:var(--axis)" stroke-width="1"/></svg><span><b class="rp-pack-tier" title="For hospital and field teams">One-page summary</b><span class="rp-dl-langs"><span class="rp-pack-lang" data-l="en"><span class="rp-pack-lname">English</span>
               <a id="rp-sum-pdf" class="rp-btn" target="_blank" rel="noopener"
                  title="One-page summary, for hospital and field teams: the coming months, a region table and maps (PDF, one A4 page)">PDF</a>
               <a id="rp-sum-xlsx" class="rp-btn" rel="noopener"
@@ -567,68 +397,50 @@
               <a id="rp-sum-pt-pdf" class="rp-btn" target="_blank" rel="noopener" lang="pt"
                  title="Resumo de uma página, para hospitais e trabalho de campo (PDF)">PDF</a>
               <a id="rp-sum-pt-xlsx" class="rp-btn" rel="noopener" lang="pt"
-                 title="Resumo de uma página (Excel)">Excel</a></span>
-            <span class="rp-pack-tier" title="For analysts">Full analysis</span>
-            <span class="rp-pack-lang" data-l="full">
-              <a id="rp-pack-pdf" class="rp-btn" target="_blank" rel="noopener"
-                 title="Full analysis, for analysts: the forecast, the regional forecast with its skill, past El Niño seasons, outbreaks and sources (PDF, English)">PDF</a>
-              <a id="rp-pack-xlsx" class="rp-btn" rel="noopener"
-                 title="The full analysis with every table behind it, as an Excel workbook (English)">Excel</a></span>
-          </span>
+                 title="Resumo de uma página (Excel)">Excel</a></span></span></span></div>
+          <div class="dl"><svg viewBox="0 0 34 40" aria-hidden="true"><path d="M4 1.5h18l8 8V38.5H4z" fill="#fff" style="stroke:var(--ink)" stroke-width="1.2" stroke-linejoin="round"/><path d="M22 1.5v8h8" fill="none" style="stroke:var(--ink)" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 13h10M8 17h14" style="stroke:var(--axis)" stroke-width="1"/><text x="17" y="32" text-anchor="middle" font-size="9.5" font-weight="700" style="fill:var(--link)" font-family="Arial, sans-serif">PDF</text></svg><span><b>Full analysis</b><span class="rp-pack-lang" data-l="full"><a id="rp-pack-pdf" class="rp-btn" target="_blank" rel="noopener"
+                 title="Full analysis, for analysts: the forecast, the regional forecast with its skill, past El Niño seasons, outbreaks and sources (PDF, English)">PDF</a></span><span class="rp-dl-langs">For analysts, English</span></span></div>
+          <div class="dl"><svg viewBox="0 0 34 40" aria-hidden="true"><path d="M4 1.5h18l8 8V38.5H4z" fill="#fff" style="stroke:var(--ink)" stroke-width="1.2" stroke-linejoin="round"/><path d="M22 1.5v8h8" fill="none" style="stroke:var(--ink)" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 12h18M8 16h18M8 20h18M14 12v8M20 12v8" style="stroke:var(--ink)" stroke-width="0.9" fill="none"/><text x="17" y="32" text-anchor="middle" font-size="9.5" font-weight="700" style="fill:var(--link)" font-family="Arial, sans-serif">XLS</text></svg><span><b>Full analysis</b><span class="rp-pack-lang" data-l="full-x"><a id="rp-pack-xlsx" class="rp-btn" rel="noopener"
+                 title="The full analysis with every table behind it, as an Excel workbook (English)">Excel</a></span><span class="rp-dl-langs">Every table behind it</span></span></div>
         </div>
       </div>
-
-      <!-- Masthead, print only. Filled in by JS so the sheet always names the
-           event and country it actually shows. -->
-      <div class="rp-print-head" id="rp-print-head">
-        <p class="ph-title" id="rp-print-title"></p>
-        <p class="ph-sub" id="rp-print-sub"></p>
-      </div>
-
-      <!-- Country picker map. Open by default: clicking the map is the natural
-           way to choose a country, and the dropdown stays as the keyboard and
-           screen-reader path rather than being replaced by it. -->
-      <!-- One map, two jobs: it shows what this event did, and clicking a
-           country selects it for the charts below. Data is drawn on a canvas
-           with the country outlines as an SVG layer on top, the same split the
-           Teleconnections map uses. -->
-      <!-- Shown until an event is chosen. See the .rp-empty rule for why the
-           page no longer opens on the developing event. -->
-      <div class="rp-empty" id="rp-empty">
-        <strong>Choose an event to begin</strong>
-        Pick an El Ni&ntilde;o or La Ni&ntilde;a from the list above and this page fills in:
-        maps for every month of it, and the same months charted against every other
-        event of its kind.
-      </div>
-
-      <div class="rp-mapwrap" id="rp-mapwrap" hidden>
-        <canvas id="rp-map-canvas"></canvas>
-        <svg id="rp-map" role="img" aria-label="World map of this event's impact. Click a country to select it."></svg>
-        <div class="rp-map-hint" id="rp-map-hint">Click a country. Scroll to zoom, drag to pan, double-click to reset</div>
-        <div class="rp-readout" id="rp-map-readout" hidden></div>
-        <div class="rp-map-var">
-          <select id="rp-map-variable" aria-label="Impact shown on the map"></select>
-        </div>
-        <div class="rp-colorbar" id="rp-colorbar" hidden>
-          <div class="rp-cb-title" id="rp-cb-title"></div>
-          <canvas id="rp-cb-bar" height="10"></canvas>
-          <div class="rp-cb-ticks" id="rp-cb-ticks"></div>
+      <div class="rp-step">
+        <h2 class="rp-step-h"><label for="rp-event">3. To replay a particular event, choose an El Niño or La Niña event</label></h2>
+        <div class="rp-controls">
+          <div class="rp-ctrl">
+            <select id="rp-event"></select>
+          </div>
+          <div class="rp-ctrl">
+            <button type="button" id="rp-pdf" class="btn">Print or save as PDF</button>
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- Country zoom + event-by-event strip.
-           Modelled on MacLeod et al., "Dress Rehearsal: 2023 El Nino
-           Anticipatory Action Somalia, in the Shadow of 1997" (Figure 4), which
-           stacks 1997 above 2023 on one shared calendar axis. Overlaid grey
-           lines answer "is this one unusual" only for the sharpest reader;
-           one row per event answers it at a glance, and reads on paper. -->
-      <!-- Side-by-side spatial signature. The world map answers "where did this
-           land"; at world scale one country is a few pixels, and comparing two
-           events means clicking back and forth and trusting your memory of the
-           previous frame. Two panels on one shared colour scale removes the
-           memory step, and the month selector turns a window average into the
-           actual sequence: 1997 and 2023 differ far more in WHEN the rain fell
-           than in how much. -->
+    <!-- Masthead, print only. Filled in by JS so the sheet always names the
+         event and country it actually shows. -->
+    <div class="rp-print-head" id="rp-print-head">
+      <p class="ph-title" id="rp-print-title"></p>
+      <p class="ph-sub" id="rp-print-sub"></p>
+    </div>
+
+    <!-- Shown until an event is chosen: an empty page that says so beats a full
+         one that shows nothing. -->
+    <div class="rp-empty" id="rp-empty">
+      <span id="rp-empty-country"><strong>Choose a country to begin</strong>
+      Choose a country in step 1, or click one on the map, and this page fills in: its downloads,
+      maps for every month of the event, and the same months charted against every other
+      event of its kind.</span>
+      <span id="rp-empty-event" hidden><strong>Choose an event to begin</strong>
+      Pick an El Ni&ntilde;o or La Ni&ntilde;a from the list above and this page fills in:
+      maps for every month of it, and the same months charted against every other
+      event of its kind.</span>
+    </div>
+
+    <!-- One map, two jobs: it shows what this event did, and clicking a country
+         selects it for the charts below. Data on a canvas, outlines as SVG on top. -->
+    <figure class="fig" id="rp-fig-map">
+      <div class="card">
       <div class="rp-zoom-head" id="rp-zoom-head" hidden>
         <div class="rp-zc-ctrl">
           <label for="rp-zoom-cmp">Compare maps with</label>
@@ -640,44 +452,72 @@
           <output id="rp-zoom-month-out">Whole window</output>
         </div>
       </div>
-
-      <div class="rp-zoom" id="rp-zoom" hidden>
-        <div class="rp-zoom-map">
-          <h3 id="rp-zoom-title-a">This event</h3>
-          <div class="rp-zoomwrap" id="rp-zoomwrap">
-            <canvas id="rp-zoom-canvas"></canvas>
-            <div class="rp-readout" id="rp-zoom-readout-a" hidden></div>
-            <svg id="rp-zoom-svg" role="img" aria-label="Selected event over the selected country."></svg>
+        <div class="rp-mapwrap" id="rp-mapwrap" hidden>
+          <canvas id="rp-map-canvas"></canvas>
+          <svg id="rp-map" role="img" aria-label="World map of this event's impact. Click a country to select it."></svg>
+          <div class="rp-readout" id="rp-map-readout" hidden></div>
+          <div class="rp-map-var">
+            <select id="rp-map-variable" aria-label="Impact shown on the map"></select>
           </div>
+        </div>
+        <p class="rp-map-hint" id="rp-map-hint">Click a country. Scroll to zoom, drag to pan, double-click to reset</p>
+        <div class="key">
+          <div class="rp-colorbar" id="rp-colorbar" hidden>
+            <div class="rp-cb-title" id="rp-cb-title"></div>
+            <canvas id="rp-cb-bar" height="10"></canvas>
+            <div class="rp-cb-ticks" id="rp-cb-ticks"></div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Fig. 1. World map of this event's impact.</b></figcaption>
+    </figure>
+
+    <!-- Side-by-side spatial signature, modelled on MacLeod et al., "Dress
+         Rehearsal: 2023 El Nino Anticipatory Action Somalia, in the Shadow of 1997"
+         (Figure 4). Two panels on one shared colour scale remove the memory step;
+         the month selector turns a window average into the actual sequence. -->
+    <figure class="fig" id="rp-fig-zoom">
+      <div class="card">
+        <div class="rp-zoom" id="rp-zoom" hidden>
+          <div class="rp-zoom-map">
+            <div class="panel-head"><span class="panel-letter">a</span><h3 id="rp-zoom-title-a">This event</h3></div>
+            <div class="rp-zoomwrap" id="rp-zoomwrap">
+              <canvas id="rp-zoom-canvas"></canvas>
+              <div class="rp-readout" id="rp-zoom-readout-a" hidden></div>
+              <svg id="rp-zoom-svg" role="img" aria-label="Selected event over the selected country."></svg>
+            </div>
+          </div>
+          <div class="rp-zoom-map">
+            <div class="panel-head"><span class="panel-letter">b</span><h3 id="rp-zoom-title-b">Comparison</h3></div>
+            <div class="rp-zoomwrap" id="rp-zoomwrap-b">
+              <canvas id="rp-zoom-canvas-b"></canvas>
+              <div class="rp-readout" id="rp-zoom-readout-b" hidden></div>
+              <svg id="rp-zoom-svg-b" role="img" aria-label="Comparison event over the same country."></svg>
+            </div>
+            <div class="rp-panel-cb" id="rp-zoom-cb-b" hidden>
+              <div class="rp-cb-cap" id="rp-zoom-cb-cap-b"></div>
+              <canvas id="rp-zoom-cb-bar-b" height="9"></canvas>
+              <div class="rp-cb-ticks" id="rp-zoom-cb-ticks-b"></div>
+            </div>
+          </div>
+        </div>
+        <div class="key">
           <div class="rp-panel-cb" id="rp-zoom-cb-a" hidden>
             <div class="rp-cb-cap" id="rp-zoom-cb-cap-a"></div>
             <canvas id="rp-zoom-cb-bar-a" height="9"></canvas>
             <div class="rp-cb-ticks" id="rp-zoom-cb-ticks-a"></div>
           </div>
         </div>
-        <div class="rp-zoom-map">
-          <h3 id="rp-zoom-title-b">Comparison</h3>
-          <div class="rp-zoomwrap" id="rp-zoomwrap-b">
-            <canvas id="rp-zoom-canvas-b"></canvas>
-            <div class="rp-readout" id="rp-zoom-readout-b" hidden></div>
-            <svg id="rp-zoom-svg-b" role="img" aria-label="Comparison event over the same country."></svg>
-          </div>
-          <div class="rp-panel-cb" id="rp-zoom-cb-b" hidden>
-            <div class="rp-cb-cap" id="rp-zoom-cb-cap-b"></div>
-            <canvas id="rp-zoom-cb-bar-b" height="9"></canvas>
-            <div class="rp-cb-ticks" id="rp-zoom-cb-ticks-b"></div>
-          </div>
-        </div>
       </div>
-      <p class="rp-sub rp-zoom-foot" id="rp-zoom-note"></p>
+      <figcaption><b>Fig. 2. Selected event and comparison over the selected country.</b> <span id="rp-zoom-note"></span></figcaption>
+    </figure>
 
-      <!-- Names the area the charts below describe. Six charts silently becoming a
-           different place is the failure this prevents. -->
-      <div class="rp-region-banner" id="rp-region-banner" hidden></div>
+    <!-- Names the area the charts below describe. Six charts silently becoming a
+         different place is the failure this prevents. -->
+    <div class="rp-region-banner" id="rp-region-banner" hidden></div>
 
-      <!-- Sub-national breakdown. A map shows you the pattern; it cannot tell you
-           that eastern DRC ran 50 mm above normal, which is the number an
-           operational planner actually writes down. Requested by MSF, August 2026. -->
+    <!-- Sub-national breakdown: the number an operational planner writes down.
+         Requested by MSF, August 2026. -->
       <details class="rp-regions" id="rp-regions" hidden>
         <summary id="rp-regions-summary">By sub-national region</summary>
         <div class="rp-regions-body">
@@ -692,7 +532,7 @@
         <div class="rp-regions-body">
           <p class="rp-sub" id="rp-outlook-intro"></p>
           <ul class="rp-ol-sent" id="rp-outlook-sent"></ul>
-          <div class="rp-ol-tabs" id="rp-outlook-tabs"></div>
+          <div class="rp-ol-tabs seg" id="rp-outlook-tabs" role="group" aria-label="Index"></div>
           <div class="rp-ol-mapbox">
             <div class="rp-ol-mapbar">
               <div class="rp-zc-ctrl"><label for="rp-ol-sys">Model</label>
@@ -714,17 +554,12 @@
           <div class="rp-regions-tablewrap">
             <table class="rp-regions-table rp-ol-table" id="rp-outlook-table"></table>
           </div>
+          <div class="key" id="rp-outlook-rngkey" hidden></div>
         </div>
       </details>
 
-      <div class="rp-meta" id="rp-meta"></div>
+    <dl class="facts rp-meta" id="rp-meta" aria-label="This event and country"></dl>
 
-      <!-- This control used to sit at the top of the page next to Country,
-           labelled "Compare against", while the only thing it changes is the
-           grey lines on the charts BELOW it. Two problems at once: its effect
-           was eight panels away from it, and it read as a near-duplicate of
-           "Compare with" in the month bar, which drives the second MAP. Both
-           now sit with what they change and are named after it. -->
       <div class="rp-chartbar" id="rp-chartbar" hidden>
         <div class="rp-zc-ctrl">
           <label for="rp-compare">Compare charts with</label>
@@ -736,37 +571,34 @@
         </div>
       </div>
 
-      <!-- Legend where the lines are, not in a paragraph under the page. A
-           reader decoding a chart looks at the chart. -->
-      <div class="rp-legend" id="rp-legend" hidden></div>
-
-      <div class="rp-grid" id="rp-grid" hidden>
+    <div class="rp-grid" id="rp-grid" hidden>
+      <figure class="fig">
+        <div class="card">
         <div class="rp-panel rp-wide">
-          <h3>Sea surface temperature, Niño 3.4</h3>
-          <p class="rp-sub">The event itself, in standard deviations. This is the index the event was
-            classified from, so it is the same everywhere and does not depend on the country chosen.</p>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-nino"></canvas></div>
+          <div class="panel-head"><h3 class="panel-title">Sea surface temperature, Niño 3.4</h3></div>
+          <p class="panel-sub rp-sub" style="margin-left:0">The index the event was classified from, in standard deviations.</p>
+          <span class="rp-yunit" data-for="rp-chart-nino"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-nino" role="img"></canvas></div>
         </div>
+          <div class="key rp-legend" data-key-for="nino"></div>
+        </div>
+        <figcaption><b>Fig. 3. Sea surface temperature, Niño 3.4.</b> <span class="rp-xnote"></span></figcaption>
+      </figure>
 
-        <!-- Recorded impacts, on the SAME month axis as the charts above, so a
-           marker lines up vertically with the climate anomaly that preceded
-           it. That alignment is the deliverable: it is how the lag between an
-           anomaly and an outbreak becomes visible, and it is what a map alone
-           cannot show. Method: Anyamba et al. 2019, doi:10.1038/s41598-018-38034-z -->
-      <div class="rp-impacts rp-wide" id="rp-impacts" hidden>
-        <div class="rp-imp-head">
-          <h3>Reported disasters and outbreaks</h3>
-          <span class="rp-thr" role="group" aria-label="Impact theme">
-            <button type="button" data-theme="water" class="on">Floods and drought</button>
-            <button type="button" data-theme="heat">Extreme heat</button>
-            <button type="button" data-theme="disease">Disease</button>
+      <!-- Recorded impacts, on the SAME month axis as the charts, so a marker lines
+           up with the anomaly that preceded it. Method: Anyamba et al. 2019,
+           doi:10.1038/s41598-018-38034-z -->
+      <figure class="fig">
+        <div class="card rp-impacts rp-wide" id="rp-impacts" hidden>
+          <div class="rp-imp-head">
+            <h3>Reported disasters and outbreaks</h3>
+            <span class="rp-thr seg" role="group" aria-label="Impact theme">
+            <button type="button" data-theme="water" class="on" aria-pressed="true">Floods and drought</button>
+            <button type="button" data-theme="heat" aria-pressed="false">Extreme heat</button>
+            <button type="button" data-theme="disease" aria-pressed="false">Disease</button>
           </span>
-        </div>
-        <p class="rp-sub" id="rp-imp-sub"></p>
-        <div class="rp-imp-legend" id="rp-imp-legend" hidden></div>
-        <!-- Driver row and marker row share one axis, the way the NASA SVS
-             timeplots stack SST, precipitation and outbreaks. Rendered in this
-             site's own light card style rather than theirs. -->
+          </div>
+          <p class="rp-sub" id="rp-imp-sub"></p>
         <figure class="rp-imp-fig">
           <!-- Month rules and the active-event band live in one layer behind
                both rows, so the vertical lines run unbroken from the rainfall
@@ -780,122 +612,176 @@
           <div class="rp-imp-track" id="rp-imp-track"></div>
           <div class="rp-imp-axis" id="rp-imp-axis"></div>
         </figure>
-        <ul class="rp-imp-list" id="rp-imp-list"></ul>
-        <p class="rp-sub rp-imp-foot" id="rp-imp-foot"></p>
-        <!-- Jake Levi, 2026-08-27, reviewing the first version: the panel needed
-             to say plainly what it is not. Two things a reader will otherwise
-             assume, both wrong. That an empty stretch means nothing happened,
-             when EM-DAT holds only what was reported and met a threshold. And
-             that a marker inside an El Nino window is evidence the event caused
-             it, when the panel has only put two records on one axis. -->
-        <aside class="rp-imp-caveat">
-          <strong>What this cannot tell you.</strong>
-          EM-DAT holds only events that were reported and met its entry
-          threshold, so most floods, droughts and outbreaks are missing from it
-          entirely. How much is missing differs from country to country and has
-          changed over the decades, which means a thin stretch here is at least
-          as likely to be thin reporting as a quiet period.
-          <span id="rp-imp-sources">
-          For cholera in sub-Saharan Africa a second source fills part of that
-          gap: the compilation behind Perez-Saez et al. (2022), from ministries
-          of health, WHO, MSF, ProMED and ReliefWeb, marking the months when
-          cholera ran above its usual local level. For meningitis in the African
-          meningitis belt, 2014 to 2026, the WHO West Africa weekly bulletins mark
-          the months when at least one district crossed the WHO epidemic
-          threshold; meningitis comes back every dry season, so only that
-          threshold counts as an outbreak. For chikungunya, Zika and dengue in
-          Brazil, InfoDengue (Code&ccedil;o et al., 2018; Fiocruz and FGV with the
-          Ministry of Health) marks the epidemic waves: months when municipalities
-          above their own epidemic threshold held at least 3 per cent of Brazil's
-          population (20 per cent for dengue, which never fully goes away).
-          Chikungunya and Zika get one marker per state hit; dengue reaches nearly
-          every state every summer, so it gets one marker per wave listing the
-          states where most people lived above the threshold. Also for Brazil,
-          DATASUS (the national notification system, SINAN) gives leptospirosis,
-          leishmaniasis and hantavirus by state and month; a month counts as an
-          outbreak when a state's cases exceed the usual level for that month by
-          four standard deviations, Brazil's own "control diagram" made strict, so
-          that chance alone almost never trips it. Dengue outside Brazil comes
-          from WHO's global dengue surveillance (national cases by week or month,
-          from 2007 in Asia and 2014 in the Americas), judged by the same rule on
-          each country's national monthly total; months a country did not report
-          are left out rather than counted as zero, and countries with fewer than
-          five years of reports are not judged at all. The rule is strict, so an
-          epidemic in a country whose other years were also high can go
-          unmarked. Yellow fever is also dated from the reports behind
-          Shearer et al. (2018): WHO's Weekly Epidemiological Record and outbreak
-          news, PAHO bulletins and journal papers. A month is used only when a
-          report states it or two sources agree.
-          Worldwide, WHO's
-          Disease Outbreak News (as compiled by Torres Mungu&iacute;a et al., 2022)
-          adds the outbreaks WHO reported, placed in the month of its first report,
-          which is usually some weeks after the outbreak began. Reports about
-          imported cases or overseas territories are left out where WHO's title
-          says so, but a few imported cases remain, such as Ebola in Spain and the
-          United States in 2014.
-          </span> An outbreak two sources both hold is shown once.
-          A marker falling inside an El Ni&ntilde;o or La Ni&ntilde;a window
-          shows only that both were recorded in the same months. This is a
-          timeline placed on a shared axis: it is not evidence of cause, and it
-          is not a measurement of correlation.
-        </aside>
-      </div>
+          <div class="key rp-imp-legend" id="rp-imp-legend" hidden></div>
+          <ul class="rp-imp-list" id="rp-imp-list"></ul>
+          <p class="rp-sub rp-imp-foot" id="rp-imp-foot"></p>
+          <!-- Jake Levi, 2026-08-27: the panel has to say plainly what it is not.
+               An empty stretch is not "nothing happened", and a marker inside an
+               El Nino window is not evidence the event caused it. -->
+          <aside class="callout limits">
+            <b>What this cannot tell you.</b>
+            EM-DAT holds only events that were reported and met its entry
+          threshold, so most floods, droughts and outbreaks are missing from it.
+          How much is missing differs by country and has changed over the decades:
+          a thin stretch is as likely to be thin reporting as a quiet period.
+            <!-- Written over from impacts/index.json by site.js; check_consistency
+                 keeps this copy equal to the served descriptions. -->
+            <span id="rp-imp-sources">
+            For cholera in sub-Saharan Africa a second source fills part of
+            that gap: the compilation behind Perez-Saez et al. (2022), from
+            ministries of health, WHO, MSF, ProMED and ReliefWeb, marking the
+            months when cholera ran above its usual local level. For
+            meningitis in the African meningitis belt, 2014 to 2026, the WHO
+            West Africa weekly bulletins mark the months when at least one
+            district crossed the WHO epidemic threshold; meningitis comes back
+            every dry season, so only that threshold counts as an outbreak.
+            For chikungunya, Zika and dengue in Brazil, InfoDengue (Codeço et
+            al., 2018; Fiocruz and FGV with the Ministry of Health) marks the
+            epidemic waves: months when municipalities above their own
+            epidemic threshold held at least 3 per cent of Brazil's population
+            (20 per cent for dengue, which never fully goes away). Chikungunya
+            and Zika get one marker per state hit; dengue reaches nearly every
+            state every summer, so it gets one marker per wave listing the
+            states where most people lived above the threshold. Also for
+            Brazil, DATASUS (the national notification system, SINAN) gives
+            leptospirosis, leishmaniasis and hantavirus by state and month; a
+            month counts as an outbreak when a state's cases exceed the usual
+            level for that month by four standard deviations, Brazil's own
+            "control diagram" made strict, so that chance alone almost never
+            trips it. Dengue outside Brazil comes from WHO's global dengue
+            surveillance (national cases by week or month, from 2007 in Asia
+            and 2014 in the Americas), judged by the same rule on each
+            country's national monthly total; months a country did not report
+            are left out rather than counted as zero, and countries with fewer
+            than five years of reports are not judged. The rule is strict, so
+            an epidemic in a country whose other years were also high can go
+            unmarked. Yellow fever is also dated from the reports behind
+            Shearer et al. (2018): WHO's Weekly Epidemiological Record and
+            outbreak news, PAHO bulletins and journal papers. A month is used
+            only when a report states it or two sources agree; each marker
+            links to its report. Yellow fever records from Lim et al. (2025)
+            and Shearer et al. (2018) that carry only a year, dated from the
+            reports behind them (WHO, PAHO, ministries, journal papers): a
+            month is used only when a report states the onset or two
+            independent reports agree. Records that look like animal
+            outbreaks, sit in the wrong place, or have no human cases in WHO's
+            yearly review are left out. Worldwide, WHO's Disease Outbreak News
+            (as compiled by Torres Munguía et al., 2022) adds the outbreaks
+            WHO reported. Each starts in the month WHO's report says the
+            outbreak began, quoted from that report; where WHO gives no start,
+            it starts in the month of WHO's first report, which is usually
+            some weeks after the outbreak began. Reports about imported cases
+            or overseas territories are left out where WHO's title says so,
+            but a few imported cases remain, such as Ebola in Spain and the
+            United States in 2014. An outbreak WHO reported on both sides of
+            New Year is shown once. From May 2026, a newly reported outbreak
+            is shown only once a second, independent report (a ministry of
+            health, OCHA or ReliefWeb, or WHO's Africa bulletin) confirms it.
+            </span> An outbreak two sources both hold is shown once.
+            A marker inside an El Ni&ntilde;o or La Ni&ntilde;a window shows only
+          that both were recorded in the same months. It is not evidence of cause,
+          and not a measure of correlation.
+            <a href="methodology.html#event-replay">How these are built</a>.
+          </aside>
+        </div>
+        <figcaption><b>Fig. 4. Reported disasters and outbreaks.</b></figcaption>
+      </figure>
+
+      <figure class="fig">
+        <div class="card">
+          <div class="rp-pair">
         <div class="rp-panel">
-          <h3>Heaviest 10-day rainfall <span class="code">(Rx10day)</span></h3>
-          <p class="rp-sub">The wettest ten consecutive days in each month, the index behind flood
-            risk. Computed within each calendar month, so a spell crossing a month boundary is
-            split between the two.</p>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-rx10"></canvas></div>
+          <div class="panel-head"><span class="panel-letter">a</span><h3 class="panel-title">Rainfall</h3></div>
+          <p class="panel-sub rp-sub">Monthly total over the country, and the difference from normal (the average of neutral years) for that same calendar month.</p>
+          <span class="rp-yunit" data-for="rp-chart-rain"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-rain" role="img"></canvas></div>
         </div>
         <div class="rp-panel">
-          <h3>Longest dry spell <span class="code">(CDD)</span></h3>
-          <p class="rp-sub">The longest run of days below 1 mm inside each month. A missing day
-            breaks a spell rather than extending it.</p>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-cdd"></canvas></div>
+          <div class="panel-head"><span class="panel-letter">b</span><h3 class="panel-title">Dry days</h3></div>
+          <p class="panel-sub rp-sub">Days below 1 mm in each month. The seasonal maps show the longest dry <em>run</em> instead.</p>
+          <span class="rp-yunit" data-for="rp-chart-dry"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-dry" role="img"></canvas></div>
+        </div>
+          </div>
+          <div class="key rp-legend" data-key-for="pair"></div>
+        </div>
+        <figcaption><b>Fig. 5. Rainfall and dry days.</b></figcaption>
+      </figure>
+
+      <figure class="fig">
+        <div class="card">
+          <div class="rp-pair">
+        <div class="rp-panel">
+          <div class="panel-head"><span class="panel-letter">a</span><h3 class="panel-title">Heaviest 10-day rainfall <span class="code">(Rx10day)</span></h3></div>
+          <p class="panel-sub rp-sub">The wettest ten consecutive days in each month, a flood-risk index, computed within the calendar month.</p>
+          <span class="rp-yunit" data-for="rp-chart-rx10"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-rx10" role="img"></canvas></div>
         </div>
         <div class="rp-panel">
-          <h3>Maximum temperature <span class="code">(Tmax)</span></h3>
-          <p class="rp-sub">Monthly mean of the daily maximum, averaged over the country.</p>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-tmax"></canvas></div>
+          <div class="panel-head"><span class="panel-letter">b</span><h3 class="panel-title">Longest dry spell <span class="code">(CDD)</span></h3></div>
+          <p class="panel-sub rp-sub">The longest run of days below 1 mm inside each month. A missing day breaks a spell.</p>
+          <span class="rp-yunit" data-for="rp-chart-cdd"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-cdd" role="img"></canvas></div>
+        </div>
+          </div>
+          <div class="key rp-legend" data-key-for="pair"></div>
+        </div>
+        <figcaption><b>Fig. 6. Heaviest 10-day rainfall and longest dry spell.</b></figcaption>
+      </figure>
+
+      <figure class="fig">
+        <div class="card">
+          <div class="rp-pair">
+        <div class="rp-panel">
+          <div class="panel-head"><span class="panel-letter">a</span><h3 class="panel-title">Maximum temperature <span class="code">(Tmax)</span></h3></div>
+          <p class="panel-sub rp-sub">Monthly mean of the daily maximum, averaged over the country.</p>
+          <span class="rp-yunit" data-for="rp-chart-tmax"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-tmax" role="img"></canvas></div>
         </div>
         <div class="rp-panel">
-          <h3>Rainfall</h3>
-          <p class="rp-sub">Monthly total over the country, and the difference from normal (the
-            average of neutral years) for that same calendar month.</p>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-rain"></canvas></div>
-        </div>
-        <div class="rp-panel">
-          <h3>Dry days</h3>
-          <p class="rp-sub">Days below 1 mm. The seasonal maps show the longest dry <em>run</em>; inside a
-            single month that is ambiguous because spells cross month boundaries, so this counts days.</p>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-dry"></canvas></div>
-        </div>
-        <div class="rp-panel">
-          <h3>Heat stress
-            <span class="rp-thr" role="group" aria-label="UTCI band">
+          <div class="panel-head"><span class="panel-letter">b</span><h3 class="panel-title">Heat stress</h3></div>
+          <span class="rp-thr seg" role="group" aria-label="UTCI band">
               <button type="button" data-panel="heat" data-key="utci_strong_days" class="on">32-38 °C</button>
               <button type="button" data-panel="heat" data-key="utci_vstrong_days">38-46 °C</button>
               <button type="button" data-panel="heat" data-key="utci_extreme_days">46 °C+</button>
             </span>
-          </h3>
-          <p class="rp-sub" id="rp-sub-heat"></p>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-heat"></canvas></div>
+          <p class="panel-sub rp-sub" id="rp-sub-heat"></p>
+          <span class="rp-yunit" data-for="rp-chart-heat"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-heat" role="img"></canvas></div>
         </div>
-        <div class="rp-panel">
-          <h3>Warm nights
-            <span class="rp-thr" role="group" aria-label="Night temperature band">
+          </div>
+          <div class="key rp-legend" data-key-for="pair"></div>
+        </div>
+        <figcaption><b>Fig. 7. Maximum temperature and heat stress.</b></figcaption>
+      </figure>
+
+      <figure class="fig">
+        <div class="card">
+        <div class="rp-panel rp-wide">
+          <div class="panel-head"><h3 class="panel-title">Warm nights</h3></div>
+          <span class="rp-thr seg" role="group" aria-label="Night temperature band">
               <button type="button" data-panel="night" data-key="night_tropical">20-25 °C</button>
               <button type="button" data-panel="night" data-key="night_equatorial" class="on">25-30 °C</button>
               <button type="button" data-panel="night" data-key="night_torrid">30 °C+</button>
             </span>
-          </h3>
-          <p class="rp-sub" id="rp-sub-night"></p>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-night"></canvas></div>
+          <p class="panel-sub rp-sub" id="rp-sub-night" style="margin-left:0"></p>
+          <span class="rp-yunit" data-for="rp-chart-night"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-night" role="img"></canvas></div>
         </div>
-      </div>
-
-      <p class="rp-legend-note" id="rp-note"></p>
+          <div class="key rp-legend" data-key-for="nino"></div>
+        </div>
+        <figcaption><b>Fig. 8. Warm nights.</b></figcaption>
+      </figure>
     </div>
+
+    <!-- The legend line the script writes for the enlarge dialog and for print. -->
+    <div class="rp-legend" id="rp-legend" hidden></div>
+
+    <section class="notes">
+      <h2 class="h3">Notes</h2>
+      <p class="rp-legend-note" id="rp-note"></p>
+    </section>
+
   <!-- Enlarge one panel. Jake asked for it in August 2026: eight panels fit on
        a screen at a size you can compare but not read closely. The chart is
        rebuilt from the source panel's own config, so the big copy can never
@@ -918,12 +804,14 @@
 
   </main>
 
-  <script src="static/lib/d3.min.js?v=20261019b"></script>
-  <script src="static/lib/d3-geo-projection.min.js?v=20261019b"></script>
-  <script src="static/lib/chart.umd.min.js?v=20261019b"></script>
-  <script src="static/js/data_base.js?v=20261019b"></script>
-  <script src="static/js/index_names.js?v=20261019b"></script>
-  <script src="static/js/site.js?v=20261019b"></script>
-  <script src="static/js/event_replay.js?v=20261019b"></script>
+  <script src="static/lib/d3.min.js?v=20261019c"></script>
+  <script src="static/lib/d3-geo-projection.min.js?v=20261019c"></script>
+  <script src="static/lib/chart.umd.min.js?v=20261019c"></script>
+  <script src="static/js/chart_theme.js?v=20261019c"></script>
+  <script src="static/js/data_base.js?v=20261019c"></script>
+  <script src="static/js/index_names.js?v=20261019c"></script>
+  <script src="static/js/site.js?v=20261019c"></script>
+  <script src="static/js/ramps.js?v=20261019c"></script>
+  <script src="static/js/event_replay.js?v=20261019c"></script>
 </body>
 </html>

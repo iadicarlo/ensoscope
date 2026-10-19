@@ -17,7 +17,7 @@ const DATA_BASE = "data/";
 // Monthly data-build cache-buster. Bump whenever the served data/*.json are
 // regenerated (forecast, members, hindcast). Appended to every data fetch so a
 // fresh forecast vintage is never masked by a stale browser/CDN copy.
-const DATA_VERSION = "20261019b";
+const DATA_VERSION = "20261019c";
 function _dv(url) {
   return url + (url.indexOf("?") === -1 ? "?" : "&") + "v=" + DATA_VERSION;
 }
@@ -114,9 +114,13 @@ const CENTRE_COLOR = {
   xro_iod: "#111111",   // XRO IOD - black
 };
 
+// System names written in text, in the darker text variant of each mark colour
+// (#1f77b4 as text is just under AA; spec 2.1).
+const CENTRE_TEXT = { seas5: "var(--seas5-text)", mf9: "var(--mf9-text)" };
+
 const CENTRE_SHORT = {
   seas5:   "SEAS5",
-  mf9:     "MF9",
+  mf9:     "Météo-France",   // glossary: the system's name, never "MF9", in reader text
   ncep2:   "NCEP",
   dwd21:   "DWD",
   cmcc35:  "CMCC",
@@ -265,17 +269,20 @@ function _renderMultiSourceSelector(containerId, manifest, selected, onChange) {
   // onChange: callback(Set<string>) when user toggles a checkbox
   const el = document.getElementById(containerId);
   if (!el) return;
+  // A segmented control (spec 4.10). Each button is a label around a visually
+  // hidden checkbox, so the checkboxes stay the state other code reads.
+  const MARK = { seas5: "mk-c", mf9: "mk-s" };
   const rows = (manifest.sources || []).map(s => {
     const checked = selected.has(s.source) ? "checked" : "";
-    const colour = CENTRE_COLOR[s.source] || "#888";
-    const vintage = s.latest_vintage ? ` <span style="color:var(--text-muted);font-size:0.75rem">(${s.latest_vintage})</span>` : "";
-    return `<label class="centre-checkbox" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.2rem 0.55rem;margin:0.15rem;border-radius:4px;cursor:pointer;font-size:0.82rem;border:1px solid var(--border)">` +
-           `<input type="checkbox" value="${s.source}" ${checked} style="accent-color:${colour}">` +
-           `<span style="display:inline-block;width:10px;height:10px;background:${colour};border-radius:2px"></span>` +
+    const colour = CENTRE_COLOR[s.source] || "var(--muted)";
+    const vintage = s.latest_vintage ? ` <span class="muted">(${s.latest_vintage})</span>` : "";
+    return `<label class="centre-checkbox">` +
+           `<input type="checkbox" class="visually-hidden" value="${s.source}" ${checked}>` +
+           `<i class="${MARK[s.source] || "mk-c"}" style="background:${colour}"></i>` +
            `<span>${s.model}</span>${vintage}` +
            `</label>`;
   }).join("");
-  el.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:0.25rem;align-items:center">${rows}</div>`;
+  el.innerHTML = `<div class="seg centre-seg" role="group" aria-label="Forecast systems">${rows}</div>`;
   el.querySelectorAll("input[type=checkbox]").forEach(cb => {
     cb.addEventListener("change", () => {
       const now = new Set();
@@ -299,14 +306,15 @@ const CLASS_COLOR = {
 };
 const CLASS_CSS = CLASS_COLOR;  // alias
 
+// Plain words first: the class names in full, never abbreviated.
 const CLASS_LABEL = {
-  extreme_la_nina:  "Ext La Niña",
-  strong_la_nina:   "Str La Niña",
-  moderate_la_nina: "Mod La Niña",
+  extreme_la_nina:  "Extreme La Niña",
+  strong_la_nina:   "Strong La Niña",
+  moderate_la_nina: "Moderate La Niña",
   neutral:          "Neutral",
-  moderate_el_nino: "Mod El Niño",
-  strong_el_nino:   "Str El Niño",
-  extreme_el_nino:  "Ext El Niño",
+  moderate_el_nino: "Moderate El Niño",
+  strong_el_nino:   "Strong El Niño",
+  extreme_el_nino:  "Extreme El Niño",
 };
 
 const CESM_PRODUCT_LABEL = {
@@ -361,17 +369,18 @@ const CLASSES_ORDERED = [
 const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
 const VAR_META = {
+  // Glossary G2: these are the relative indices (tropical mean removed).
   nino34_std: {
-    label: "Niño 3.4 SST (sigma)",
-    axis: "Niño 3.4 SST (sigma)",
+    label: "Relative Niño 3.4 (σ)",
+    axis: "Relative Niño 3.4 (σ)",
   },
   nino3_std: {
-    label: "Niño 3 SST (sigma)",
-    axis: "Niño 3 SST (sigma)",
+    label: "Relative Niño 3 (σ)",
+    axis: "Relative Niño 3 (σ)",
   },
   nino4_std: {
-    label: "Niño 4 SST (sigma)",
-    axis: "Niño 4 SST (sigma)",
+    label: "Relative Niño 4 (σ)",
+    axis: "Relative Niño 4 (σ)",
   },
   nino3_pr_anom: {
     label: "Niño 3 Precip Anomaly (mm/day)",
@@ -852,6 +861,8 @@ async function initForecastPage() {
     selected = newSel;
     await rerender();
   });
+  const clsSel = document.getElementById("forecast-latest-variable");
+  if (clsSel) clsSel.addEventListener("change", () => window.updateForecastLatestChart());
 
   await rerender();
 }
@@ -883,8 +894,6 @@ function renderOutlookBanner(forecasts, sources) {
   // hardcoded, so it only read correctly for the classes starting with a
   // consonant, which is every class except this one.
   const _artcl = w => (/^[aeiou]/i.test(w) ? "an" : "a");
-  const ACCENT = { en: "#E64A19", ln: "#1565C0", neu: "#78909C" };   // style.css phase tokens
-  const TINT = { en: "#FCEDE8", ln: "#EAF1FB", neu: "#ECEFF1" };
   const FRIENDLY = { seas5: "SEAS5", mf9: "Météo-France", ncep2: "NCEP" };
   const nameOf = s => FRIENDLY[s] || CENTRE_SHORT[s] || s;
   const coarseWhen = vt => {
@@ -984,10 +993,10 @@ function renderOutlookBanner(forecasts, sources) {
 
   el.style.display = "block";
   el.innerHTML =
-    `<div style="border-left:5px solid ${ACCENT[dom]};background:${TINT[dom]};border-radius:8px;padding:1rem 1.2rem;margin-bottom:1.4rem">` +
-      `<div style="font-size:1.18rem;font-weight:700;color:#14202b;line-height:1.32">${headline}</div>` +
-      `<div style="font-size:0.9rem;color:#3b4754;margin-top:0.4rem">${sub}</div>` +
-      `<a href="${ctaUrl}" style="display:inline-block;margin-top:0.85rem;padding:0.45rem 1rem;background:${ACCENT[dom]};color:#fff;border-radius:6px;font-size:0.86rem;font-weight:600;text-decoration:none">See what this means for rainfall, drought and heat &rarr;</a>` +
+    `<div class="fc-outlook">` +
+      `<p class="fc-head">${headline}</p>` +
+      `<p class="fc-sub">${sub}</p>` +
+      `<a href="${ctaUrl}">See what this means for rainfall, drought and heat</a>` +
     `</div>`;
 }
 
@@ -995,73 +1004,63 @@ function _renderMultiForecastMeta(metaEl, forecasts, sources) {
   if (!metaEl) return;
   const parts = sources.map(src => {
     const f = forecasts[src];
-    if (!f) return `<span style="color:#c62828">${CENTRE_SHORT[src] || src}: missing</span>`;
-    return `<span><strong style="color:${CENTRE_COLOR[src] || '#111'}">${CENTRE_SHORT[src] || src}</strong> ${f.vintage}${f.calibrated ? " ✓" : ""}</span>`;
+    if (!f) return `<span>${CENTRE_SHORT[src] || src}: missing</span>`;
+    return `<span><strong style="color:${CENTRE_TEXT[src] || "var(--ink)"}">${CENTRE_SHORT[src] || src}</strong> ${f.vintage}${f.calibrated ? " ✓" : ""}</span>`;
   }).join("");
-  metaEl.innerHTML = parts + `<span style="font-size:0.8rem;color:var(--text-muted)">Chance = share of the runs in each class</span>`;
+  metaEl.innerHTML = parts + `<span>Chance = share of the runs in each class</span>`;
 }
 
 function _renderMultiForecastBars(container, forecasts, sources) {
-  // One table section per centre; L1..L6 rows with probability bars.
-  // Each centre is a <details> disclosure so users can collapse the long
-  // ones instead of scrolling miles. First centre open by default.
-  _ensureForecastBlockStyles();
+  // Fig. 1: one small multiple per system, side by side (paper Fig 1 a), each
+  // month a stacked bar of the seven classes, La Niña left, El Niño right.
+  // Table 1 under it gives the numbers.
   const classes = CLASSES_ORDERED;
-  const legend =
-    `<div class="prob-legend" style="margin-bottom:1rem">` +
-    classes.map(cls =>
-      `<div class="prob-legend-item">` +
-      `<div class="prob-legend-swatch ${CLASS_COLOR[cls]}"></div>` +
-      `<span>${CLASS_LABEL[cls]}</span>` +
-      `</div>`
-    ).join("") +
-    `</div>`;
-
-  const controls =
-    `<div class="fc-block-controls" style="margin-bottom:0.6rem;display:flex;gap:0.5rem">
-       <button type="button" class="btn-plain" data-fc-expand>Expand all</button>
-       <button type="button" class="btn-plain" data-fc-collapse>Collapse all</button>
-     </div>`;
-
-  const sections = sources.map((src, i) => {
+  const LETTERS = "abcdefgh";
+  const panels = sources.map((src, i) => {
     const f = forecasts[src];
-    const colour = CENTRE_COLOR[src] || "#111";
     const short = CENTRE_SHORT[src] || src;
-    const open  = i === 0 ? " open" : "";
-    if (!f) {
-      return `<details class="fc-block"${open} style="border-left:4px solid ${colour}">` +
-             `<summary><span style="color:${colour};font-weight:700">${short}</span> - no data</summary>` +
-             `</details>`;
-    }
-    const headerLabel = (f.model || "").startsWith(short) ? f.model : `${short} - ${f.model}`;
-    const summary =
-      `<summary>` +
-      `<span style="color:${colour};font-weight:700">${headerLabel}</span>` +
-      ` <span style="color:var(--text-muted);font-size:0.82rem">(${f.vintage})</span>` +
-      `</summary>`;
-    let table =
-      `<table class="forecast-table" style="margin-top:0.5rem;margin-bottom:0.5rem"><thead><tr>` +
-      `<th>Lead</th><th>Valid Month</th>` +
-      `<th style="min-width:400px">Probability Distribution</th>` +
-      `</tr></thead><tbody>`;
-    for (const row of f.leads) {
+    const head = `<div class="panel-head">${sources.length > 1 ? `<span class="panel-letter">${LETTERS[i]}</span>` : ""}`
+      + `<span class="panel-title"><b style="color:${CENTRE_TEXT[src] || "var(--ink)"}">${f && f.model ? f.model : short}</b>`
+      + `${f ? `, issued ${_formatValidMonth(f.vintage)}` : ", no data"}</span></div>`;
+    if (!f) return `<div class="fc-sys">${head}</div>`;
+    const rows = f.leads.map(row => {
       const bars = classes.map(cls => {
         const p = row[cls] || 0;
-        const label = p >= 0.07 ? pct(p) : "";
-        return `<div class="prob-seg ${CLASS_COLOR[cls]}" style="flex:${p}" ` +
-               `title="${CLASS_LABEL[cls]}: ${pct(p)}">${label}</div>`;
+        const label = p >= 0.07 ? Math.round(p * 100) + "%" : "";
+        return `<div class="prob-seg ${CLASS_COLOR[cls]}" style="flex:${p}" title="${CLASS_LABEL[cls]}: ${pct(p)}">${label}</div>`;
       }).join("");
-      table +=
-        `<tr><td><strong>L${row.lead}</strong></td>` +
-        `<td>${_formatValidMonth(row.valid_time)}</td>` +
-        `<td><div class="prob-bar-row">${bars}</div></td></tr>`;
-    }
-    table += `</tbody></table>`;
-    return `<details class="fc-block"${open} style="border-left:4px solid ${colour}">${summary}${table}</details>`;
+      return `<tr><th scope="row">${_formatValidMonth(row.valid_time)} <span class="muted">L${row.lead}</span></th>`
+        + `<td><div class="prob-bar-row" role="img" aria-label="${_formatValidMonth(row.valid_time)}: `
+        + classes.filter(c => (row[c] || 0) > 0).map(c => `${CLASS_LABEL[c]} ${Math.round((row[c] || 0) * 100)}%`).join(", ")
+        + `">${bars}</div></td></tr>`;
+    }).join("");
+    return `<div class="fc-sys">${head}<table class="fc-bars"><tbody>${rows}</tbody></table></div>`;
   }).join("");
+  const key = `<div class="key">` + classes.map(cls =>
+      `<span class="k"><i class="sw prob-legend-swatch ${CLASS_COLOR[cls]}"></i>${CLASS_LABEL[cls]}</span>`).join("")
+    + `</div>`;
+  container.innerHTML = `<div class="${sources.length > 1 ? "grid-2" : ""}">${panels}</div>` + key;
 
-  container.innerHTML = legend + controls + sections;
-  _wireForecastBlockControls(container);
+  // Table 1: the share of the runs in each class, by month and system. Only the
+  // classes some run of some system falls in, so the table stays readable.
+  const host = document.getElementById("fc-table1-wrap");
+  if (!host) return;
+  const have = sources.filter(s => forecasts[s] && forecasts[s].leads);
+  if (!have.length) { host.innerHTML = ""; return; }
+  const used = classes.filter(c => have.some(s => forecasts[s].leads.some(l => (l[c] || 0) > 0)));
+  const base = forecasts[have[0]].leads;
+  const head1 = `<tr class="span"><th class="blank" colspan="2"></th>` + have.map(s =>
+      `<th colspan="${used.length}" style="color:${CENTRE_TEXT[s] || "var(--ink)"}">${CENTRE_SHORT[s] || s}<span class="u">(% of runs)</span></th>`).join("") + `</tr>`;
+  const head2 = `<tr><th>Month</th><th class="r">Lead</th>` + have.map(() =>
+      used.map(c => `<th class="r">${CLASS_LABEL[c]}</th>`).join("")).join("") + `</tr>`;
+  const body = base.map(row => `<tr><th scope="row">${_formatValidMonth(row.valid_time)}</th><td class="r">${row.lead}</td>`
+    + have.map(s => {
+        const l = forecasts[s].leads.find(x => x.lead === row.lead) || {};
+        return used.map(c => `<td class="r">${Math.round((l[c] || 0) * 100)}</td>`).join("");
+      }).join("") + `</tr>`).join("");
+  host.innerHTML = `<p class="caption" style="margin:0 0 var(--s2)"><b>Table 1.</b> Share of the runs in each class, by month and `
+    + `forecast system. Lead 1 is the month the forecast is issued.</p>`
+    + `<div class="table-wrap"><table class="data"><thead>${head1}${head2}</thead><tbody>${body}</tbody></table></div>`;
 }
 
 function _ensureForecastBlockStyles() {
@@ -1134,7 +1133,7 @@ function _renderMultiForecastPlume(forecasts, sources) {
   let labels = null;
   for (const src of sources) {
     if (forecasts[src]) {
-      labels = forecasts[src].leads.map(r => `L${r.lead} - ${_formatValidMonth(r.valid_time)}`);
+      labels = forecasts[src].leads.map(r => `L${r.lead}: ${_formatValidMonth(r.valid_time)}`);
       break;
     }
   }
@@ -1154,43 +1153,51 @@ function _renderMultiForecastPlume(forecasts, sources) {
       }
       return (r[variable] || 0) * 100;
     });
+    // SEAS5 circles, Météo-France squares, 1 px white edge; the name in its
+    // text colour at the line end (spec 4.8).
     return {
       label:           CENTRE_SHORT[src] || src,
       data,
       borderColor:     CENTRE_COLOR[src] || "#111",
       backgroundColor: CENTRE_COLOR[src] || "#111",
-      tension:         0.25,
-      borderWidth:     2.5,
-      pointRadius:     4,
+      labelColor:      src === "seas5" ? cssVar("--seas5-text") : src === "mf9" ? cssVar("--mf9-text") : undefined,
+      pointStyle:      src === "mf9" ? "rect" : "circle",
+      pointBorderColor: "#fff",
+      pointBorderWidth: 1,
+      tension:         0,
+      spanGaps:        false,
+      borderWidth:     2,
+      pointRadius:     4.5,
       pointHoverRadius: 6,
     };
   }).filter(Boolean);
 
+  const sel = document.getElementById("forecast-latest-variable");
+  const titleEl = document.getElementById("forecast-latest-chart-title");
+  if (titleEl && sel) titleEl.textContent = sel.options[sel.selectedIndex].text;
+  const keyEl = document.getElementById("fc-plume-key");
+  if (keyEl) keyEl.innerHTML = datasets.map(d =>
+      `<span class="k"><i class="${d.pointStyle === "rect" ? "mk-s" : "mk-c"}" style="background:${d.borderColor}"></i>${d.label}</span>`).join("")
+    + `<span class="note">Chance = share of the runs in each class</span>`;
   window._multiChart = new Chart(canvas.getContext("2d"), {
     type: "line",
-    data: {labels, datasets},
+    data: {labels: labels.map(l => l.split(": ").reverse()), datasets},
     options: {
       responsive: true,
       maintainAspectRatio: false,
       interaction: {mode: "nearest", intersect: false},
       scales: {
-        y: {title: {display: true, text: "Probability (%)"}, min: 0, max: 100},
-        x: {title: {display: true, text: "Lead"}},
+        y: {min: 0, max: 100, border: {display: false}},
+        x: {grid: {display: false}},
       },
       plugins: {
-        legend: {position: "bottom"},
+        legend: {display: false},
+        directLabels: {enabled: true},
         tooltip: {
           callbacks: {
+            title: (items) => items.length ? labels[items[0].dataIndex] : "",
             label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%`,
           },
-        },
-        title: {
-          display: true,
-          text: (
-            variable === "_en_total" ? "P(El Niño - any intensity) by Lead" :
-            variable === "_ln_total" ? "P(La Niña - any intensity) by Lead" :
-            `P(${variable}) by Lead`
-          ),
         },
       },
     },
@@ -1418,6 +1425,8 @@ async function initEnsoHindcastMultiCentre() {
     await buildYearDropdown();
     window.updateEnsoHindcastChart();
   });
+  document.getElementById("enso-hx-year")?.addEventListener("change", () => window.updateEnsoHindcastChart());
+  document.getElementById("enso-hx-variable")?.addEventListener("change", () => window.updateEnsoHindcastChart());
 
   _writeSourcesParam([...selected]);
   await buildYearDropdown();
@@ -1482,17 +1491,26 @@ window.updateEnsoHindcastChart = async function() {
       data,
       borderColor: CENTRE_COLOR[src] || "#111",
       backgroundColor: CENTRE_COLOR[src] || "#111",
-      tension: 0.25,
-      borderWidth: 2.5,
-      pointRadius: 4,
+      labelColor: src === "seas5" ? cssVar("--seas5-text") : src === "mf9" ? cssVar("--mf9-text") : undefined,
+      pointStyle: src === "mf9" ? "rect" : "circle",
+      pointBorderColor: "#fff",
+      pointBorderWidth: 1,
+      tension: 0,
+      spanGaps: false,
+      borderWidth: 2,
+      pointRadius: 4.5,
       pointHoverRadius: 6,
     });
   }
 
   if (titleEl) {
-    titleEl.textContent = `ENSO probability by lead - init ${String(month).padStart(2,"0")}/${year} - ${_plotted.length} of ${sources.length} centre${sources.length === 1 ? "" : "s"} plotted`;
+    titleEl.textContent = `ENSO probability by lead, init ${String(month).padStart(2,"0")}/${year}, ${_plotted.length} of ${sources.length} centre${sources.length === 1 ? "" : "s"} plotted`;
   }
 
+  const keyEl = document.getElementById("enso-hx-key");
+  if (keyEl) keyEl.innerHTML = datasets.map(d =>
+      `<span class="k"><i class="${d.pointStyle === "rect" ? "mk-s" : "mk-c"}" style="background:${d.borderColor}"></i>${d.label}</span>`).join("")
+    + `<span class="note">Chance = share of the runs in each class; L1 is the start month</span>`;
   window._ensoHxChart = new Chart(canvas.getContext("2d"), {
     type: "line",
     data: {labels, datasets},
@@ -1501,11 +1519,12 @@ window.updateEnsoHindcastChart = async function() {
       maintainAspectRatio: false,
       interaction: {mode: "nearest", intersect: false},
       scales: {
-        y: {title: {display: true, text: "Probability (%)"}, min: 0, max: 100},
-        x: {title: {display: true, text: "Lead"}},
+        y: {min: 0, max: 100, border: {display: false}},
+        x: {grid: {display: false}},
       },
       plugins: {
-        legend: {position: "bottom"},
+        legend: {display: false},
+        directLabels: {enabled: true},
         tooltip: {callbacks: {label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y === null ? "n/a" : ctx.parsed.y.toFixed(1) + "%"}`}},
       },
     },
@@ -1513,7 +1532,7 @@ window.updateEnsoHindcastChart = async function() {
 
   _renderPlumeCoverageBanner({
     hostId: "enso-hx-coverage-banner",
-    insertAfter: "enso-hx-chart-title",
+    insertAfter: "enso-hx-head",
     selected: sources, plotted: _plotted, missing: _missing,
     contextLabel: `${String(month).padStart(2,"0")}/${year} init`,
   });
@@ -2395,7 +2414,7 @@ window.updateHindcastChart = async function() {
 
   const { datasets, labels } = _buildSpaghettiDatasets(yearData, varName, obsLookup);
 
-  if (titleEl) titleEl.textContent = `${year} ${MONTH_NAMES[month-1]} start - ${varLabel(varName)} - ${Object.keys(yearData).length} runs`;
+  if (titleEl) titleEl.textContent = `${year} ${MONTH_NAMES[month-1]} start, ${varLabel(varName)}, ${Object.keys(yearData).length} runs`;
 
   if (summaryEl) {
     const lastPhases = Object.values(yearData).map(rows => rows[rows.length-1]?.phase || rows[rows.length-1]?.classified_phase || "").filter(Boolean);
@@ -2429,7 +2448,7 @@ window.updateForecastChart = async function() {
   if (_obsData) _obsData.times.forEach((t, i) => { obsLookup[t] = _obsData[varName]?.[i] ?? null; });
 
   const { datasets, labels } = _buildSpaghettiDatasets(memberData, varName, obsLookup);
-  if (titleEl) titleEl.textContent = `${vintage} Forecast - ${varLabel(varName)} - ${Object.keys(memberData).length} runs`;
+  if (titleEl) titleEl.textContent = `${vintage} forecast, ${varLabel(varName)}, ${Object.keys(memberData).length} runs`;
 
   _drawChart("fc-chart", datasets, labels, varName);
   _renderSpreadStats(_buildSpreadStats(memberData, varName), "fc-spread-content", "fc-spread-card");
@@ -2478,7 +2497,7 @@ function _renderMultiIodPlume(forecasts, sources) {
   let labels = null;
   for (const src of sources) {
     if (forecasts[src]) {
-      labels = forecasts[src].leads.map(r => `L${r.lead || r.lead_time} - ${_formatValidMonth(r.valid_time)}`);
+      labels = forecasts[src].leads.map(r => `L${r.lead || r.lead_time}: ${_formatValidMonth(r.valid_time)}`);
       break;
     }
   }
@@ -2523,7 +2542,7 @@ function _renderMultiIodPlume(forecasts, sources) {
         title: {
           display: true,
           text: (
-            variable === "_piod_total" ? "P(Positive IOD - any intensity) by Lead" :
+            variable === "_piod_total" ? "P(Positive IOD, any intensity) by Lead" :
             `P(${IOD_LABEL[variable] || variable}) by Lead`
           ),
         },
@@ -2650,7 +2669,8 @@ window.updateEnsoHindcastPlume = async function() {
         backgroundColor: "transparent",
         borderWidth: 0.7,
         pointRadius: 0,
-        tension: 0.25,
+        tension: 0,
+        directLabel: false,
         showLine: true,
         _isMemberLine: true,
         _centre: src,
@@ -2676,15 +2696,26 @@ window.updateEnsoHindcastPlume = async function() {
       data: med,
       borderColor: colour,
       backgroundColor: colour,
-      borderWidth: 3,
-      pointRadius: 3,
-      tension: 0.25,
+      labelColor: src === "seas5" ? cssVar("--seas5-text") : src === "mf9" ? cssVar("--mf9-text") : undefined,
+      directText: CENTRE_SHORT[src] || src,
+      pointStyle: src === "mf9" ? "rect" : "circle",
+      pointBorderColor: "#fff",
+      pointBorderWidth: 1,
+      borderWidth: 2.25,
+      pointRadius: 3.5,
+      tension: 0,
       showLine: true,
       _centre: src,
     });
   }
 
   // Chart.js rendering
+  const unitEl = document.getElementById("hxp-unit");
+  if (unitEl) unitEl.textContent = (VAR_META[variable] && VAR_META[variable].axis) || variable;
+  const keyEl = document.getElementById("hxp-key");
+  if (keyEl) keyEl.innerHTML = datasets.filter(d => !d._isMemberLine).map(d =>
+      `<span class="k"><i class="${d.pointStyle === "rect" ? "mk-s" : "mk-c"}" style="background:${d.borderColor}"></i>${d.label}</span>`).join("")
+    + `<span class="k"><i class="mk-line" style="border-color:var(--other);border-top-width:1px"></i>one run</span>`;
   window._ensoPlumeChart = new Chart(canvas.getContext("2d"), {
     type: "line",
     data: {labels, datasets},
@@ -2694,32 +2725,25 @@ window.updateEnsoHindcastPlume = async function() {
       animation: false,
       interaction: {mode: "nearest", intersect: false},
       plugins: {
-        legend: {
-          position: "bottom",
-          labels: {
-            filter: (item, data) => !data.datasets[item.datasetIndex]._isMemberLine,
-          },
-          // When the user clicks a centre legend, toggle BOTH its median line
-          // AND all its member lines so the whole centre disappears.
-          onClick: _makeLegendCentreToggle(),
-        },
+        legend: { display: false },
+        directLabels: { enabled: true },
         tooltip: {callbacks: {
           label: ctx => `${ctx.dataset.label || "run"}: ${ctx.parsed.y == null ? "n/a" : ctx.parsed.y.toFixed(2)}`,
         }},
       },
       scales: {
-        x: {title: {display: true, text: "Valid month"}},
-        y: {title: {display: true, text: variable}},
+        x: {grid: {display: false}},
+        y: {border: {display: false}},
       },
     },
   });
 
   const title = document.getElementById("hxp-chart-title");
   if (title) title.textContent =
-    `Runs from each model - ${year}-${String(month).padStart(2,"0")} init - ${variable}`;
+    `Runs from each model, ${year}-${String(month).padStart(2,"0")} init, ${(VAR_META[variable] && VAR_META[variable].label) || variable}`;
   _renderPlumeCoverageBanner({
     hostId: "hxp-coverage-banner",
-    insertAfter: "hxp-chart-title",
+    insertAfter: "hxp-head",
     selected, plotted: _plotted, missing: _missing,
     contextLabel: `${year}-${String(month).padStart(2,"0")} init`,
   });
@@ -2741,7 +2765,7 @@ function _renderPlumeCoverageBanner({hostId, insertAfter, selected, plotted, mis
   const nPlotted = plotted.length, nSel = selected.length;
   const ok = nPlotted === nSel;
   const missList = missing.map(m =>
-    `<span><strong style="color:${CENTRE_COLOR[m.src] || '#555'}">${CENTRE_SHORT[m.src] || m.src}</strong> - ${m.reason}</span>`
+    `<span><strong style="color:${CENTRE_TEXT[m.src] || "var(--ink)"}">${CENTRE_SHORT[m.src] || m.src}</strong>: ${m.reason}</span>`
   ).join(" · ");
   el.innerHTML =
     `<div class="pcb ${ok ? 'ok' : 'warn'}">` +
@@ -2758,11 +2782,10 @@ function _ensurePlumeCoverageBannerStyles() {
   const s = document.createElement("style");
   s.id = "plume-coverage-banner-styles";
   s.textContent = `
-    .plume-coverage-banner { margin:0.3rem 0 0.5rem }
-    .pcb { font-size:0.78rem;padding:0.4rem 0.7rem;border-radius:4px;border:1px solid var(--border);color:var(--text) }
-    .pcb.ok   { background:#f3fbf5;border-color:#b3d8c2 }
-    .pcb.warn { background:#fff6ec;border-color:#f5c48a }
-    .pcb-missing span { margin-right:0.5rem }
+    .plume-coverage-banner { margin: var(--s1) 0 var(--s2) }
+    .pcb { font-size: var(--fs-sm); color: var(--muted) }
+    .pcb.warn { color: var(--ink); background: var(--key); border-radius: var(--r-key); padding: var(--s2) var(--s3) }
+    .pcb-missing span { margin-right: var(--s2) }
   `;
   document.head.appendChild(s);
 }
@@ -2884,7 +2907,7 @@ window.updateIodHindcastPlume = async function() {
   });
   const title = document.getElementById("iodhxp-chart-title");
   if (title) title.textContent =
-    `IOD runs from each model - ${year}-${String(month).padStart(2,"0")} init - ${variable}`;
+    `IOD runs from each model, ${year}-${String(month).padStart(2,"0")} init, ${variable}`;
   _renderPlumeCoverageBanner({
     hostId: "iodhxp-coverage-banner",
     insertAfter: "iodhxp-chart-title",
@@ -2969,7 +2992,8 @@ async function _renderForecastMembersPlume({canvasId, titleLabel, variable, iod}
         backgroundColor: "transparent",
         borderWidth: 0.7,
         pointRadius: 0,
-        tension: 0.25,
+        tension: 0,
+        directLabel: false,
         showLine: true,
         _isMemberLine: true,
         _centre: src,
@@ -2995,14 +3019,28 @@ async function _renderForecastMembersPlume({canvasId, titleLabel, variable, iod}
       data: med,
       borderColor: colour,
       backgroundColor: colour,
-      borderWidth: 3,
-      pointRadius: 3,
-      tension: 0.25,
+      labelColor: src === "seas5" ? cssVar("--seas5-text") : src === "mf9" ? cssVar("--mf9-text") : undefined,
+      directText: CENTRE_SHORT[src] || src,
+      pointStyle: src === "mf9" ? "rect" : "circle",
+      pointBorderColor: "#fff",
+      pointBorderWidth: 1,
+      borderWidth: 2.25,
+      pointRadius: 3.5,
+      tension: 0,
       showLine: true,
       _centre: src,
     });
   }
 
+  // Unit above the axis, the key and the start month in the figure, not inside the plot.
+  const unitEl = document.getElementById(iod ? "fc-iod-members-unit" : "fc-members-unit");
+  if (unitEl) unitEl.textContent = (VAR_META[variable] && VAR_META[variable].axis) || variable;
+  const keyEl = document.getElementById(iod ? "fc-iod-members-key" : "fc-members-key");
+  if (keyEl) keyEl.innerHTML = datasets.filter(d => !d._isMemberLine).map(d =>
+      `<span class="k"><i class="${d.pointStyle === "rect" ? "mk-s" : "mk-c"}" style="background:${d.borderColor}"></i>${d.label}</span>`).join("")
+    + `<span class="k"><i class="mk-line" style="border-color:var(--other);border-top-width:1px"></i>one run</span>`;
+  const capEl = document.getElementById(iod ? "fc-iod-members-caption" : "fc-members-caption");
+  if (capEl) capEl.textContent = `Valid month (init ${currentVintage}).`;
   window[prevKey] = new Chart(canvas.getContext("2d"), {
     type: "line",
     data: {labels, datasets},
@@ -3012,11 +3050,8 @@ async function _renderForecastMembersPlume({canvasId, titleLabel, variable, iod}
       animation: false,
       interaction: {mode: "nearest", intersect: false},
       plugins: {
-        legend: {
-          position: "bottom",
-          labels: {filter: (item, data) => !data.datasets[item.datasetIndex]._isMemberLine},
-          onClick: _makeLegendCentreToggle(),
-        },
+        legend: { display: false },
+        directLabels: { enabled: true },
         tooltip: {
           callbacks: {
             label: ctx => `${ctx.dataset.label || "run"}: ${ctx.parsed.y == null ? "n/a" : ctx.parsed.y.toFixed(2)}`,
@@ -3024,8 +3059,8 @@ async function _renderForecastMembersPlume({canvasId, titleLabel, variable, iod}
         },
       },
       scales: {
-        x: {title: {display: true, text: `Valid month (init ${currentVintage})`}},
-        y: {title: {display: true, text: variable}},
+        x: {grid: {display: false}},
+        y: {border: {display: false}},
       },
     },
   });

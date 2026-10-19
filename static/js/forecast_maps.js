@@ -12,7 +12,7 @@ const DATA_BASE = "data/forecast_maps/";
 // forecast vintage is never masked by a stale browser/CDN copy. Kept in sync
 // with app.js DATA_VERSION. Static basemaps (ne_*.geojson) never change and are
 // left unversioned, matching the app.js / map_explorer.js convention.
-const DATA_VERSION = "20261019b";
+const DATA_VERSION = "20261019c";
 function _dv(url) {
   return url + (url.indexOf("?") === -1 ? "?" : "&") + "v=" + DATA_VERSION;
 }
@@ -123,7 +123,6 @@ const CMAPS = {
   // Rain: brown dry, green-blue wet, as on every other rainfall map of the site.
   "BrBG":   [[0,[140,81,10]],[0.25,[216,179,101]],[0.5,[245,245,245]],[0.75,[90,180,172]],[1,[1,102,94]]],
   "BrBG_r": [[0,[1,102,94]],[0.25,[90,180,172]],[0.5,[245,245,245]],[0.75,[216,179,101]],[1,[140,81,10]]],
-  "Grey":   [[0,[213,219,225]],[1,[213,219,225]]],
   "Blues": [
     [0,   [247, 252, 253]],
     [0.2, [204, 236, 230]],
@@ -175,7 +174,7 @@ async function _loadFcManifest() {
       + "normal, on the same normal as the observations. Colours show the forecast everywhere; how well each "
       + "model did in its past forecasts (" + (_fcManifest.hindcast || "1993-2025") + "), region by region, is "
       + "in the tables on the <a href=\"event_replay.html\">Event replay</a> page. Dots: the models disagree "
-      + "on the sign of the change from normal. Grey: dry months for the rain indices.";
+      + "on the sign of the change from normal. Hatched: dry months for the rain indices.";
   }
   const sel = document.getElementById("fm-variable");
   for (const ix of _fcManifest.indices) {
@@ -382,6 +381,14 @@ function _buildLandMaskGrid(lats, lons) {
 
 // ── Canvas cell rendering (sparse + orthographic) ────────────────────────────
 
+// Anomaly layers (the SST field and the regional forecast) draw on the shared
+// continuous anomaly ramps of ramps.js (near-white middle); the legacy absolute
+// daily-precipitation layers keep their own sequential ramps.
+function _cmapFor(spec) {
+  const anomaly = spec.tileStyle === "fcmap" || _variable === "ssta";
+  return anomaly ? window.ENSO_RAMPS[window.ENSO_ANOMALY(spec.cmap, "continuous")] : (CMAPS[spec.cmap] || CMAP_RDBU_R);
+}
+
 function _renderData() {
   _ctx.clearRect(0, 0, _W, _H);
   const key = `${_variable}_L${_lead}`;
@@ -391,7 +398,7 @@ function _renderData() {
     return;
   }
   const spec = VARIABLES[_variable];
-  const cmap = CMAPS[spec.cmap] || CMAP_RDBU_R;
+  const cmap = _cmapFor(spec);
   const vmin = spec.vmin, vmax = spec.vmax;
 
   if (spec.tileStyle === "sparse") {
@@ -422,7 +429,7 @@ function _renderData() {
       // va as in the SST tiles: % of centres agreeing with the sign; -1 = nothing to compare
       va.push(have.length < 2 ? -1 : ((have[0] - ref) * (have[1] - ref) < 0 ? 50 : 100));
     }
-    _renderSparse(gr, gc, gv, null, lats, lons, 1, -1, 1, CMAPS.Grey);
+    _renderSparse(gr, gc, gv, null, lats, lons, 1, -1, 1, "HATCH");   // dry months: the no-data look
     _renderSparse(ri, ci, v, va, lats, lons, 1, spec.vmin, spec.vmax, cmap);
   } else if (spec.tileStyle === "dense-daily") {
     // Daily precip tile: tile.{pr_total_mm|rx1day_mm} = {multi_model_median, per_centre_mean}
@@ -448,6 +455,7 @@ function _renderData() {
   }
 }
 
+let _hatch = null;
 function _renderSparse(ri, ci, v, va, lats, lons, scale, vmin, vmax, cmap) {
   // Shrink cells slightly (factor < 1) to avoid coastal overdraw on land.
   const dlat = lats.length > 1 ? Math.abs(lats[1] - lats[0]) : 1.0;
@@ -492,7 +500,7 @@ function _renderSparse(ri, ci, v, va, lats, lons, scale, vmin, vmax, cmap) {
 
     const val = v[idx] / scale;
     const t = (val - vmin) / (vmax - vmin);
-    const [R, G, B] = interpolateColor(cmap, t);
+    const [R, G, B] = cmap === "HATCH" ? [0, 0, 0] : interpolateColor(cmap, t);
 
     const corners = [
       [lon - hlon, lat - hlat],
@@ -511,7 +519,7 @@ function _renderSparse(ri, ci, v, va, lats, lons, scale, vmin, vmax, cmap) {
     _ctx.moveTo(corners[0][0], corners[0][1]);
     for (let k = 1; k < corners.length; k++) _ctx.lineTo(corners[k][0], corners[k][1]);
     _ctx.closePath();
-    _ctx.fillStyle = `rgba(${R},${G},${B},${opacity})`;
+    _ctx.fillStyle = cmap === "HATCH" ? (_hatch || (_hatch = window.ENSO_HATCH(_ctx))) : `rgba(${R},${G},${B},${opacity})`;
     _ctx.fill();
     nDrawn++;
   }
@@ -555,6 +563,9 @@ function _renderSparse(ri, ci, v, va, lats, lons, scale, vmin, vmax, cmap) {
   }
 }
 
+// Line colours from the CSS tokens (style.css), as in the paper figures.
+const _tok = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
 function _renderSVG() {
   _svg.selectAll("*").remove();
   // Globe outline (ocean fill - NO FILL so canvas beneath shows through)
@@ -562,7 +573,7 @@ function _renderSVG() {
     .datum({type:"Sphere"})
     .attr("d", _pathGen)
     .attr("fill", "none")
-    .attr("stroke", "#6a7f99")
+    .attr("stroke", _tok("--axis"))
     .attr("stroke-width", 0.6);
   // Graticule
   const gr = d3.geoGraticule().step([30, 30])();
@@ -570,8 +581,8 @@ function _renderSVG() {
     .datum(gr)
     .attr("d", _pathGen)
     .attr("fill", "none")
-    .attr("stroke", "rgba(80,100,120,0.25)")
-    .attr("stroke-width", 0.4);
+    .attr("stroke", _tok("--grid"))
+    .attr("stroke-width", 0.5);
   // Country borders - transparent fill so the click has a wide hit target
   if (_countriesGeoJSON) {
     _svg.append("g")
@@ -580,8 +591,9 @@ function _renderSVG() {
       .join("path")
       .attr("d", _pathGen)
       .attr("fill", "rgba(255,255,255,0.01)")
-      .attr("stroke", "rgba(30,30,40,0.65)")
-      .attr("stroke-width", 0.4)
+      .attr("stroke", _tok("--ink"))
+      .attr("stroke-opacity", 0.4)
+      .attr("stroke-width", 0.5)
       .attr("class", "fm-country-path")
       .style("cursor", "pointer");
   }
@@ -598,9 +610,11 @@ function _renderSVG() {
         .data(subset)
         .join("path")
         .attr("d", _pathGen)
-        .attr("fill", "rgba(255,200,0,0.04)")
-        .attr("stroke", "rgba(200,120,0,0.8)")
-        .attr("stroke-width", 0.8)
+        .attr("fill", "rgba(255,255,255,0.01)")
+        .attr("stroke", _tok("--ink"))
+        .attr("stroke-opacity", 0.55)
+        .attr("stroke-dasharray", "2 1.6")
+        .attr("stroke-width", 0.6)
         .attr("class", "fm-region-path")
         .style("cursor", "pointer");
 
@@ -614,7 +628,7 @@ function _renderSVG() {
           .datum(activeFeat)
           .attr("d", _pathGen)
           .attr("fill", "none")
-          .attr("stroke", "#d62728")
+          .attr("stroke", _tok("--ink"))
           .attr("stroke-width", 1.5);
       }
     }
@@ -702,10 +716,10 @@ function renderColorbar(vmin, vmax, units) {
         + (tile.rain ? "% of normal (100 = normal)" : `difference from normal (${spec.units})`)
         + ". Colours show the forecast everywhere; how well each model did in the past is in the tables on "
         + "the Event replay page. Dots: the models disagree on the sign."
-        + (tile.rain_based ? " Grey: dry months." : "") };
+        + (tile.rain_based ? " Hatched: dry months." : "") };
     }
   }
-  const cmap = CMAPS[spec.cmap] || CMAP_RDBU_R;
+  const cmap = _cmapFor(spec);
   // Read the units + label from the tile meta rather than the static registry:
   // the SSTA field is a variance-adjusted sigma, not K, and the meta label is
   // stamped with the valid month, so reading from the data keeps the colourbar
@@ -723,13 +737,23 @@ function renderColorbar(vmin, vmax, units) {
     ctx.fillStyle = `rgb(${R},${G},${B})`;
     ctx.fillRect(x, 0, 1, c.height);
   }
-  document.getElementById("fm-cmin").textContent = vmin.toFixed(vmin === Math.floor(vmin) ? 0 : 1);
-  document.getElementById("fm-cmax").textContent = (vmax >= 0 ? "+" : "") + vmax.toFixed(vmax === Math.floor(vmax) ? 0 : 1);
-  const unitsSpan = c.parentElement.querySelector("span:last-child");
-  if (unitsSpan) {
-    // meta.label is the authoritative caption (already carries the sigma unit
-    // and the valid month); fall back to the registry label + units bracket.
-    unitsSpan.textContent = meta.label ? meta.label : `${spec.label} [${uUnits}]`;
+  // Ticks with a true minus and a sign on positives; the middle tick is 0 on a
+  // two-sided scale (100 for rain as % of normal).
+  const tick = v => (v < 0 ? "\u2212" : v > 0 && vmin < 0 ? "+" : "") + Math.abs(v).toFixed(Math.abs(v) === Math.floor(Math.abs(v)) ? 0 : 1);
+  document.getElementById("fm-cmin").textContent = tick(vmin);
+  document.getElementById("fm-cmax").textContent = tick(vmax);
+  const mid = document.getElementById("fm-cmid");
+  if (mid) mid.textContent = tick((vmin + vmax) / 2);
+  const title = document.getElementById("fm-cb-title");
+  if (title) {
+    // meta.label is the authoritative caption (it carries the valid month). For
+    // the SST field the unit is written out (spec 6.6): "(standard deviations)".
+    let txt = meta.label ? meta.label : `${spec.label} [${uUnits}]`;
+    if (_variable === "ssta") {
+      const month = String(meta.label || "").split(" - ")[1];
+      txt = `SSTA, variance-adjusted (standard deviations)${month ? ", " + month : ""}`;
+    }
+    title.textContent = txt;
   }
 }
 
@@ -810,7 +834,7 @@ async function init() {
       let yr, mo;  // mo is 1..12
       if (_vm[L]) { const p = String(_vm[L]).split("-"); yr = +p[0]; mo = +p[1]; }
       else { const tot = (_iy * 12 + (_im - 1)) + (L - 1); yr = Math.floor(tot / 12); mo = (tot % 12) + 1; }
-      o.textContent = `L${L} - ${_MONTHS[mo - 1]} ${yr}`;
+      o.textContent = `L${L}: ${_MONTHS[mo - 1]} ${yr}`;
     });
   }
 
@@ -875,254 +899,13 @@ async function preloadVariable(variable) {
 document.addEventListener("DOMContentLoaded", init);
 
 
-// ── Country-click + time-series panel ────────────────────────────────────────
+// ── Map clicks ───────────────────────────────────────────────────────────────
+// The country, region and pixel drill-down charted the April 2026 daily-precipitation
+// layers, which the regional forecast replaced; it was retired on 19 Oct 2026 (the data
+// files stay). _renderSVG still reads these two, so they remain, always empty.
+let _regionsGeoJSON = null;
+let _activeCountry = null;
 
-let _countrySeries = null;        // loaded precip_country_series_{TAG}.json
-let _regionSeries  = null;        // loaded precip_region_series_{TAG}.json
-let _regionsGeoJSON = null;       // ne_10m_admin_1 features
-let _countryChart = null;
-let _activeCountry = null;        // name of country being drilled into (for sub-region overlay)
-let _activePanelScope = null;     // "country" | "region" | "pixel"
-let _activePanelKey   = null;
-let _pixelMode = false;           // when true: click anywhere on map opens pixel panel
-let _pixelTiles = {};             // `${var}_L${lead}` → JSON (pixel precip tiles)
-
-async function _loadCountrySeries() {
-  if (_countrySeries !== null) return _countrySeries;
-  try {
-    const r = await fetch(_dv(DATA_BASE + `precip_country_series_${_tag}.json`), {cache:"no-cache"});
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    _countrySeries = await r.json();
-    console.log("forecast_maps: loaded", Object.keys(_countrySeries.countries).length, "countries series");
-  } catch (e) {
-    console.warn("forecast_maps: no country series", e);
-    _countrySeries = {countries: {}};
-  }
-  return _countrySeries;
-}
-
-async function _loadRegionSeries() {
-  if (_regionSeries !== null) return _regionSeries;
-  try {
-    const r = await fetch(_dv(DATA_BASE + `precip_region_series_${_tag}.json`), {cache:"no-cache"});
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    _regionSeries = await r.json();
-    console.log("forecast_maps: loaded", Object.keys(_regionSeries.regions).length, "regions series");
-  } catch (e) {
-    console.warn("forecast_maps: no region series", e);
-    _regionSeries = {regions: {}};
-  }
-  return _regionSeries;
-}
-
-
-/** Force d3-geo ring winding on a FeatureCollection, in place.
- *
- *  d3-geo is spherical: the interior is the region to the LEFT of the ring, so
- *  an exterior ring must run clockwise in lon/lat. GeoJSON RFC 7946 says the
- *  opposite and d3 does not rewind for you, so a counter-clockwise exterior
- *  ring is drawn as the whole sphere minus that ring: invisible against the
- *  background, but its hit area covers the entire panel and it swallows every
- *  click. Natural Earth ships twelve such rings, all tiny four-point islands.
- *  Florida's took every click on the USA panel until 2026-09-18; clicking
- *  California selected Florida, and China and Japan had the same trap.
- *
- *  The builder normalises on write (scripts/analysis/finance/_geojson_winding.py)
- *  and an invariant fails if a bad ring reaches website/data. This is the third
- *  line: the served files can come from a bucket, and a click trap must never
- *  be one stale upload away.
- */
-function _rewindForD3ForecastMaps(gj) {
-  if (!gj || !gj.features) return gj;
-  const area = ring => {
-    let a = 0;
-    for (let i = 0; i < ring.length; i++) {
-      const p = ring[i], q = ring[(i + 1) % ring.length];
-      a += p[0] * q[1] - q[0] * p[1];
-    }
-    return a / 2;
-  };
-  const fix = rings => rings.map((r, i) => {
-    if (r.length < 4) return r;
-    const wantNegative = i === 0;                 // exterior clockwise, holes the other way
-    return ((area(r) < 0) !== wantNegative) ? r.slice().reverse() : r;
-  });
-  for (const f of gj.features) {
-    const g = f && f.geometry;
-    if (!g) continue;
-    if (g.type === "Polygon") g.coordinates = fix(g.coordinates);
-    else if (g.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
-  }
-  return gj;
-}
-
-async function _loadRegionsGeoJSON() {
-  if (_regionsGeoJSON) return _regionsGeoJSON;
-  try {
-    const r = await fetch("data/maps/ne_10m_admin_1_states_provinces.geojson", {cache:"no-cache"});
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    _regionsGeoJSON = _rewindForD3ForecastMaps(await r.json());
-  } catch (e) {
-    console.warn("forecast_maps: no admin-1 geojson", e);
-    _regionsGeoJSON = {features: []};
-  }
-  return _regionsGeoJSON;
-}
-
-async function _loadPixelTile(variable, lead) {
-  const key = `${variable}_L${lead}`;
-  if (_pixelTiles[key]) return _pixelTiles[key];
-  const url = DATA_BASE + `pixel_precip_${variable}_L${lead}_${_tag}.json`;
-  try {
-    const r = await fetch(_dv(url), {cache:"no-cache"});
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    _pixelTiles[key] = await r.json();
-  } catch (e) {
-    console.warn("forecast_maps: pixel tile load failed", url, e);
-    _pixelTiles[key] = null;
-  }
-  return _pixelTiles[key];
-}
-
-async function _preloadPixelVar(variable) {
-  await Promise.all([1,2,3,4,5,6].map(L => _loadPixelTile(variable, L)));
-}
-
-async function showPixelPanel(lon, lat) {
-  // Find nearest land cell across any already-loaded pixel tile
-  const variable = document.getElementById("fm-country-variable").value || "pr_total_mm";
-  await _preloadPixelVar(variable);
-  // Use L1 tile to pick the cell index closest to (lat, lon)
-  const tL1 = _pixelTiles[`${variable}_L1`];
-  if (!tL1) return;
-  const lats = tL1.lats, lons = tL1.lons;
-  // Find nearest grid row/col
-  let bestIdx = -1, bestDist = 1e18;
-  for (let i = 0; i < tL1.ri.length; i++) {
-    const r = tL1.ri[i], c = tL1.ci[i];
-    const dlat = lats[r] - lat;
-    // wrap lon into same sign as dataset
-    let lon_ds = lons[c];
-    let dlon = lon_ds - lon;
-    if (dlon > 180) dlon -= 360;
-    if (dlon < -180) dlon += 360;
-    const d = dlat*dlat + dlon*dlon;
-    if (d < bestDist) { bestDist = d; bestIdx = i; }
-  }
-  if (bestIdx < 0) return;
-  const ri = tL1.ri[bestIdx], ci = tL1.ci[bestIdx];
-  const cellLat = tL1.lats[ri], cellLon = tL1.lons[ci];
-
-  // Assemble per-centre quantile arrays across 6 leads
-  const centres = Object.keys(tL1.centres);
-  const field = {};
-  for (const src of centres) {
-    const p10 = new Array(6).fill(null);
-    const p50 = new Array(6).fill(null);
-    const p90 = new Array(6).fill(null);
-    for (let L = 1; L <= 6; L++) {
-      const t = _pixelTiles[`${variable}_L${L}`];
-      if (!t) continue;
-      const scale = (t.meta && t.meta.scale) || 10;
-      // Find bestIdx in this tile's sparse arrays (should be same order)
-      // Tiles share ri/ci ordering since built from same land mask.
-      const idx = bestIdx;
-      if (t.centres[src]) {
-        p10[L-1] = t.centres[src].p10[idx] / scale;
-        p50[L-1] = t.centres[src].p50[idx] / scale;
-        p90[L-1] = t.centres[src].p90[idx] / scale;
-      }
-    }
-    field[src] = {p10, p50, p90,
-      // Fill in P25/P75 as midpoints so the box+whisker renderer still draws
-      p25: p10.map((v,i) => v==null||p50[i]==null ? null : (v+p50[i])/2),
-      p75: p50.map((v,i) => v==null||p90[i]==null ? null : (v+p90[i])/2),
-    };
-  }
-
-  _activePanelScope = "pixel";
-  _activePanelKey   = `pixel:${cellLat.toFixed(1)},${cellLon.toFixed(1)}:${variable}`;
-  const card = document.getElementById("fm-country-card");
-  card.classList.add("active");
-  document.getElementById("fm-country-title").textContent =
-    `Pixel ${cellLat.toFixed(1)}°N ${cellLon.toFixed(1)}°E - precip forecast`;
-  const backBtn = document.getElementById("fm-country-back");
-  if (backBtn) backBtn.style.display = "none";
-  // Build a shape matching what _renderCountryChart expects
-  const pseudoCountry = {[variable]: field};
-  _renderCountryChart(pseudoCountry);
-  card.scrollIntoView({behavior: "smooth", block: "nearest"});
-}
-
-function _countryColor(src) {
-  return (typeof CENTRE_COLOR === "object" ? CENTRE_COLOR : {})[src] || "#888";
-}
-function _centreShort(src) {
-  return (typeof CENTRE_SHORT === "object" ? CENTRE_SHORT : {})[src] || src.toUpperCase();
-}
-
-async function showCountryPanel(name) {
-  if (!name) return;
-
-  // Don't offer a country drill-down when the user is looking at a variable
-  // that has no country-level series (e.g. SSTA - SST averaged over a country
-  // is scientifically meaningless). Keep the per-country drill-down for
-  // precipitation / drought-style indices only.
-  if (!_variableSupportsCountryDrill(_variable)) {
-    _flashMapToast(`Country drill-down isn't available for ${_variableLabel(_variable)}. ` +
-                    `Switch to a precip variable (Monthly precip, RX1DAY) first.`);
-    return;
-  }
-
-  const series = await _loadCountrySeries();
-  const country = series.countries[name];
-  if (!country) {
-    console.warn("forecast_maps: no country series for", name);
-    return;
-  }
-  // Also load regions + geojson so the map can overlay them
-  await Promise.all([_loadRegionSeries(), _loadRegionsGeoJSON()]);
-  _activeCountry    = name;
-  _activePanelScope = "country";
-  _activePanelKey   = name;
-  const card = document.getElementById("fm-country-card");
-  card.classList.add("active");
-  document.getElementById("fm-country-title").textContent =
-    `${name} - precip forecast from ${series.init} init`;
-  // Sync the drill-down variable dropdown to the current map variable when possible
-  _syncCountryDrillVariable();
-  _renderCountryChart(country);
-  const backBtn = document.getElementById("fm-country-back");
-  if (backBtn) backBtn.style.display = "none";
-  _redraw();  // repaint globe with sub-region overlay
-  card.scrollIntoView({behavior: "smooth", block: "nearest"});
-}
-
-// Country drill-down is supported only for variables that have a country
-// series on disk. Currently: monthly precip total, RX1DAY, RX10DAY, CDD.
-// SSTA does NOT get a per-country drill (averaging SST over a country is
-// not meaningful).
-const _COUNTRY_DRILL_VARIABLES = new Set([
-  "pr_total_mm", "rx1day_mm", "rx10day_mm", "cdd_days",
-]);
-function _variableSupportsCountryDrill(v) { return _COUNTRY_DRILL_VARIABLES.has(v); }
-function _variableLabel(v) {
-  const labels = {
-    ssta: "SSTA",
-    pr_total_mm: "monthly precip total",
-    rx1day_mm: "RX1DAY",
-    rx10day_mm: "RX10DAY",
-    cdd_days: "CDD",
-  };
-  return labels[v] || v;
-}
-function _syncCountryDrillVariable() {
-  const cv = document.getElementById("fm-country-variable");
-  if (!cv) return;
-  const want = _variable;
-  const opt = [...cv.options].find(o => o.value === want);
-  if (opt) cv.value = want;
-}
 function _flashMapToast(msg) {
   let t = document.getElementById("fm-toast");
   if (!t) {
@@ -1139,193 +922,6 @@ function _flashMapToast(msg) {
   t._hideT = setTimeout(() => { t.style.display = "none"; }, 5000);
 }
 
-async function showRegionPanel(admin, regionName) {
-  if (!_variableSupportsCountryDrill(_variable)) {
-    _flashMapToast(`Region drill-down isn't available for ${_variableLabel(_variable)}. ` +
-                    `Switch to a precip variable first.`);
-    return;
-  }
-  const series = await _loadRegionSeries();
-  const key = `${admin}|${regionName}`;
-  const region = series.regions[key];
-  if (!region) {
-    console.warn("forecast_maps: no region series for", key);
-    return;
-  }
-  _activePanelScope = "region";
-  _activePanelKey   = key;
-  const card = document.getElementById("fm-country-card");
-  card.classList.add("active");
-  document.getElementById("fm-country-title").textContent =
-    `${regionName}, ${admin} - precip forecast from ${series.init} init`;
-  _syncCountryDrillVariable();
-  _renderCountryChart(region);
-  const backBtn = document.getElementById("fm-country-back");
-  if (backBtn) backBtn.style.display = "inline-block";
-  card.scrollIntoView({behavior: "smooth", block: "nearest"});
-}
-
-function resetDrill() {
-  _activeCountry = null;
-  _activePanelScope = null;
-  _activePanelKey = null;
-  document.getElementById("fm-country-card").classList.remove("active");
-  if (_countryChart) { try { _countryChart.destroy(); } catch (_) {} _countryChart = null; }
-  _redraw();
-}
-
-// Destroy + redraw - Chart.js doesn't have native box plot, so we use a
-// custom plugin that draws one box per (lead, centre) using the 5 quantiles.
-function _renderCountryChart(country) {
-  const canvas = document.getElementById("fm-country-chart");
-  if (_countryChart) { try { _countryChart.destroy(); } catch (_) {} _countryChart = null; }
-  const variable = document.getElementById("fm-country-variable").value;
-  const field = country[variable];
-  if (!field) return;
-
-  const centres = Object.keys(field);
-  const N_LEADS = 6;
-  const leadLabels = ["L1","L2","L3","L4","L5","L6"];
-
-  // Compute global y-limits across all centres & quantiles
-  let ymin = Infinity, ymax = -Infinity;
-  for (const src of centres) {
-    for (const k of ["p10","p25","p50","p75","p90"]) {
-      for (const v of (field[src][k] || [])) {
-        if (v == null || !isFinite(v)) continue;
-        if (v < ymin) ymin = v;
-        if (v > ymax) ymax = v;
-      }
-    }
-  }
-  if (!isFinite(ymin)) { ymin = 0; ymax = 1; }
-  ymin = Math.min(0, ymin);
-  // Round ymax up to a "nice" tick so the axis label isn't e.g. 132.7.
-  // Pick a step from {1,2,5}×10^k that keeps ~5 visible ticks, then ceil
-  // ymax to the next multiple of that step.
-  function _niceAxisMax(raw) {
-    if (raw <= 0) return 1;
-    const pow10 = Math.pow(10, Math.floor(Math.log10(raw)));
-    const n = raw / pow10;           // in [1, 10)
-    let step;
-    if (n <= 1)   step = 0.2 * pow10;
-    else if (n <= 2) step = 0.5 * pow10;
-    else if (n <= 5) step = 1.0 * pow10;
-    else             step = 2.0 * pow10;
-    return Math.ceil(raw * 1.02 / step) * step;
-  }
-  ymax = _niceAxisMax(ymax);
-
-  // Build dummy datasets so Chart.js lays out the axis + legend entries
-  const datasets = centres.map(src => ({
-    label: _centreShort(src),
-    data: field[src].p50 || [],
-    borderColor: _countryColor(src),
-    backgroundColor: _countryColor(src),
-    borderWidth: 0,
-    pointRadius: 0,
-    showLine: false,
-    _boxData: {src, q: field[src]},
-  }));
-
-  // Custom plugin: draw boxes + whiskers + median line + P10/P90 whiskers.
-  const boxPlugin = {
-    id: "boxWhiskerDraw",
-    afterDatasetsDraw(chart) {
-      const {ctx, chartArea, scales} = chart;
-      const xScale = scales.x;
-      const yScale = scales.y;
-      const categoryW = (xScale.getPixelForValue(1) - xScale.getPixelForValue(0));
-      const nC = centres.length;
-      const boxW = Math.max(6, Math.min(28, categoryW * 0.8 / nC));
-      for (let L = 0; L < N_LEADS; L++) {
-        const cx0 = xScale.getPixelForValue(L);
-        for (let i = 0; i < nC; i++) {
-          const src = centres[i];
-          const q   = field[src];
-          const p10 = q.p10?.[L], p25 = q.p25?.[L], p50 = q.p50?.[L];
-          const p75 = q.p75?.[L], p90 = q.p90?.[L];
-          if ([p10, p25, p50, p75, p90].some(v => v == null || !isFinite(v))) continue;
-
-          const offset = (i - (nC - 1) / 2) * (boxW + 2);
-          const x = cx0 + offset;
-          const y10 = yScale.getPixelForValue(p10);
-          const y25 = yScale.getPixelForValue(p25);
-          const y50 = yScale.getPixelForValue(p50);
-          const y75 = yScale.getPixelForValue(p75);
-          const y90 = yScale.getPixelForValue(p90);
-          const col = _countryColor(src);
-
-          // Whisker line
-          ctx.strokeStyle = col;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(x, y10); ctx.lineTo(x, y90);
-          ctx.stroke();
-          // Whisker caps
-          ctx.beginPath();
-          ctx.moveTo(x - boxW*0.3, y10); ctx.lineTo(x + boxW*0.3, y10);
-          ctx.moveTo(x - boxW*0.3, y90); ctx.lineTo(x + boxW*0.3, y90);
-          ctx.stroke();
-          // Box (P25-P75)
-          ctx.fillStyle = col + "55";
-          ctx.fillRect(x - boxW/2, y75, boxW, y25 - y75);
-          ctx.strokeStyle = col;
-          ctx.strokeRect(x - boxW/2, y75, boxW, y25 - y75);
-          // Median line
-          ctx.strokeStyle = "#111";
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.moveTo(x - boxW/2, y50); ctx.lineTo(x + boxW/2, y50);
-          ctx.stroke();
-        }
-      }
-    },
-  };
-
-  _countryChart = new Chart(canvas.getContext("2d"), {
-    type: "scatter",
-    data: {labels: leadLabels, datasets},
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: false,
-      plugins: {
-        legend: {position: "bottom"},
-        tooltip: {enabled: false},
-      },
-      scales: {
-        x: {
-          type: "linear",
-          min: -0.5,
-          max: N_LEADS - 0.5,
-          ticks: {
-            stepSize: 1,
-            callback: (v) => leadLabels[v] || "",
-          },
-          title: {display: true, text: "Lead month"},
-          grid: {display: false},
-        },
-        y: {
-          min: ymin,
-          max: ymax,
-          title: {
-            display: true,
-            text: ({
-              pr_total_mm: "Monthly precip total (mm/month)",
-              rx1day_mm:   "RX1DAY (mm/day)",
-              rx10day_mm:  "RX10DAY (mm / 10-day)",
-              cdd_days:    "CDD (days)",
-            }[variable] || variable),
-          },
-        },
-      },
-    },
-    plugins: [boxPlugin],
-  });
-}
-
-// Wire up controls and SVG click handler once init() has built the globe
 (function setupCountryClickHooks() {
   const interval = setInterval(() => {
     if (_countriesGeoJSON && _svg) {
@@ -1336,105 +932,17 @@ function _renderCountryChart(country) {
 })();
 
 function _attachCountryClicks() {
-  // Re-attach after each _renderSVG() call (countries get rebuilt each redraw).
-  const wrap = _renderSVG;
-  // Only wrap once - guard
-  if (wrap._patchedForClicks) return;
-  wrap._patchedForClicks = true;
-  // Hook into existing _renderSVG: patch via monkey-patching wouldn't persist
-  // because render-svg is a private function. Easier: use d3 delegated click.
+  if (_attachCountryClicks.done) return;
+  _attachCountryClicks.done = true;
+  // A click on a regional forecast map says what that cell holds and where the region
+  // detail is; on the SST map a click does nothing.
   _svg.on("click", (event) => {
-    // Always invert the click to geographic coordinates, then do a
-    // point-in-polygon test against the features. This avoids SVG hit-test
-    // artefacts for polygons that span the antimeridian or are weirdly
-    // shaped after orthographic projection (Alaska/Russia/Fiji).
-    const svgNode = _svg.node();
-    const rect = svgNode.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const ll = _projection.invert([x, y]);
+    if (!_isFc(_variable)) return;
+    const rect = _svg.node().getBoundingClientRect();
+    const ll = _projection.invert([event.clientX - rect.left, event.clientY - rect.top]);
     if (!ll) return;
-    const [lon, lat] = ll;
-
-    if (_isFc(_variable)) {
-      const info = _fcCellInfo(lon, lat);
-      _flashMapToast((info ? info + " " : "") + "Region by region detail for this forecast: Event replay, with "
-                     + "the country and the developing El Niño selected.");
-      return;
-    }
-    if (_pixelMode) {
-      showPixelPanel(lon, lat);
-      return;
-    }
-
-    // Two-level drill. If a country is already active, look for a region hit first.
-    if (_activeCountry && _regionsGeoJSON) {
-      const hit = _findFeatureHit(lon, lat,
-        _regionsGeoJSON.features.filter(f => {
-          const p = f.properties || {};
-          return (p.admin || p.ADMIN) === _activeCountry;
-        })
-      );
-      if (hit) {
-        const p = hit.properties || {};
-        const admin = p.admin || p.ADMIN;
-        const name  = p.name  || p.NAME;
-        if (admin && name) { showRegionPanel(admin, name); return; }
-      }
-    }
-    // Otherwise, fall back to country hit
-    if (_countriesGeoJSON) {
-      const hit = _findFeatureHit(lon, lat, _countriesGeoJSON.features);
-      if (hit) {
-        const p = hit.properties || {};
-        const name = p.name || p.NAME || p.ADMIN;
-        if (name) showCountryPanel(name);
-      }
-    }
-  });
-
-  function _findFeatureHit(lon, lat, features) {
-    // GeoJSON coords are -180..180; user clicks also come back from
-    // _projection.invert in that range.
-    for (const f of features) {
-      const g = f.geometry;
-      if (!g) continue;
-      if (g.type === "Polygon") {
-        if (_pointInPolygon(lon, lat, g.coordinates)) return f;
-      } else if (g.type === "MultiPolygon") {
-        for (const poly of g.coordinates) {
-          if (_pointInPolygon(lon, lat, poly)) return f;
-        }
-      }
-    }
-    return null;
-  }
-
-  document.getElementById("fm-pixel-mode")?.addEventListener("change", (e) => {
-    _pixelMode = e.target.checked;
-    if (_pixelMode) {
-      // When pixel mode is on, hide country hover cursor
-      document.querySelectorAll(".fm-country-path").forEach(el => el.style.cursor = "crosshair");
-    }
-  });
-  // Variable selector → re-render chart for whatever is currently shown
-  document.getElementById("fm-country-variable").addEventListener("change", () => {
-    if (!_activePanelScope) return;
-    let data = null;
-    if (_activePanelScope === "country") {
-      data = _countrySeries?.countries?.[_activePanelKey];
-    } else if (_activePanelScope === "region") {
-      data = _regionSeries?.regions?.[_activePanelKey];
-    }
-    if (data) _renderCountryChart(data);
-  });
-  // Close button
-  document.getElementById("fm-country-close").addEventListener("click", () => {
-    resetDrill();
-  });
-  // Back-to-country button (visible only in region scope)
-  document.getElementById("fm-country-back")?.addEventListener("click", () => {
-    if (_activeCountry) showCountryPanel(_activeCountry);
-    document.getElementById("fm-country-back").style.display = "none";
+    const info = _fcCellInfo(ll[0], ll[1]);
+    _flashMapToast((info ? info + " " : "") + "Region by region detail for this forecast: Event replay, with "
+                   + "the country and the developing El Niño selected.");
   });
 }

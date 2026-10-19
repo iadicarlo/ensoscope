@@ -16,6 +16,28 @@
 window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-19",
+    tag: "New feature",
+    title: "A new look for every page, and outbreaks placed at their start",
+    items: [
+      "Every page has a new, simpler layout. Each chart line is labelled at its end, beside the chart, so labels never cross a line; the Skill page uses a purple scale; and captions say what a figure shows.",
+      "Event replay now starts with the country, then its downloads, then the El Niño or La Niña event you want to replay.",
+      "Outbreaks from WHO's Disease Outbreak News now start in the month WHO's report says the outbreak began, quoted from that report, in 25 of 406 cases; the others still start at WHO's first report.",
+      "Yellow fever outbreaks known only by their year now carry a start month where a published report gives one. Records that look like outbreaks in animals only, or that are filed under the wrong place, are kept off the panel, and an outbreak held by two sources is shown once.",
+      "Place names from the EM-DAT disaster database are shown in English, and garbled characters in them are repaired.",
+      "Until CRED replies to our request, the country downloads no longer list EM-DAT records one by one. Their counts and charts still include them, and the outbreak panel on Event replay is unchanged.",
+    ],
+  },
+  {
+    date: "2026-10-19",
+    tag: "Fix",
+    title: "WHO's yearly malaria estimates removed from the country downloads",
+    items: [
+      "The country packs and the Full analysis no longer show WHO's yearly estimates of malaria incidence. They are national figures only, and they are not adjusted for bednets, seasonal malaria chemoprevention or vaccines, so a fall or a rise can reflect those programmes rather than the climate. Malaria outbreaks recorded in outbreak reports still appear in the outbreak list and on the Event replay.",
+      "Where a whole-country figure covers only part of a country, the downloads now say so: rain for Germany as a whole, for instance, is the average of the 228 of its 726 grid cells with observed rainfall, because CHIRPS covers 50°S to 50°N. The regions without it say so in their own rows.",
+    ],
+  },
+  {
+    date: "2026-10-19",
     tag: "Fix",
     title: "One-page summaries: no table text cut off",
     items: [
@@ -312,7 +334,7 @@ window.ENSOSCOPE_UPDATES = [
     title: "Every teleconnection map now picks its past seasons the same way",
     items: [
       "The four layers behind the Teleconnections maps, observed rainfall, observed heat, and the CESM2 model's rainfall and heat, each had their own way of deciding which season a past event contributes. They now share one rule: the event, or the neutral period, must span every month of the season, it contributes one season even when it lasted several years, and that season must have at least 90 per cent of its days in the record.",
-      "The observed rainfall maps change most. Every event had been cut at the first day of its last month, so 10 of the 110 event-seasons were missing most of a month, among them the moderate El Ninos of 1994-95 and 2002-03 in December to February and the extreme El Nino of 1982-83 in March to May. The heaviest rain and the longest dry spell are both measured over the season, so a season with a month missing understates both. Those events now count in full. The 2025-26 La Nina, which the December to February rainfall maps held on December 2025 alone, is left out until its whole season is in the record, as the heat maps already did. The December to February strong and extreme El Nino rainfall maps do not move: none of those events, and none of the neutral years they are compared with, ended inside that season.",
+      "The observed rainfall maps change most. Every event had been cut at the first day of its last month, so 10 of the 110 event-seasons were missing most of a month, among them the moderate El Niños of 1994-95 and 2002-03 in December to February and the extreme El Niño of 1982-83 in March to May. The heaviest rain and the longest dry spell are both measured over the season, so a season with a month missing understates both. Those events now count in full. The 2025-26 La Niña, which the December to February rainfall maps held on December 2025 alone, is left out until its whole season is in the record, as the heat maps already did. The December to February strong and extreme El Niño rainfall maps do not move: none of those events, and none of the neutral years they are compared with, ended inside that season.",
       "In the CESM2 model, neutral years are now chosen exactly like events (the rainfall layer used to require them to last five months), and the heat layer uses one season per event, as the rainfall layer always did. A defect that dated the heat layer's ENSO classification one month late was fixed on the way."
     ]
   },
@@ -322,7 +344,7 @@ window.ENSOSCOPE_UPDATES = [
     title: "Clicking a region on the event replay map picked the wrong one",
     items: [
       "Clicking California on the event replay map selected Florida, and a few other regions did the same. A tiny island outline in the map data was drawn inside out, which left it invisible but gave it an area covering the whole map, so it caught every click. Every outline is now checked for this before it is served.",
-      "For four days after the 14 September switch, the observed rainfall maps on the Teleconnections tab were still built on the old classification while the heat maps beside them had moved: a December to February strong El Nino map was built from 3 events where the catalogue has 4. They were rebuilt on 18 September, and the rebuild now includes them so it cannot happen again."
+      "For four days after the 14 September switch, the observed rainfall maps on the Teleconnections tab were still built on the old classification while the heat maps beside them had moved: a December to February strong El Niño map was built from 3 events where the catalogue has 4. They were rebuilt on 18 September, and the rebuild now includes them so it cannot happen again."
     ]
   },
   {
@@ -331,9 +353,9 @@ window.ENSOSCOPE_UPDATES = [
     title: "ENSO classification moved to the relative index and NOAA's episode rule",
     items: [
       "Every ENSO index on the site is now a relative index: the Pacific box minus the tropical mean of the same month, the index NOAA and WMO use. The previous method removed global warming with a fitted curve, and by 2026 that curve ran about a third of a standard deviation too warm, which is why the site briefly said August 2026 had passed the 1997-98 peak. It had not. On the relative index August 2026 reads +2.4, level with the biggest events on record, against +2.65 at the 1997-98 peak.",
-      "Events are now found with NOAA's own episode rule, written in standard deviations so that observations and models stay comparable, and multi-year La Ninas such as 1998-2001 and 2020-2023 are single events that keep their pieces. The catalogue holds 25 events since 1980: the 2016 La Nina is back, and two marginal La Ninas that last four seasons on our SST product instead of five are gone. Every change was checked against NOAA's published episode list.",
+      "Events are now found with NOAA's own episode rule, written in standard deviations so that observations and models stay comparable, and multi-year La Niñas such as 1998-2001 and 2020-2023 are single events that keep their pieces. The catalogue holds 25 events since 1980: the 2016 La Niña is back, and two marginal La Niñas that last four seasons on our SST product instead of five are gone. Every change was checked against NOAA's published episode list.",
       "The observed Nino index now runs to the latest month of sea surface temperature, August 2026. Rainfall products still stop at their own end, June 2026, and each panel says which.",
-      "Meteo-France forecasts are rescaled with their own hindcast statistics instead of ECMWF's. Its Nino3.4 plume barely moves, but its extreme El Nino probability at five and six months drops sharply, because its own rainfall spread is larger and the rainfall gate for an extreme El Nino is strict.",
+      "Météo-France forecasts are rescaled with their own hindcast statistics instead of ECMWF's. Its Nino3.4 plume barely moves, but its extreme El Niño probability at five and six months drops sharply, because its own rainfall spread is larger and the rainfall gate for an extreme El Niño is strict.",
       "The CESM2 rainfall composites were rebuilt with the same rule, and a defect that filed every model February under January was found and fixed on the way. The methodology page describes the new classification in full.",
     ]
   },
@@ -343,7 +365,7 @@ window.ENSOSCOPE_UPDATES = [
     title: "Reported disasters and outbreaks now cover all 83 countries",
     items: [
       "The impacts panel on the event replay tab went from ten countries to every country the tab supports: 6,257 recorded floods, droughts, heat waves and outbreaks, of which 72% name a place precise enough to put on a map.",
-      "A plainer note now sits under the figure. EM-DAT holds only events that were reported and met its entry threshold, so most floods, droughts and outbreaks are missing from it, and how much is missing differs by country and has changed over the decades. A marker falling inside an El Nino or La Nina window shows only that both were recorded in the same months: it is a timeline, not evidence of cause.",
+      "A plainer note now sits under the figure. EM-DAT holds only events that were reported and met its entry threshold, so most floods, droughts and outbreaks are missing from it, and how much is missing differs by country and has changed over the decades. A marker falling inside an El Niño or La Niña window shows only that both were recorded in the same months: it is a timeline, not evidence of cause.",
       "The extreme heat theme is often empty, and it now says why instead of leaving a blank. EM-DAT holds 181 heat waves but in only 31 of these 83 countries, with India, the United States and Japan accounting for a large share. That is a gap in reporting rather than an absence of dangerous heat, and the heat panels on the same page are measured from ERA5 and do not depend on a report being filed."
     ]
   },
@@ -362,7 +384,7 @@ window.ENSOSCOPE_UPDATES = [
     title: "Observations now run through June 2026",
     items: [
       "The maps and charts reached April 2026; they now reach June. Two more months of CHIRPS rainfall and of ERA5 heat, across the world maps, the country charts and the sub-national zoom.",
-      "The Teleconnections maps deliberately do not include 2026. Classifying an El Nino or La Nina intensity takes about five months, so the developing event has no settled classification yet and its months cannot join a phase composite without changing what the composite means. They enter once the event resolves.",
+      "The Teleconnections maps deliberately do not include 2026. Classifying an El Niño or La Niña intensity takes about five months, so the developing event has no settled classification yet and its months cannot join a phase composite without changing what the composite means. They enter once the event resolves.",
       "Two faults were found and fixed on the way. The build skips work whose inputs have not changed, and that check could not read the disk it was checking, so it reported everything up to date and skipped seven of the eleven gridded stores. The site's own audit caught the result before it was published, which is what it is for.",
       "The second was quieter: the maps had moved to June while the charts under them were still at April, in the same panel. That is the failure the coverage module was written to prevent, and nothing compared those two stores to each other. A check now does, and it was proven on the live fault rather than a made-up one."
     ]

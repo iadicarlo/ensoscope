@@ -3,20 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hindcasts - ENSOscope</title>
+  <title>Hindcasts | ENSOscope</title>
   <meta name="description" content="Explore the ENSO hindcast archive (1993-2026): past forecasts and observed phases by month and year.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/hindcast_explorer.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261019b">
-  <script src="static/lib/chart.umd.min.js?v=20261019b"></script>
-  <link rel="icon" type="image/png" href="favicon.png?v=20261019b">
+  <link rel="stylesheet" href="static/css/style.css?v=20261019c">
+  <script src="static/lib/chart.umd.min.js?v=20261019c"></script>
+  <script src="static/js/chart_theme.js?v=20261019c"></script>
+  <style>
+    /* Hindcasts page layout. Shared components live in style.css. */
+    .hx-plot { position: relative; height: 280px; }
+    .hx-yunit { display: block; font-size: var(--fs-xs); color: var(--muted); margin: var(--s2) 0 2px; }
+    @media (max-width: 600px) { .hx-plot { height: 240px; } .controls .field, .controls select { width: 100%; } }
+  </style>
+  <link rel="icon" type="image/png" href="favicon.png?v=20261019c">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="hindcast_explorer">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019b" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019c" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -49,27 +56,28 @@
   </header>
 
   <main>
-    <h1 class="page-title">Hindcasts</h1>
-    <p class="page-subtitle">
+    <div class="page-head" style="padding-top:0">
+      <p class="kicker">Hindcasts</p>
+      <h1 class="page-title">Hindcasts</h1>
+      <p class="page-subtitle">
       Browse every run of the Niño index past forecasts for any available year/month in the hindcast archive.
       Each spaghetti line is one run; the thick line is the median of the runs; the dotted black line is the observed value.
       Observed overlays use the relative observational indices, each box minus the concurrent 20°S to 20°N tropical mean (SST standardized to a fixed 1980-2014 baseline; Niño-3 precipitation shown as anomaly in mm/day).
-    </p>
-
-    <!-- Multi-centre phase probability overlay -->
-    <div class="card" id="enso-hx-selector-card">
-      <div style="font-weight:600;margin-bottom:0.5rem">Centres (check to overlay on phase-probability plot):</div>
-      <div id="enso-hx-selector-body">Loading centres…</div>
+      </p>
     </div>
 
-    <div class="card" style="padding:1rem 1.5rem">
-      <div style="display:flex;flex-wrap:wrap;gap:1.5rem;align-items:flex-end">
-        <div>
-          <label class="ctrl-label" for="enso-hx-year">Hindcast Year</label>
+    <div class="card">
+      <div id="enso-hx-selector-card" class="fc-centres">
+        <span class="ctrl-label">Forecast systems</span>
+        <div id="enso-hx-selector-body">Loading centres…</div>
+      </div>
+      <div class="controls" style="margin-top:var(--s4)">
+        <div class="field">
+          <label for="enso-hx-year">Hindcast year</label>
           <select id="enso-hx-year" class="ctrl-select"></select>
         </div>
-        <div>
-          <label class="ctrl-label" for="enso-hx-month">Start Month</label>
+        <div class="field">
+          <label for="enso-hx-month">Start month</label>
           <select id="enso-hx-month" class="ctrl-select">
             <option value="1">January</option><option value="2">February</option>
             <option value="3">March</option><option value="4">April</option>
@@ -79,66 +87,68 @@
             <option value="11">November</option><option value="12">December</option>
           </select>
         </div>
-        <div>
-          <label class="ctrl-label" for="enso-hx-variable">Variable</label>
-          <select id="enso-hx-variable" class="ctrl-select">
-            <option value="_en_total" selected>P(El Niño - any intensity)</option>
-            <option value="_ln_total">P(La Niña - any intensity)</option>
-            <option value="prob_extreme_el_nino">P(Extreme El Niño)</option>
-            <option value="prob_strong_el_nino">P(Strong El Niño)</option>
-            <option value="prob_moderate_el_nino">P(Moderate El Niño)</option>
-            <option value="prob_neutral">P(Neutral)</option>
-            <option value="prob_moderate_la_nina">P(Moderate La Niña)</option>
-            <option value="prob_strong_la_nina">P(Strong La Niña)</option>
-            <option value="prob_extreme_la_nina">P(Extreme La Niña)</option>
-          </select>
+      </div>
+    </div>
+
+    <section class="section">
+      <h2>Chance of each class by lead</h2>
+      <figure class="fig" style="margin-top:0">
+        <div class="card">
+          <div class="field" style="max-width:320px">
+            <label for="enso-hx-variable">Class</label>
+            <select id="enso-hx-variable" class="ctrl-select">
+              <option value="_en_total" selected>Chance of El Niño, any intensity</option>
+              <option value="_ln_total">Chance of La Niña, any intensity</option>
+              <option value="prob_extreme_el_nino">Chance of extreme El Niño</option>
+              <option value="prob_strong_el_nino">Chance of strong El Niño</option>
+              <option value="prob_moderate_el_nino">Chance of moderate El Niño</option>
+              <option value="prob_neutral">Chance of neutral</option>
+              <option value="prob_moderate_la_nina">Chance of moderate La Niña</option>
+              <option value="prob_strong_la_nina">Chance of strong La Niña</option>
+              <option value="prob_extreme_la_nina">Chance of extreme La Niña</option>
+            </select>
+          </div>
+          <div class="panel-head" id="enso-hx-head" style="margin-top:var(--s4)"><span class="panel-title" id="enso-hx-chart-title">ENSO probability by lead</span></div>
+          <span class="hx-yunit">Chance (% of runs)</span>
+          <div class="hx-plot"><canvas id="enso-hx-chart" role="img" aria-label="Chance of the selected class by lead, one line per forecast system"></canvas></div>
+          <div class="key" id="enso-hx-key"></div>
         </div>
-        <button class="btn-primary" onclick="updateEnsoHindcastChart()">Update</button>
-      </div>
-    </div>
+        <figcaption><b>Fig. 1. Chance of each class by lead, for one past start.</b></figcaption>
+      </figure>
+    </section>
 
-    <div class="card">
-      <h2 id="enso-hx-chart-title">Multi-centre ENSO phase probability by lead</h2>
-      <div style="position:relative;height:420px">
-        <canvas id="enso-hx-chart"></canvas>
-      </div>
-    </div>
-
-    <!-- Multi-centre member plumes -->
-    <h2 style="margin-top:2rem;margin-bottom:0.3rem">Runs from each model</h2>
-    <p class="page-subtitle" style="margin-top:0">
-      Every run for the selected (year, start month), per model. Each thin line is one
+    <section class="section">
+      <h2>Runs from each model</h2>
+      <p class="prose">
+        Every run for the selected (year, start month), per model. Each thin line is one
       run; the thick line is the median of that model's runs. Select which models to
       overlay via the checkboxes above.
-    </p>
-
-    <div class="card" style="padding:1rem 1.5rem">
-      <div style="display:flex;flex-wrap:wrap;gap:1.5rem;align-items:flex-end">
-        <div>
-          <label class="ctrl-label" for="hxp-variable">Variable</label>
-          <select id="hxp-variable" class="ctrl-select">
-            <option value="nino34_std" selected>Niño 3.4 SST (σ)</option>
-            <option value="nino3_std">Niño 3 SST (σ)</option>
-            <option value="nino4_std">Niño 4 SST (σ)</option>
-            <option value="nino3_pr_anom">Niño 3 Precip Anomaly (mm/day)</option>
-          </select>
+      </p>
+      <figure class="fig">
+        <div class="card">
+          <div class="field" style="max-width:320px">
+            <label for="hxp-variable">Index</label>
+            <select id="hxp-variable" class="ctrl-select">
+              <option value="nino34_std" selected>Relative Niño 3.4 (σ)</option>
+              <option value="nino3_std">Relative Niño 3 (σ)</option>
+              <option value="nino4_std">Relative Niño 4 (σ)</option>
+              <option value="nino3_pr_anom">Niño 3 precip anomaly (mm/day)</option>
+            </select>
+          </div>
+          <div class="panel-head" id="hxp-head" style="margin-top:var(--s4)"><span class="panel-title" id="hxp-chart-title">Runs from each model</span></div>
+          <span class="hx-yunit" id="hxp-unit"></span>
+          <div class="hx-plot"><canvas id="hxp-chart" role="img" aria-label="Every run of each model for the selected start, with the median of each model's runs"></canvas></div>
+          <div class="key" id="hxp-key"></div>
+          <div class="threshold-legend" id="hxp-phase-legend" hidden></div>
         </div>
-        <button class="btn-primary" onclick="updateEnsoHindcastPlume()">Update plumes</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2 id="hxp-chart-title">Runs from each model</h2>
-      <div style="position:relative;height:460px">
-        <canvas id="hxp-chart"></canvas>
-      </div>
-      <div class="threshold-legend" id="hxp-phase-legend"></div>
-    </div>
+        <figcaption><b>Fig. 2. Runs from each model, for one past start.</b></figcaption>
+      </figure>
+    </section>
   </main>
 
-  <script src="static/js/data_base.js?v=20261019b"></script>
+  <script src="static/js/data_base.js?v=20261019c"></script>
 
-  <script src="static/js/app.js?v=20261019b"></script>
-  <script src="static/js/site.js?v=20261019b"></script>
+  <script src="static/js/app.js?v=20261019c"></script>
+  <script src="static/js/site.js?v=20261019c"></script>
 </body>
 </html>

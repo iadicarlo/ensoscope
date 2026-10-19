@@ -1,6 +1,6 @@
 {
   "source": "mf9",
-  "model": "Meteo-France System 9",
+  "model": "M\u00e9t\u00e9o-France System 9",
   "hindcast_dir": "results/mf9_hindcast/1993-2024",
   "n_entries": 2400,
   "n_stale_inits": 11,

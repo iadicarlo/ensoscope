@@ -36,74 +36,14 @@ function _tileURL(path) {
 
 // ── Colorscale definitions ────────────────────────────────────────────────────
 
-const CMAPS = {
-  RdBu: [
-    [0,    [178,24,43]],
-    [0.1,  [214,96,77]],
-    [0.25, [244,165,130]],
-    [0.4,  [253,219,199]],
-    [0.5,  [247,247,247]],
-    [0.6,  [209,229,240]],
-    [0.75, [146,197,222]],
-    [0.9,  [67,147,195]],
-    [1,    [33,102,172]],
-  ],
-  RdBu_r: [
-    [0,    [33,102,172]],
-    [0.1,  [67,147,195]],
-    [0.25, [146,197,222]],
-    [0.4,  [209,229,240]],
-    [0.5,  [247,247,247]],
-    [0.6,  [253,219,199]],
-    [0.75, [244,165,130]],
-    [0.9,  [214,96,77]],
-    [1,    [178,24,43]],
-  ],
+// The ramps live in ramps.js (shared with the Guide's map key).
+const CMAPS = window.ENSO_RAMPS;
 
-  // Rainfall is brown and green, matching the Event replay tab. Red reads as
-  // hot, which is the wrong instinct for a rainfall deficit.
-  // BrBG: green = more rain. BrBG_r: brown = more dry.
-  BrBG: [
-    [0, [140, 81, 10]], [0.25, [216, 179, 101]], [0.5, [245, 245, 245]],
-    [0.75, [90, 180, 172]], [1, [1, 102, 94]],
-  ],
-  BrBG_r: [
-    [0, [1, 102, 94]], [0.25, [90, 180, 172]], [0.5, [245, 245, 245]],
-    [0.75, [216, 179, 101]], [1, [140, 81, 10]],
-  ],
-  Blues: [
-    [0,    [247,251,255]],
-    [0.25, [198,219,239]],
-    [0.5,  [107,174,214]],
-    [0.75, [33,113,181]],
-    [1,    [8,48,107]],
-  ],
-  YlOrBr_r: [
-    [0,    [140,81,10]],
-    [0.25, [191,129,45]],
-    [0.5,  [223,194,125]],
-    [0.75, [246,232,195]],
-    [1,    [255,255,229]],
-  ],
-  // Sequential ramps for the "absolute" layers: pale at the low end, dark at the
-  // high end. CDD rises with dryness and WBGT/UTCI/heatwave-days rise with heat,
-  // so darker always means worse. Do NOT swap these for a diverging map: an
-  // absolute field has no zero to diverge about.
-  YlOrBr: [
-    [0,    [255,255,229]],
-    [0.25, [254,227,145]],
-    [0.5,  [254,153,41]],
-    [0.75, [204,76,2]],
-    [1,    [102,37,6]],
-  ],
-  YlOrRd: [
-    [0,    [255,255,204]],
-    [0.25, [254,217,118]],
-    [0.5,  [253,141,60]],
-    [0.75, [227,26,28]],
-    [1,    [128,0,38]],
-  ],
-};
+// Anomaly layers draw on the shared continuous anomaly ramps (ramps.js: the print end
+// colours with a near-white middle); absolute layers keep their own ramps.
+function _rampFor(meta) {
+  return /_anomaly$/.test(String(meta.variable || "")) ? window.ENSO_ANOMALY(meta.cmap, "continuous") : meta.cmap;
+}
 
 function interpolateColor(cmap, t) {
   // Fall back loudly: a missing entry used to silently render an absolute field
@@ -363,7 +303,8 @@ async function _attachGrid(tile) {
 // ── Colorbar ─────────────────────────────────────────────────────────────────
 
 function renderColorbar(meta) {
-  const { label, units, cmap, vmax, symmetric, vmin } = meta;
+  const { label, units, vmax, symmetric, vmin } = meta;
+  const cmap = _rampFor(meta);
   const _vmin = symmetric ? -Math.abs(vmax) : (vmin != null ? vmin : 0);
   const _vmax = symmetric ?  Math.abs(vmax) : vmax;
 
@@ -384,7 +325,11 @@ function renderColorbar(meta) {
     ctx.fillRect(x, 0, 1, canvas.height);
   }
 
-  const fmt = n => Number.isInteger(n) ? String(n) : n.toFixed(1);
+  // True minus sign, and a plus sign on positive values of a two-sided scale.
+  const fmt = n => {
+    const t = Number.isInteger(n) ? String(Math.abs(n)) : Math.abs(n).toFixed(1);
+    return (n < 0 ? "\u2212" : (symmetric && n > 0 ? "+" : "")) + t;
+  };
   document.getElementById("cb-min").textContent = fmt(_vmin);
   document.getElementById("cb-mid").textContent = fmt(symmetric ? 0 : (_vmin + _vmax) / 2);
   document.getElementById("cb-max").textContent = fmt(_vmax);
@@ -437,50 +382,50 @@ const VARIABLE_OPTIONS = {
   // 2026-06-23: simplified to anomaly + absolute only (prob-ratio layers removed);
   // frost days removed (heat-focused).
   // Base names come from index_names.js so this tab and the Replay tab cannot
-  // drift apart again; only the " - anomaly/absolute" suffix is local.
+  // drift apart again; only the ", anomaly/absolute" suffix is local.
   wet: [
-    { value: "rx10day_anomaly",      label: `${window.ensoIndexName("rx10day")} - anomaly vs neutral-season average` },
-    { value: "rx10day_absolute",     label: `${window.ensoIndexName("rx10day")} - absolute mean` },
+    { value: "rx10day_anomaly",      label: `${window.ensoIndexName("rx10day")}, anomaly vs neutral-season average` },
+    { value: "rx10day_absolute",     label: `${window.ensoIndexName("rx10day")}, absolute mean` },
   ],
   dry: [
-    { value: "cdd_anomaly",    label: `${window.ensoIndexName("cdd")} - anomaly vs neutral-season average` },
-    { value: "cdd_absolute",   label: `${window.ensoIndexName("cdd")} - absolute mean` },
+    { value: "cdd_anomaly",    label: `${window.ensoIndexName("cdd")}, anomaly vs neutral-season average` },
+    { value: "cdd_absolute",   label: `${window.ensoIndexName("cdd")}, absolute mean` },
   ],
   heat: [
-    { value: "wbgt_max_anomaly",    label: "WBGT (heat-stress) - anomaly vs neutral-season average" },
-    { value: "wbgt_max_absolute",   label: "WBGT - absolute mean" },
-    { value: "utci_max_anomaly",    label: "UTCI (universal heat-stress) - anomaly vs neutral-season average" },
-    { value: "utci_max_absolute",   label: "UTCI - absolute mean" },
-    { value: "tmax_anomaly",        label: `${window.ensoIndexName("tmax")} - anomaly vs neutral-season average` },
-    { value: "tmax_absolute",       label: `${window.ensoIndexName("tmax")} - absolute mean` },
-    { value: "hw_days_anomaly",     label: "Daytime heatwave days - anomaly vs neutral-season average" },
-    { value: "hw_days_absolute",    label: "Daytime heatwave days - absolute" },
-    { value: "hw_nights_anomaly",   label: "Nighttime heatwave days - anomaly vs neutral-season average" },
-    { value: "hw_nights_absolute",  label: "Nighttime heatwave days - absolute" },
-    { value: "hw_compound_anomaly", label: "Compound (day+night) heatwave days - anomaly vs neutral-season average" },
-    { value: "hw_compound_absolute",label: "Compound (day+night) heatwave days - absolute" },
+    { value: "wbgt_max_anomaly",    label: "WBGT (heat-stress), anomaly vs neutral-season average" },
+    { value: "wbgt_max_absolute",   label: "WBGT, absolute mean" },
+    { value: "utci_max_anomaly",    label: "UTCI (universal heat-stress), anomaly vs neutral-season average" },
+    { value: "utci_max_absolute",   label: "UTCI, absolute mean" },
+    { value: "tmax_anomaly",        label: `${window.ensoIndexName("tmax")}, anomaly vs neutral-season average` },
+    { value: "tmax_absolute",       label: `${window.ensoIndexName("tmax")}, absolute mean` },
+    { value: "hw_days_anomaly",     label: "Daytime heatwave days, anomaly vs neutral-season average" },
+    { value: "hw_days_absolute",    label: "Daytime heatwave days, absolute" },
+    { value: "hw_nights_anomaly",   label: "Nighttime heatwave days, anomaly vs neutral-season average" },
+    { value: "hw_nights_absolute",  label: "Nighttime heatwave days, absolute" },
+    { value: "hw_compound_anomaly", label: "Compound (day+night) heatwave days, anomaly vs neutral-season average" },
+    { value: "hw_compound_absolute",label: "Compound (day+night) heatwave days, absolute" },
     // Fixed-temperature health thresholds (Aug 2026). Grouped after the
     // percentile-based layers, and labelled with the actual cut-off so the
     // reader never has to guess what "strong" means. See methodology.html
     // #heat-thresholds for why the absolute counts are ERA5-first.
-    { value: "utci_strong_absolute",      label: "Days with UTCI 32 to 38 °C - absolute" },
-    { value: "utci_strong_anomaly",       label: "Days with UTCI 32 to 38 °C - anomaly vs neutral-season average" },
-    { value: "utci_vstrong_absolute",     label: "Days with UTCI 38 to 46 °C - absolute" },
-    { value: "utci_vstrong_anomaly",      label: "Days with UTCI 38 to 46 °C - anomaly vs neutral-season average" },
-    { value: "utci_extreme_absolute",     label: "Days with UTCI 46 °C and above - absolute" },
-    { value: "utci_extreme_anomaly",      label: "Days with UTCI 46 °C and above - anomaly vs neutral-season average" },
-    { value: "wbgt_strong_absolute",      label: "Days with WBGT 29 to 31 °C - absolute" },
-    { value: "wbgt_strong_anomaly",       label: "Days with WBGT 29 to 31 °C - anomaly vs neutral-season average" },
-    { value: "wbgt_vstrong_absolute",     label: "Days with WBGT 31 to 32 °C - absolute" },
-    { value: "wbgt_vstrong_anomaly",      label: "Days with WBGT 31 to 32 °C - anomaly vs neutral-season average" },
-    { value: "wbgt_extreme_absolute",     label: "Days with WBGT 32 °C and above - absolute" },
-    { value: "wbgt_extreme_anomaly",      label: "Days with WBGT 32 °C and above - anomaly vs neutral-season average" },
-    { value: "night_tropical_absolute",   label: "Nights 20 to 25 °C (tropical) - absolute" },
-    { value: "night_tropical_anomaly",    label: "Nights 20 to 25 °C (tropical) - anomaly vs neutral-season average" },
-    { value: "night_equatorial_absolute", label: "Nights 25 to 30 °C (equatorial) - absolute" },
-    { value: "night_equatorial_anomaly",  label: "Nights 25 to 30 °C (equatorial) - anomaly vs neutral-season average" },
-    { value: "night_torrid_absolute",     label: "Nights 30 °C and above (torrid) - absolute" },
-    { value: "night_torrid_anomaly",      label: "Nights 30 °C and above (torrid) - anomaly vs neutral-season average" },
+    { value: "utci_strong_absolute",      label: "Days with UTCI 32 to 38 °C, absolute" },
+    { value: "utci_strong_anomaly",       label: "Days with UTCI 32 to 38 °C, anomaly vs neutral-season average" },
+    { value: "utci_vstrong_absolute",     label: "Days with UTCI 38 to 46 °C, absolute" },
+    { value: "utci_vstrong_anomaly",      label: "Days with UTCI 38 to 46 °C, anomaly vs neutral-season average" },
+    { value: "utci_extreme_absolute",     label: "Days with UTCI 46 °C and above, absolute" },
+    { value: "utci_extreme_anomaly",      label: "Days with UTCI 46 °C and above, anomaly vs neutral-season average" },
+    { value: "wbgt_strong_absolute",      label: "Days with WBGT 29 to 31 °C, absolute" },
+    { value: "wbgt_strong_anomaly",       label: "Days with WBGT 29 to 31 °C, anomaly vs neutral-season average" },
+    { value: "wbgt_vstrong_absolute",     label: "Days with WBGT 31 to 32 °C, absolute" },
+    { value: "wbgt_vstrong_anomaly",      label: "Days with WBGT 31 to 32 °C, anomaly vs neutral-season average" },
+    { value: "wbgt_extreme_absolute",     label: "Days with WBGT 32 °C and above, absolute" },
+    { value: "wbgt_extreme_anomaly",      label: "Days with WBGT 32 °C and above, anomaly vs neutral-season average" },
+    { value: "night_tropical_absolute",   label: "Nights 20 to 25 °C (tropical), absolute" },
+    { value: "night_tropical_anomaly",    label: "Nights 20 to 25 °C (tropical), anomaly vs neutral-season average" },
+    { value: "night_equatorial_absolute", label: "Nights 25 to 30 °C (equatorial), absolute" },
+    { value: "night_equatorial_anomaly",  label: "Nights 25 to 30 °C (equatorial), anomaly vs neutral-season average" },
+    { value: "night_torrid_absolute",     label: "Nights 30 °C and above (torrid), absolute" },
+    { value: "night_torrid_anomaly",      label: "Nights 30 °C and above (torrid), anomaly vs neutral-season average" },
   ],
   // vector (dengue/malaria suitability) removed 2026-06-23 - teleconnections
   // tab keeps heat + precip metrics only.
@@ -552,8 +497,12 @@ window.setHazard = function(hazard, opts) {
   _currentHazard = hazard;
   for (const h of ["wet", "dry", "heat"]) {
     const btn = document.getElementById("hazard-" + h);
-    if (btn) btn.classList.toggle("active", hazard === h);
+    if (btn) {
+      btn.classList.toggle("active", hazard === h);
+      btn.setAttribute("aria-pressed", hazard === h ? "true" : "false");
+    }
   }
+  _syncKey();
   // Move the source to one that can answer this hazard, keeping the current
   // one when it can. Silent because it is bookkeeping, not a choice the reader
   // made: they asked for heat, and this is simply where heat comes from.
@@ -613,7 +562,8 @@ function _renderData() {
   if (!_currentTile) return;
 
   const { meta, scale, lats, lons, ri, ci, v, va } = _currentTile;
-  const { vmax, symmetric, vmin, cmap } = meta;
+  const { vmax, symmetric, vmin } = meta;
+  const cmap = _rampFor(meta);
   const _vmin = symmetric ? -Math.abs(vmax) : (vmin != null ? vmin : 0);
   const _vmax = symmetric ?  Math.abs(vmax) : vmax;
 
@@ -736,6 +686,10 @@ function _pointInFeature(lon, lat, feature) {
 
 // ── SVG border layer ──────────────────────────────────────────────────────────
 
+// Line colours from the CSS tokens (style.css), as in the paper figures:
+// boundaries 0.5 px ink at 40%, graticule 0.5 px grid, the selected country 1.5 px ink.
+const _tok = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
 function _renderSVG() {
   _svg.selectAll("*").remove();
 
@@ -743,8 +697,8 @@ function _renderSVG() {
   _svg.append("path")
     .datum({type: "Sphere"})
     .attr("d", _pathGen)
-    .attr("fill", "#c8d8e8")
-    .attr("stroke", "#aab8c8")
+    .attr("fill", _tok("--map-ocean"))   // the globe's ocean, as before (#c8d8e8)
+    .attr("stroke", _tok("--rule"))
     .attr("stroke-width", 0.5);
 
   // Graticule
@@ -753,7 +707,7 @@ function _renderSVG() {
     .datum(graticule)
     .attr("d", _pathGen)
     .attr("fill", "none")
-    .attr("stroke", "rgba(100,120,140,0.25)")
+    .attr("stroke", _tok("--grid"))
     .attr("stroke-width", 0.5);
 
   // Country borders
@@ -764,8 +718,9 @@ function _renderSVG() {
       .join("path")
       .attr("d", _pathGen)
       .attr("fill", "transparent")
-      .attr("stroke", "rgba(60,60,80,0.55)")
-      .attr("stroke-width", 0.4)
+      .attr("stroke", _tok("--ink"))
+      .attr("stroke-opacity", 0.4)
+      .attr("stroke-width", 0.5)
       .attr("class", "country-border")
       .style("cursor", _drillLevel < 2 ? "pointer" : "default")
       .on("click", (event, d) => { event.stopPropagation(); _onCountryClick(d); });
@@ -777,7 +732,7 @@ function _renderSVG() {
       .datum(_maskFeature)
       .attr("d", _pathGen)
       .attr("fill", "none")
-      .attr("stroke", "#222")
+      .attr("stroke", _tok("--ink"))
       .attr("stroke-width", 1.5);
   }
 }
@@ -999,8 +954,8 @@ const _MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","No
 // Both forecast models, as on the Forecast page. ?v= is bumped with each build;
 // no-store because the files are small and change monthly.
 const _FC_FILES = [
-  { key: "seas5", name: "SEAS5", file: "data/forecast.json?v=20261019b" },
-  { key: "mf9", name: "Météo-France", file: "data/forecast_mf9.json?v=20261019b" },
+  { key: "seas5", name: "SEAS5", file: "data/forecast.json?v=20261019c" },
+  { key: "mf9", name: "Météo-France", file: "data/forecast_mf9.json?v=20261019c" },
 ];
 const _PANEL_VAR = {
   wet: { variable: "rx10day_anomaly", units: "mm", up: "heavier", down: "lighter" },
@@ -1175,7 +1130,7 @@ async function loadAndRender() {
     }
     if (source === "obs" && note.includes("Americas only") &&
         _drillLevel >= 1 && !OBS_SUBREGIONS.has(_subregionId)) {
-      note += "  ·  No CHIRPS data here - switch to CESM2.";
+      note += "  ·  No CHIRPS data here; switch to CESM2.";
     }
     document.getElementById("coverage-note").textContent = note;
 
@@ -1183,6 +1138,7 @@ async function loadAndRender() {
     const hasAgreement = Array.isArray(_currentTile.va) && _currentTile.va.length > 0;
     const stippRow = document.getElementById("stipple-toggle-row");
     if (stippRow) stippRow.style.display = hasAgreement ? "" : "none";
+    _syncKey();
 
     // No agreement at all on a single-intensity OBSERVED layer is deliberate,
     // not missing data: 1-7 events per class cannot support a sign test, and
@@ -1207,9 +1163,9 @@ async function loadAndRender() {
       }
       if (below === 0 && nEv != null && nEv < 8) {
         document.getElementById("coverage-note").textContent = note +
-          `  ·  Too few events (n = ${nEv}) to test robustness here: agreement can only take a few ` +
-          `values and never drops below ${Math.round(STIPPLE_THRESHOLD * 100)}%, so the absence of ` +
-          `dots is a small-sample limit, not evidence of a robust signal. Switch to CESM2 for a real test.`;
+          `  ·  Too few events (n = ${nEv}) to test robustness here: agreement never drops below ` +
+          `${Math.round(STIPPLE_THRESHOLD * 100)}%, so the lack of dots reflects the small sample, not a robust signal. ` +
+          `CESM2 gives a real test.`;
       }
     }
 
@@ -1226,8 +1182,20 @@ async function loadAndRender() {
 window.toggleStippling = function() {
   const cb = document.getElementById("ctrl-stipple");
   if (cb) _showStippling = cb.checked;
+  _syncKey();
   _redraw();
 };
+
+// The map's key box says what the marks on the current map mean: the dots line
+// only while dots can be drawn and are switched on, the desert line on the rain
+// and dry-day maps (heat maps do not have that problem).
+function _syncKey() {
+  const stippRow = document.getElementById("stipple-toggle-row");
+  const dots = document.getElementById("key-dots");
+  if (dots) dots.hidden = !(stippRow && stippRow.style.display !== "none" && _showStippling);
+  const desert = document.getElementById("key-desert");
+  if (desert) desert.hidden = _currentHazard === "heat";
+}
 
 window.setProbThreshold = function() {
   const sel = document.getElementById("ctrl-prob-threshold");
@@ -1259,6 +1227,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     .append("svg")
     .attr("width",  _W)
     .attr("height", _H)
+    .attr("viewBox", `0 0 ${_W} ${_H}`)   // lets print scale the globe to the page
     .style("position", "absolute")
     .style("top", "0")
     .style("left", "0");

@@ -3,244 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teleconnections - ENSOscope</title>
+  <title>Teleconnections | ENSOscope</title>
   <meta name="description" content="Interactive El Niño / La Niña teleconnection maps: how each ENSO phase shifts rainfall, drought and heat stress by region and season.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/map_explorer.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261019b">
+  <link rel="stylesheet" href="static/css/style.css?v=20261019c">
   <style>
-    /* ── Map page layout ───────────────────────────────────────────────── */
-    .map-page { display: flex; flex-direction: column; gap: 1rem; }
+    /* Teleconnections page layout. Colours, type and radii come from the tokens in style.css. */
 
-    /* Controls bar */
-    .map-controls {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem;
-      background: var(--surface-2, #f0f4f8);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-    }
-    .map-ctrl-group { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; max-width: 100%; }
-    .map-ctrl-group label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
+    /* Fig. 1: the teleconnection chain, ink lines on light zones */
+    .tc-chain { margin: var(--s4) 0 0; }
+    .tc-chain svg { display: block; width: 100%; height: auto; }
+    .tc-chain .narrow { display: none; max-width: 300px; margin: 0 auto; }
+    .tc-zone  { fill: var(--zone); }
+    .tc-ico   { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .tc-arrow { fill: none; stroke: var(--ink); stroke-width: 1.2; }
+    .tc-head  { fill: var(--ink); }
+    .tc-title { fill: var(--ink); font-weight: 600; font-size: 14.5px; }
+    .tc-sub   { fill: var(--muted); font-size: 12.5px; }
+
+    /* Controls card */
+    .map-controls { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--s4); }
+    .map-ctrl-group { display: flex; flex-direction: column; gap: var(--s1); min-width: 0; max-width: 100%; }
+    .map-ctrl-group > label { font-size: var(--fs-sm); color: var(--muted); }
     .map-ctrl-group select {
-      padding: 0.3rem 0.55rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--card-bg);
-      color: var(--text);
-      font-size: 0.85rem;
-      cursor: pointer;
-      min-width: 160px;
+      font: inherit; font-size: var(--fs-ui); color: var(--ink);
+      background: var(--page) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235F6B76' stroke-width='1.4'/%3E%3C/svg%3E") no-repeat right 12px center;
+      border: 1px solid var(--rule); border-radius: var(--r-ctl);
+      padding: 8px 32px 8px 10px; min-height: 40px; min-width: 160px;
       max-width: 100%;   /* long metric names must not widen the page on a phone */
+      appearance: none; -webkit-appearance: none; cursor: pointer;
     }
-    .map-ctrl-group select:focus { outline: none; border-color: var(--accent); }
+    .map-ctrl-group select:hover { border-color: var(--ink); }
+    .ctrl-note { font-size: var(--fs-sm); color: var(--muted); max-width: 22rem; }
+    .stipple-check { display: flex; align-items: center; gap: var(--s2); min-height: 40px; font-size: var(--fs-ui); color: var(--ink); cursor: pointer; }
 
-    /* Map container */
-    #map-container {
-      position: relative;
-      border-radius: var(--radius);
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-    }
-    #map { height: 560px; background: transparent; position: relative; }
-
-    /* Colorbar */
-    #colorbar {
-      position: absolute;
-      bottom: 28px;
-      right: 12px;
-      background: rgba(255,255,255,0.92);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.5rem 0.65rem;
-      font-size: 0.75rem;
-      z-index: 500;
-      min-width: 160px;
-    }
-    #colorbar-title { font-weight: 600; margin-bottom: 4px; font-size: 0.72rem; color: var(--text); }
-    #colorbar-bar {
-      height: 12px;
-      border-radius: 3px;
-      margin-bottom: 3px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    #colorbar-labels {
-      display: flex;
-      justify-content: space-between;
-      color: var(--text-muted);
-      font-size: 0.68rem;
-    }
-
-    /* Tooltip */
-    #map-tooltip {
-      position: absolute;
-      pointer-events: none;
-      background: rgba(20,30,50,0.88);
-      color: #fff;
-      padding: 0.35rem 0.6rem;
-      border-radius: 5px;
-      font-size: 0.78rem;
-      z-index: 600;
-      display: none;
-      white-space: nowrap;
-    }
-
-    /* Drill-down breadcrumb on map */
-    #map-breadcrumb {
-      position: absolute;
-      top: 10px;
-      left: 12px;
-      z-index: 500;
-      background: rgba(255,255,255,0.92);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 0.3rem 0.75rem;
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .bc-item { cursor: pointer; color: var(--accent); font-weight: 600; }
-    .bc-item:hover { text-decoration: underline; }
-    .bc-item.bc-current { color: var(--text); cursor: default; font-weight: 600; }
-    .bc-sep { color: var(--text-muted); }
-
-    /* Loading overlay */
-    /* Hidden by default; map_explorer.js sets display inline to "flex" while a
-       layer loads. The rule used to declare display twice, flex then none, so
-       the flex never applied and a reader had to check the JS to find out which
-       one the element actually got. align-items and justify-content stay: they
-       take effect the moment the script switches it on. */
-    #map-loading {
-      position: absolute;
-      inset: 0;
-      background: rgba(255,255,255,0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 700;
-      font-weight: 600;
-      color: var(--accent);
-      font-size: 0.95rem;
-    }
-
-    /* Coverage note */
-    #coverage-note {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      padding: 0.3rem 0;
-    }
-
-    /* Hazard toggle */
-    .hazard-toggle {
-      display: flex;
-      gap: 0.3rem;
-    }
-    .hazard-btn {
-      padding: 0.28rem 0.7rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--card-bg);
-      color: var(--text-muted);
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-    .hazard-btn.active {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-    }
+    /* Hazard toggle: a segmented control */
+    .hazard-btn.active { background: var(--key); font-weight: 600; box-shadow: inset 0 -2px 0 var(--link); }
     /* A hazard the CURRENT source cannot answer. Marked, never hidden: hiding
        it is how the heat maps went missing for MSF for weeks while all 270
        layers per season sat on the server. Clicking one moves the source. */
-    .hazard-btn.other-source:not(.active) {
-      border-style: dashed;
-      color: #7d8b98;
-    }
-    .hazard-btn.other-source:not(.active)::after {
-      content: " \2022";
-      color: var(--accent);
+    .hazard-btn.other-source:not(.active) { color: var(--muted); }
+    .hazard-btn.other-source:not(.active)::after { content: " \2022"; color: var(--link); }
+
+    /* Fig. 2: the map in its figure card */
+    #map-container { position: relative; overflow: hidden; }
+    #map { height: 560px; background: transparent; position: relative; }
+
+    /* Colour bar, inside the key box under the map */
+    .cbar { display: flex; flex-direction: column; gap: var(--s1); width: 280px; max-width: 100%; }
+    #colorbar-title { font-size: var(--fs-sm); color: var(--ink); }
+    #colorbar-bar { width: 100%; height: 10px; display: block; }
+    #colorbar-labels { display: flex; justify-content: space-between; color: var(--tick); font-size: var(--fs-xs); font-variant-numeric: tabular-nums; }
+    .sw-dots { width: 12px; height: 12px; display: inline-block; }
+    .sw-dots-mark { fill: rgba(40, 40, 40, 0.55); }   /* the same dots as on the map */
+
+    /* Tooltip */
+    #map-tooltip {
+      position: absolute; pointer-events: none; display: none; white-space: nowrap; z-index: 600;
+      background: var(--page); color: var(--ink); border: var(--hair); border-radius: var(--r-ctl);
+      padding: var(--s1) var(--s2); font-size: var(--fs-sm);
     }
 
-    /* Alert panel */
-    #alert-panel {
-      display: none;
-      background: var(--surface-2, #f0f4f8);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.9rem 1.1rem;
+    /* Drill-down breadcrumb on the map */
+    #map-breadcrumb {
+      position: absolute; top: var(--s3); left: var(--s3); z-index: 500;
+      display: flex; align-items: center; gap: var(--s2);
+      background: var(--page); border: var(--hair); border-radius: var(--r-ctl);
+      padding: var(--s1) var(--s3); font-size: var(--fs-sm);
     }
-    #alert-panel h3 {
-      margin: 0 0 0.6rem 0;
-      font-size: 0.9rem;
-      color: var(--text);
+    .bc-item { cursor: pointer; color: var(--link); font-weight: 600; }
+    .bc-item:hover { text-decoration: underline; }
+    .bc-item.bc-current { color: var(--ink); cursor: default; }
+    .bc-sep { color: var(--muted); }
+
+    /* Loading overlay. Hidden by default; map_explorer.js sets display inline to
+       "flex" while a layer loads, and align-items/justify-content take effect then. */
+    #map-loading {
+      position: absolute; inset: 0; display: none; align-items: center; justify-content: center; z-index: 700;
+      background: rgba(255, 255, 255, 0.7); color: var(--ink); font-weight: 600; font-size: var(--fs-ui);
     }
+
+    /* Coverage note, in the caption */
+    #coverage-note:empty { display: none; }
+
+    /* ENSO forecast and past events for the selected country */
+    #alert-panel { display: none; margin-top: var(--s6); }
+    #alert-panel h3 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--s2); }
+    #alert-intro { font-size: var(--fs-sm); color: var(--muted); margin-bottom: var(--s3); max-width: none; }
     .alert-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8rem;
+      width: 100%; border-collapse: collapse; font-size: var(--fs-ui); line-height: var(--lh-tight);
+      border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); font-variant-numeric: tabular-nums;
     }
-    .alert-table th {
-      text-align: left;
-      padding: 0.25rem 0.5rem;
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-    }
-    .alert-table td {
-      padding: 0.28rem 0.5rem;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-      vertical-align: middle;
-    }
-    .signal-pill {
-      display: inline-block;
-      padding: 0.15rem 0.55rem;
-      border-radius: 10px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .signal-watch   { background: #fef3c7; color: #92400e; }
-    .signal-alert   { background: #fee2e2; color: #991b1b; }
-    .signal-neutral { background: #f1f5f9; color: #64748b; }
-    .signal-positive{ background: #dcfce7; color: #166534; }
+    .alert-table th { text-align: left; font-weight: 600; color: var(--ink); padding: 7px var(--s3); border-bottom: 1px solid var(--rule); vertical-align: bottom; }
+    .alert-table td { padding: 7px var(--s3); vertical-align: baseline; }
+    .alert-table tr + tr td { border-top: var(--hair); }
+    .alert-table th:first-child, .alert-table td:first-child { padding-left: 0; }
     /* Phones: one card per forecast month instead of a six-column table */
     @media (max-width: 640px) {
       .alert-table thead { display: none; }
-      .alert-table tr { display: block; padding: 0.4rem 0; border-bottom: 1px solid var(--border); }
-      .alert-table td { display: block; border: 0; padding: 0.12rem 0.2rem; }
-      .alert-table td::before { content: attr(data-label) ": "; font-weight: 600; color: var(--text-muted); }
+      .alert-table tr { display: block; padding: var(--s2) 0; }
+      .alert-table tr + tr { border-top: var(--hair); }
+      .alert-table td { display: block; padding: 2px 0; }
+      .alert-table tr + tr td { border-top: 0; }
+      .alert-table td::before { content: attr(data-label) ": "; font-weight: 600; color: var(--muted); }
     }
-    #alert-note {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      margin-top: 0.5rem;
+    #alert-note { font-size: var(--fs-sm); color: var(--muted); margin-top: var(--s2); max-width: none; }
+
+    @media (max-width: 600px) {
+      .tc-chain .wide { display: none; }
+      .tc-chain .narrow { display: block; }
+      .map-ctrl-group, .map-ctrl-group select { width: 100%; }
+      .hazard-toggle { display: flex; }
+      .hazard-toggle button { flex: 1; }
+    }
+    @media print {
+      .tc-chain .wide { display: block !important; }
+      .tc-chain .narrow { display: none !important; }
+      .tc-zone, #colorbar-bar, .sw-dots { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      /* The globe is drawn at its screen size: scale the canvas and the SVG
+         together to the page width instead of cropping them. */
+      #map { height: auto !important; }
+      #map svg { position: relative !important; width: 100% !important; height: auto !important; display: block; }
+      #map-container canvas { width: 100% !important; height: auto !important; }
     }
   </style>
-  <link rel="icon" type="image/png" href="favicon.png?v=20261019b">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261019c">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="map_explorer">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019b" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019c" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -273,91 +168,35 @@
   </header>
 
   <main>
-    <h1 class="page-title">Teleconnections - Interactive ENSO Rainfall Map</h1>
+    <h1 class="page-title">Teleconnections</h1>
     <p class="page-subtitle">
-      Gridded phase-composite rainfall indicators on an interactive globe.
+      Interactive ENSO Rainfall Map. Gridded phase-composite rainfall indicators on an interactive globe.
       Drag to rotate · Scroll to zoom · Click a country to drill down.
     </p>
 
-    <div class="card">
-      <h2>What am I looking at?</h2>
-      <p style="font-size:0.9rem;margin-bottom:0.8rem">
-        A <strong>teleconnection</strong> is the tendency for El Niño or La Niña in the Pacific to shift
-        conditions far away. Each map shows, for the chosen ENSO phase and season, how a rainfall, drought
-        or heat indicator typically <strong>departs from the neutral-season average</strong> - built by compositing every past
-        event of that phase. Set the <em>source</em>, <em>season</em>, <em>phase</em> and <em>hazard</em>
-        above: blue areas are wetter or cooler than usual, brown/red drier or hotter.
-      </p>
-      <div style="margin:0.2rem 0 0.6rem;overflow-x:auto">
-        <svg viewBox="0 0 820 170" width="100%" style="display:block;margin:0 auto;max-width:820px;min-width:540px;height:auto" role="img"
-             aria-label="How a teleconnection works: a shift in the tropical Pacific changes the atmosphere, which changes rainfall and heat in your region.">
-          <!-- boxes -->
-          <rect x="6"   y="14" width="230" height="124" rx="12" fill="#E8F4F6" stroke="#BCE0E6"/>
-          <rect x="295" y="14" width="230" height="124" rx="12" fill="#EEF3F8" stroke="#D3E0EC"/>
-          <rect x="584" y="14" width="230" height="124" rx="12" fill="#FCEFEA" stroke="#F6D2C2"/>
-          <!-- 1: sun over ocean -->
-          <circle cx="121" cy="44" r="11" fill="none" stroke="#1597A5" stroke-width="2.5"/>
-          <path d="M100 64 q10.5 -9 21 0 t21 0" fill="none" stroke="#1597A5" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- 2: wind -->
-          <path d="M392 40 h26 a6 6 0 1 0 -6 -6"  fill="none" stroke="#3A6EA5" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M392 53 h34 a6 6 0 1 1 -6 6"   fill="none" stroke="#3A6EA5" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M392 66 h20"                    fill="none" stroke="#3A6EA5" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- 3: map pin -->
-          <path d="M699 31 a13 13 0 0 1 13 13 c0 10 -13 23 -13 23 s-13 -13 -13 -23 a13 13 0 0 1 13 -13 z" fill="none" stroke="#EE6C3A" stroke-width="2.5"/>
-          <circle cx="699" cy="44" r="4.6" fill="#EE6C3A"/>
-          <!-- arrows -->
-          <path d="M244 76 h36" stroke="#9DB2C6" stroke-width="3" stroke-linecap="round"/>
-          <path d="M276 70 l9 6 -9 6" fill="none" stroke="#9DB2C6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M533 76 h36" stroke="#9DB2C6" stroke-width="3" stroke-linecap="round"/>
-          <path d="M565 70 l9 6 -9 6" fill="none" stroke="#9DB2C6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-          <!-- titles (drawn on top of the boxes) -->
-          <text text-anchor="middle" font-weight="700" font-size="14.5" fill="#0B2138">
-            <tspan x="121" y="92">1 · The Pacific shifts</tspan>
-            <tspan x="410" y="92">2 · The atmosphere reacts</tspan>
-            <tspan x="699" y="92">3 · Your region feels it</tspan>
-          </text>
-          <!-- sub labels -->
-          <text text-anchor="middle" font-size="12.5" fill="#5E7488">
-            <tspan x="121" y="111">El Niño warms it,</tspan><tspan x="121" y="127">La Niña cools it</tspan>
-            <tspan x="410" y="111">winds and storm</tspan><tspan x="410" y="127">tracks move</tspan>
-            <tspan x="699" y="111">rainfall, drought</tspan><tspan x="699" y="127">and heat change</tspan>
-          </text>
-        </svg>
-      </div>
-      <p style="font-size:0.82rem;color:var(--text-muted);margin:0 0 0.8rem">
-        That chain is a <strong>teleconnection</strong> - how a shift in the Pacific reaches regions far away.
-        The maps below show <strong>step 3</strong> for the phase and season you choose.
-      </p>
-      <div class="skill-definitions">
-        <p><strong>New here?</strong> Leave <em>Source</em> on its default, pick a <em>Hazard</em> and a
+    <p class="callout"><strong>New here?</strong> Leave <em>Source</em> on its default, pick a <em>Hazard</em> and a
            <em>Season</em>, and read the colour. Every term below is explained in plain words on the
            <a href="guide.html">Guide</a>.</p>
-        <p><strong>Where the maps come from.</strong> They use rainfall that actually fell
-           (<strong>CHIRPS</strong>) and a reanalysis for heat (<strong>ERA5</strong>), plus a climate
-           model run many times (<strong>CESM2</strong>) that fills in where the real record has too few
-           strong events for a clear map.</p>
-        <p><strong>What each hazard shows.</strong> <em>Wet</em> is the heaviest 10-day rainfall (Rx10day),
-           a flood-risk sign. <em>Drought</em> is the longest run of dry days (CDD). <em>Heat stress</em>
-           uses WBGT, a "feels-like" heat number combining temperature and humidity (high means dangerous
-           heat for the body), and UTCI, a similar comfort index.</p>
-        <p><strong>Anomaly vs absolute.</strong> "Anomaly" is the difference from the
-           <strong>neutral-season average</strong>, so it shows just the El Niño / La Niña effect. That average
-           is the mean of past neutral seasons, one per neutral period, chosen by the same full-season rule as
-           the El Niño and La Niña seasons, so like is compared with like. The Event replay and the country
-           packs compare with <em>normal</em> instead, the average of every neutral month, so their numbers
-           differ slightly. "Absolute" is the raw value during that phase.
-           Robustness dots appear in the anomaly view only. They answer "did past events agree on the
-           <em>direction</em> of the change?", and the absolute view shows no change, only the average
-           level during that phase, so there is nothing for the events to agree or disagree about.</p>
-        <p><strong>Reading dry regions.</strong> Over near-rainless places such as the Sahara or Arabian
-           Peninsula, a rainfall change is mostly noise, so treat colour over deserts with caution. Dots mark
-           places where fewer than 60% of past events agreed on the direction of the change.</p>
-      </div>
-    </div>
 
-    <div class="card map-page">
+    <section class="section">
+      <h2>What am I looking at?</h2>
+      <p class="prose">A <strong>teleconnection</strong> is the tendency for El Niño or La Niña in the Pacific to shift
+        conditions far away. Each map shows, for the chosen ENSO phase and season, how a rainfall, drought
+        or heat indicator typically <strong>departs from the neutral-season average</strong>, built by compositing every past
+        event of that phase. Set the <em>source</em>, <em>season</em>, <em>phase</em> and <em>hazard</em>
+        below: teal areas are wetter and brown drier than usual; blue areas are cooler and red hotter.</p>
+      <figure class="fig tc-chain">
+        <div>
+          <svg class="wide" viewBox="0 0 820 152" role="img" aria-label="How a teleconnection works: a shift in the tropical Pacific changes the atmosphere, which changes rainfall and heat in your region."><defs><marker id="tc-ah-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="tc-head" d="M0 0 L10 5 L0 10 z"/></marker></defs><rect class="tc-zone" x="6" y="14" width="230" height="124" rx="8"/><circle class="tc-ico" cx="121" cy="44" r="11"/><path class="tc-ico" d="M100 64 q10.5 -9 21 0 t21 0"/><text class="tc-title" text-anchor="middle" x="121" y="92">1 · The Pacific shifts</text><text class="tc-sub" text-anchor="middle"><tspan x="121" y="111">El Niño warms it,</tspan><tspan x="121" y="127">La Niña cools it</tspan></text><rect class="tc-zone" x="295" y="14" width="230" height="124" rx="8"/><path class="tc-ico" d="M392 40 h26 a6 6 0 1 0 -6 -6"/><path class="tc-ico" d="M392 53 h34 a6 6 0 1 1 -6 6"/><path class="tc-ico" d="M392 66 h20"/><text class="tc-title" text-anchor="middle" x="410" y="92">2 · The atmosphere reacts</text><text class="tc-sub" text-anchor="middle"><tspan x="410" y="111">winds and storm</tspan><tspan x="410" y="127">tracks move</tspan></text><rect class="tc-zone" x="584" y="14" width="230" height="124" rx="8"/><path class="tc-ico" d="M699 31 a13 13 0 0 1 13 13 c0 10 -13 23 -13 23 s-13 -13 -13 -23 a13 13 0 0 1 13 -13 z"/><circle class="tc-ico" cx="699" cy="44" r="4.6"/><text class="tc-title" text-anchor="middle" x="699" y="92">3 · Your region feels it</text><text class="tc-sub" text-anchor="middle"><tspan x="699" y="111">rainfall, drought</tspan><tspan x="699" y="127">and heat change</tspan></text><path class="tc-arrow" d="M242 76 H289" marker-end="url(#tc-ah-w)"/><path class="tc-arrow" d="M531 76 H578" marker-end="url(#tc-ah-w)"/></svg>
+          <svg class="narrow" viewBox="0 0 300 430" aria-hidden="true"><defs><marker id="tc-ah-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="tc-head" d="M0 0 L10 5 L0 10 z"/></marker></defs><g transform="translate(29 -10)"><rect class="tc-zone" x="6" y="14" width="230" height="124" rx="8"/><circle class="tc-ico" cx="121" cy="44" r="11"/><path class="tc-ico" d="M100 64 q10.5 -9 21 0 t21 0"/><text class="tc-title" text-anchor="middle" x="121" y="92">1 · The Pacific shifts</text><text class="tc-sub" text-anchor="middle"><tspan x="121" y="111">El Niño warms it,</tspan><tspan x="121" y="127">La Niña cools it</tspan></text></g><g transform="translate(-260 140)"><rect class="tc-zone" x="295" y="14" width="230" height="124" rx="8"/><path class="tc-ico" d="M392 40 h26 a6 6 0 1 0 -6 -6"/><path class="tc-ico" d="M392 53 h34 a6 6 0 1 1 -6 6"/><path class="tc-ico" d="M392 66 h20"/><text class="tc-title" text-anchor="middle" x="410" y="92">2 · The atmosphere reacts</text><text class="tc-sub" text-anchor="middle"><tspan x="410" y="111">winds and storm</tspan><tspan x="410" y="127">tracks move</tspan></text></g><g transform="translate(-549 290)"><rect class="tc-zone" x="584" y="14" width="230" height="124" rx="8"/><path class="tc-ico" d="M699 31 a13 13 0 0 1 13 13 c0 10 -13 23 -13 23 s-13 -13 -13 -23 a13 13 0 0 1 13 -13 z"/><circle class="tc-ico" cx="699" cy="44" r="4.6"/><text class="tc-title" text-anchor="middle" x="699" y="92">3 · Your region feels it</text><text class="tc-sub" text-anchor="middle"><tspan x="699" y="111">rainfall, drought</tspan><tspan x="699" y="127">and heat change</tspan></text></g><path class="tc-arrow" d="M150 130 V151" marker-end="url(#tc-ah-n)"/><path class="tc-arrow" d="M150 280 V301" marker-end="url(#tc-ah-n)"/></svg>
+        </div>
+        <figcaption><b>Fig. 1. How a teleconnection works.</b> A <strong>teleconnection</strong> is how a shift in the Pacific reaches regions far away.
+        The maps below show <strong>step 3</strong> for the phase and season you choose.</figcaption>
+      </figure>
+    </section>
 
-      <!-- Controls -->
+    <section class="section">
+      <div class="card no-print">
       <div class="map-controls">
         <div class="map-ctrl-group">
           <label>Source</label>
@@ -377,7 +216,7 @@
           </select>
         </div>
         <div class="map-ctrl-group">
-          <label>ENSO Phase</label>
+          <label>ENSO phase</label>
           <select id="ctrl-phase">
             <!-- Pooled first: they average over every event of that sign
                  regardless of intensity, and they are the only observed option
@@ -396,11 +235,11 @@
           </select>
         </div>
         <div class="map-ctrl-group">
-          <label>Hazard</label>
-          <div class="hazard-toggle">
-            <button class="hazard-btn active" id="hazard-wet" onclick="setHazard('wet')">Wet</button>
-            <button class="hazard-btn" id="hazard-dry" onclick="setHazard('dry')">Drought / Dry</button>
-            <button class="hazard-btn" id="hazard-heat" onclick="setHazard('heat')">Heat stress</button>
+          <span class="ctrl-label" id="hazard-label">Hazard</span>
+          <div class="hazard-toggle seg" role="group" aria-labelledby="hazard-label">
+            <button type="button" class="hazard-btn active" id="hazard-wet" aria-pressed="true" onclick="setHazard('wet')">Wet</button>
+            <button type="button" class="hazard-btn" id="hazard-dry" aria-pressed="false" onclick="setHazard('dry')">Drought / Dry</button>
+            <button type="button" class="hazard-btn" id="hazard-heat" aria-pressed="false" onclick="setHazard('heat')">Heat stress</button>
           </div>
         </div>
         <div class="map-ctrl-group">
@@ -416,11 +255,11 @@
           </select>
         </div>
         <div class="map-ctrl-group" id="stipple-toggle-row" style="display:none">
-          <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer">
+          <label class="stipple-check">
             <input type="checkbox" id="ctrl-stipple" checked onchange="toggleStippling()">
             <span>Show robustness dots</span>
           </label>
-          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.2rem">
+          <div class="ctrl-note">
             Dots mark pixels where &lt;60% of events agree in sign with the composite,
             so the signal there is not robust. Anomaly view only: an absolute value
             has no direction of change to agree on.
@@ -434,36 +273,51 @@
             <option value="50">≥ 50% change</option>
             <option value="75">≥ 75% change</option>
           </select>
-          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem">
+          <div class="ctrl-note">
             <strong>Ratio &gt; 0 %</strong> → more likely than in neutral conditions.<br>
             <strong>Ratio &lt; 0 %</strong> → less likely than in neutral conditions.<br>
             Ratio = (P<sub>phase</sub> − P<sub>neutral</sub>) / P<sub>neutral</sub> × 100.
           </div>
         </div>
       </div>
+      </div>
 
-      <!-- Map -->
+      <figure class="fig">
+      <div class="card">
       <div id="map-container">
         <div id="map"></div>
         <div id="map-breadcrumb">
           <span class="bc-item bc-current" id="bc-continent">World</span>
         </div>
-        <div id="colorbar">
-          <div id="colorbar-title">-</div>
-          <canvas id="colorbar-bar" height="12" style="width:100%;display:block;"></canvas>
-          <div id="colorbar-labels"><span id="cb-min">-</span><span id="cb-mid">0</span><span id="cb-max">-</span></div>
-        </div>
         <div id="map-tooltip"></div>
         <div id="map-loading">Loading data…</div>
       </div>
 
-      <div id="coverage-note"></div>
+      <div class="key">
+        <div class="cbar" id="colorbar">
+          <div id="colorbar-title">-</div>
+          <canvas id="colorbar-bar" height="10"></canvas>
+          <div id="colorbar-labels"><span id="cb-min">-</span><span id="cb-mid">0</span><span id="cb-max">-</span></div>
+        </div>
+        <span class="k" id="key-dots" hidden><svg class="sw-dots" viewBox="0 0 12 12" aria-hidden="true"><g class="sw-dots-mark"><circle cx="3" cy="3" r="1.5"/><circle cx="9" cy="3" r="1.5"/><circle cx="3" cy="9" r="1.5"/><circle cx="9" cy="9" r="1.5"/><circle cx="6" cy="6" r="1.5"/></g></svg>Dots mark
+           places where fewer than 60% of past events agreed on the direction of the change.</span>
+        <span class="note" id="key-desert">Over near-rainless places such as the Sahara or Arabian
+           Peninsula, a rainfall change is mostly noise.</span>
+      </div>
+      </div>
+      <figcaption><b>Fig. 2. Teleconnection map.</b> <span id="coverage-note"></span>
+        <p class="source"><strong>Where the maps come from.</strong> They use rainfall that actually fell
+           (<strong>CHIRPS</strong>) and a reanalysis for heat (<strong>ERA5</strong>), plus a climate
+           model run many times (<strong>CESM2</strong>) that fills in where the real record has too few
+           strong events for a clear map.</p>
+      </figcaption>
+      </figure>
 
       <!-- ENSO forecast and past events, for the selected country (map_explorer.js, forecast_signal.js) -->
       <div id="alert-panel">
         <h3 id="alert-panel-title">ENSO forecast and what past events did here</h3>
-        <p id="alert-intro" style="font-size:0.78rem;color:var(--text-muted);margin:0 0 0.7rem"></p>
-        <div style="overflow-x:auto">
+        <p id="alert-intro"></p>
+        <div class="table-wrap">
         <table class="alert-table" id="alert-table">
           <thead>
             <tr id="alert-head"></tr>
@@ -474,17 +328,35 @@
         <div id="alert-note"></div>
       </div>
 
-    </div><!-- .card -->
+    </section>
+
+    <section class="notes">
+      <h2 class="h3">Notes</h2>
+      <p><strong>What each hazard shows.</strong> <em>Wet</em> is the heaviest 10-day rainfall (Rx10day),
+           a flood-risk sign. <em>Drought</em> is the longest run of dry days (CDD). <em>Heat stress</em>
+           uses WBGT, a "feels-like" heat number combining temperature and humidity (high means dangerous
+           heat for the body), and UTCI, a similar comfort index.</p>
+      <p><strong>Anomaly vs absolute.</strong> "Anomaly" is the difference from the
+           <strong>neutral-season average</strong>, so it shows just the El Niño / La Niña effect. That average
+           is the mean of past neutral seasons, one per neutral period, chosen by the same full-season rule as
+           the El Niño and La Niña seasons, so like is compared with like. The Event replay and the country
+           packs compare with <em>normal</em> instead, the average of every neutral month, so their numbers
+           differ slightly. "Absolute" is the raw value during that phase.
+           Robustness dots appear in the anomaly view only. They answer "did past events agree on the
+           <em>direction</em> of the change?", and the absolute view shows no change, only the average
+           level during that phase, so there is nothing for the events to agree or disagree about.</p>
+    </section>
   </main>
 
-  <script src="static/lib/d3.min.js?v=20261019b"></script>
-  <script src="static/lib/d3-geo-projection.min.js?v=20261019b"></script>
+  <script src="static/lib/d3.min.js?v=20261019c"></script>
+  <script src="static/lib/d3-geo-projection.min.js?v=20261019c"></script>
   <!-- Must precede map_explorer.js: it defines window.ENSOSCOPE_DATA_BASE, which
        decides whether the heavy tiles come from the bucket or this origin. -->
-  <script src="static/js/data_base.js?v=20261019b"></script>
-  <script src="static/js/index_names.js?v=20261019b"></script>
-  <script src="static/js/forecast_signal.js?v=20261019b"></script>
-  <script src="static/js/map_explorer.js?v=20261019b"></script>
-  <script src="static/js/site.js?v=20261019b"></script>
+  <script src="static/js/data_base.js?v=20261019c"></script>
+  <script src="static/js/index_names.js?v=20261019c"></script>
+  <script src="static/js/forecast_signal.js?v=20261019c"></script>
+  <script src="static/js/ramps.js?v=20261019c"></script>
+  <script src="static/js/map_explorer.js?v=20261019c"></script>
+  <script src="static/js/site.js?v=20261019c"></script>
 </body>
 </html>

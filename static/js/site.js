@@ -1,9 +1,10 @@
 /* site.js - shared site chrome loaded on every page:
    - click/tap-to-open nav dropdowns (idempotent; works on touch)
    - "About" nav link
-   - mobile hamburger menu
+   - the Menu button on narrow screens
    - site footer with author credit, contact, and data-source pointer
    - the ENSO meter strip under the header (data/enso_now.json)
+   - the one-line print head (shown only when printing)
    Self-contained and safe to load alongside app.js. */
 (function () {
   function wireNavDropdowns() {
@@ -79,15 +80,19 @@
       var btn = document.createElement("button");
       btn.className = "nav-toggle";
       btn.type = "button";
-      btn.setAttribute("aria-label", "Toggle navigation");
-      btn.innerHTML = "<span></span><span></span><span></span>";
+      btn.setAttribute("aria-expanded", "false");
+      btn.textContent = "Menu";
       btn.addEventListener("click", function (e) {
         e.stopPropagation();
-        headerInner.classList.toggle("nav-open");
+        var open = headerInner.classList.toggle("nav-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
       });
       headerInner.appendChild(btn);
       nav.addEventListener("click", function (e) {
-        if (e.target.tagName === "A") headerInner.classList.remove("nav-open");
+        if (e.target.tagName === "A") {
+          headerInner.classList.remove("nav-open");
+          btn.setAttribute("aria-expanded", "false");
+        }
       });
     }
 
@@ -103,26 +108,30 @@
           '</div>' +
           '<div class="footer-col">' +
             '<div class="footer-title">Explore</div>' +
-            '<a href="guide.html">Guide</a>' +
-            '<a href="index.html">Forecast</a>' +
-            '<a href="map_explorer.html">Teleconnections</a>' +
-            '<a href="event_replay.html">Event replay</a>' +
-            '<a href="hindcast_skill.html">Skill</a>' +
-            '<a href="methodology.html">Methodology and data sources</a>' +
-            '<a href="updates.html">What&rsquo;s new</a>' +
-            '<a href="about.html">About and contact</a>' +
+            '<ul>' +
+            '<li><a href="guide.html">Guide</a></li>' +
+            '<li><a href="index.html">Forecast</a></li>' +
+            '<li><a href="map_explorer.html">Teleconnections</a></li>' +
+            '<li><a href="event_replay.html">Event replay</a></li>' +
+            '<li><a href="hindcast_skill.html">Skill</a></li>' +
+            '<li><a href="methodology.html">Methodology and data sources</a></li>' +
+            '<li><a href="updates.html">What&rsquo;s new</a></li>' +
+            '<li><a href="about.html">About and contact</a></li>' +
+            '</ul>' +
           '</div>' +
           '<div class="footer-col">' +
             '<div class="footer-title">Contact and code</div>' +
-            '<a href="https://iadicarlo.org" target="_blank" rel="noopener">iadicarlo.org</a>' +
-            '<a href="https://github.com/iadicarlo" target="_blank" rel="noopener">github.com/iadicarlo</a>' +
-            '<a href="about.html">Full contact details</a>' +
-            '<a href="https://doi.org/10.5281/zenodo.23366523" target="_blank" rel="noopener" title="Cite ENSOscope (all versions)"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.23366523.svg" alt="DOI 10.5281/zenodo.23366523" style="margin-top:0.3rem"></a>' +
+            '<ul>' +
+            '<li><a href="https://iadicarlo.org" target="_blank" rel="noopener">iadicarlo.org</a></li>' +
+            '<li><a href="https://github.com/iadicarlo" target="_blank" rel="noopener">github.com/iadicarlo</a></li>' +
+            '<li><a href="about.html">Full contact details</a></li>' +
+            '<li><a href="https://doi.org/10.5281/zenodo.23366523" target="_blank" rel="noopener" title="Cite ENSOscope (all versions)">doi:10.5281/zenodo.23366523</a></li>' +
+            '</ul>' +
             '<p class="footer-muted">The datasets ENSOscope uses, their licences and how to cite them are on the Methodology page.</p>' +
           '</div>' +
         '</div>' +
-        '<div class="footer-bottom">For research and humanitarian decision-support. Seasonal forecasts carry real uncertainty; read the Skill and Methodology pages before acting on them.' +
-          '<span style="display:block;margin-top:0.85rem;opacity:0.8">© 2026 Isma Abdelkader Di Carlo · Content licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">CC BY 4.0</a> · Underlying datasets keep their own licenses (see Methodology).</span></div>';
+        '<div class="footer-bottom"><div class="footer-bottom-inner">For research and humanitarian decision-support. Seasonal forecasts carry real uncertainty; read the Skill and Methodology pages before acting on them.' +
+          ' © 2026 Isma Abdelkader Di Carlo · Content licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> · Underlying datasets keep their own licenses (see Methodology).</div></div>';
       document.body.appendChild(f);
     }
   }
@@ -148,7 +157,7 @@
             var b = document.createElement("strong");
             b.textContent = s.title || s.label;
             li.appendChild(b);
-            li.appendChild(document.createTextNode(" - " + (s.reference || s.label) + (s.url ? ", " : ".")));
+            li.appendChild(document.createTextNode(": " + (s.reference || s.label) + (s.url ? ", " : ".")));
             if (s.url) {
               var a = document.createElement("a");
               a.href = s.url; a.target = "_blank"; a.rel = "noopener";
@@ -172,6 +181,7 @@
     neutral: "--neutral",
     moderate_el_nino: "--en-moderate", strong_el_nino: "--en-strong", extreme_el_nino: "--en-extreme"
   };
+
   var SVG_NS = "http://www.w3.org/2000/svg";
 
   function emEl(tag, cls, text) {
@@ -264,34 +274,35 @@
         }
         g.appendChild(bar);
         g.appendChild(emEl("span", "em-end", "El Niño"));
-        inner.appendChild(g);
+        var scale = emEl("div", "em-scale");
+        scale.appendChild(g);
+        var def = emEl("a", "em-def", d.definition_text || "How we measure this");
+        def.href = d.definition_href || "methodology.html#enso-classes";
+        scale.appendChild(def);
+        inner.appendChild(scale);
 
-        // 2. the latest month and its class (the index value is on the scale's tooltip)
+        // 2. now: the latest month and its class (the index value is on the scale's
+        //    tooltip), then since when, and for El Niño the latest eastern Pacific
+        //    rain; whether it counts as an event yet (the catalogue's view) is in the tooltip
         var now = emEl("p", "em-now");
         var b = emEl("strong");
         b.appendChild(emDual(o.line, o.line_short));
         now.appendChild(b);
-        inner.appendChild(now);
-
-        // 3. since when, and for El Niño the latest eastern Pacific rain; whether it
-        //    counts as an event yet (the catalogue's view) is in the tooltip
-        var st = emEl("p", "em-status");
+        var st = emEl("span", "em-status");
         st.appendChild(emDual(o.status_line, o.status_short));
         if (ev.text) st.title = ev.text;
-        inner.appendChild(st);
+        now.appendChild(st);
+        inner.appendChild(now);
 
-        var def = emEl("a", "em-def", d.definition_text || "How we measure this");
-        def.href = d.definition_href || "methodology.html#enso-classes";
-        inner.appendChild(def);
-
-        // 4. the last months of the index, each dot coloured by its month's class
+        // the last months of the index beside "now", each dot coloured by its
+        // month's class (wide screens only)
         if (o.trace && o.trace.length > 1) {
           inner.appendChild(emTrace(o.trace.map(function (t) {
             return { value: t.value, "class": t["class"], label: _emMonth(t.month) };
           }), labelOf));
         }
 
-        // 5. the ENSO forecast, one line, secondary
+        // 3. the ENSO forecast: class swatch and the sentence as a link
         if (fc) {
           var a = emEl("a", "em-fc");
           a.href = fc.href || "index.html";
@@ -313,24 +324,39 @@
       })
       .catch(function () {});
   }
-  // If a line would be cut short, switch the first two lines to their short wording.
+  // If a line would be cut short, switch the two "now" lines to their short wording.
   // Phones have it already from the stylesheet, so this only acts above 768 px.
   // The forecast line is not part of it: it wraps on desktop, and on tablets and
   // phones its short wording fits.
   function emFit(sec) {
     sec.classList.remove("em-fit1");
     if (window.matchMedia("(max-width: 768px)").matches) return;
-    var lines = sec.querySelectorAll(".em-now, .em-status");
+    var lines = sec.querySelectorAll(".em-now strong, .em-status");
     var cut = function () {
       for (var i = 0; i < lines.length; i++) if (lines[i].scrollWidth > lines[i].clientWidth + 1) return true;
       return false;
     };
     if (cut()) sec.classList.add("em-fit1");
   }
+
+  // Print head: one line at the top of the printed page (site, page, data version
+  // where the page loads it, citation). The replay page writes its own.
+  function injectPrintHead() {
+    var main = document.querySelector("main");
+    if (!main || main.querySelector(".print-head, .rp-print-head")) return;
+    var page = document.title.replace(/ \| ENSOscope$/, "");
+    var txt = "ENSOscope, iadicarlo.org/ensoscope. " + page + "." +
+      (window.ENSOSCOPE_DATA_VERSION ? " Data version " + window.ENSOSCOPE_DATA_VERSION + "." : "") +
+      " Cite doi:10.5281/zenodo.23366523";
+    var ph = emEl("p", "print-head", txt);
+    ph.setAttribute("aria-hidden", "true");
+    main.insertBefore(ph, main.firstChild);
+  }
+
   var _EM_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   function _emMonth(ym) { return _EM_MONTHS[parseInt(ym.slice(5, 7), 10) - 1] + " " + ym.slice(0, 4); }
 
-  function init() { injectChrome(); wireNavDropdowns(); renderOutbreakSources(); renderEnsoMeter(); }
+  function init() { injectChrome(); wireNavDropdowns(); renderOutbreakSources(); renderEnsoMeter(); injectPrintHead(); }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
   } else {
