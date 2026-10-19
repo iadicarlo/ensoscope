@@ -7,8 +7,8 @@
   <meta name="description" content="Replay a past El Nino or La Nina month by month for any country: sea surface temperature, rainfall, drought and heat, against every other observed event.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/event_replay.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261017c">
-  <link rel="icon" type="image/png" href="favicon.png?v=20261017c">
+  <link rel="stylesheet" href="static/css/style.css?v=20261019a">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261019a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
     /* Page-local, following the house convention (map_explorer.html does the
@@ -347,6 +347,9 @@
     .rp-pack{display:inline-flex;flex-wrap:wrap;gap:.35rem}
     .rp-pack a.rp-btn{text-decoration:none;color:inherit}
     .rp-pack a[hidden]{display:none}
+    .rp-pack-lang{display:inline-flex;align-items:center;gap:.25rem}.rp-pack-lang[hidden]{display:none}
+    .rp-pack-tier{font-weight:600;font-size:.8rem;align-self:center;margin-left:.2rem}.rp-pack-tier[hidden]{display:none}
+    .rp-pack-lname{font-size:.78rem;color:var(--text-muted)}
     .rp-btn-primary:hover{background:#0f4c8f;color:#fff}
     /* Print-only masthead: on screen it would duplicate the page title. */
     .rp-print-head{display:none}
@@ -451,7 +454,7 @@
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017c" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -510,14 +513,15 @@
           own years at the same point in its own sequence.
         </p>
         <p>
-          Every <strong>impact</strong> on this page comes from the <strong>record</strong>: sea surface
-          temperature from the ENSO indices and rainfall from CHIRPS are observed, heat comes from the
-          ERA5 reanalysis. The one exception
-          is drawn so it cannot be mistaken for anything else: where the selected event is still
-          running, the sea-surface-temperature panel also carries the live <strong>forecast</strong>
-          from ECMWF SEAS5 and Météo-France System 9, dashed and in their own colours. The rainfall
-          and heat panels stop where the record ends, because there is no calibrated forecast of
-          country rainfall or heat behind this site.
+          The past on this page comes from the <strong>record</strong>: sea surface temperature from
+          the ENSO indices and rainfall from CHIRPS are observed, heat comes from the ERA5
+          reanalysis. Two things are forecasts, both drawn dashed so they cannot be mistaken for
+          the record. Where the selected event is still running, the sea-surface-temperature panel
+          carries the live ENSO <strong>forecast</strong> from ECMWF SEAS5 and Météo-France System 9,
+          in their own colours; and the rainfall and temperature charts carry the
+          <strong>regional forecast</strong> from the same two models, corrected day by day against
+          CHIRPS rainfall and the ERA5 reanalysis: the median of the runs and the middle 80% of them,
+          drawn only in months where that model's past forecasts show skill for that region.
         </p>
       </div>
     </div>
@@ -541,20 +545,35 @@
           <button type="button" id="rp-pdf" class="rp-btn rp-btn-primary">Save as PDF</button>
         </div>
         <div class="rp-ctrl">
-          <label>Country pack</label>
+          <label>Downloads for this country</label>
           <span class="rp-pack">
-            <a id="rp-pack-pdf" class="rp-btn" target="_blank" rel="noopener"
-               title="This country's pack: outlook in plain words, maps and charts">PDF</a>
-            <a id="rp-pack-xlsx" class="rp-btn" rel="noopener"
-               title="The same pack with every table behind it, as an Excel workbook">Excel</a>
-            <a id="rp-pack-simple" class="rp-btn" rel="noopener"
-               title="One page for hospital and field teams: what to expect in the coming months, four maps and a region table (Excel, prints on one A4 page)">Simple sheet</a>
-            <a id="rp-pack-simple-fr" class="rp-btn" rel="noopener" lang="fr" hidden
-               title="Fiche d'une page en français pour les équipes de terrain et les hôpitaux (Excel)">Fiche simple (FR)</a>
-            <a id="rp-pack-simple-es" class="rp-btn" rel="noopener" lang="es" hidden
-               title="Hoja de una página en español para los equipos de terreno y los hospitales (Excel)">Hoja simple (ES)</a>
-            <a id="rp-pack-simple-pt" class="rp-btn" rel="noopener" lang="pt" hidden
-               title="Ficha de uma página em português para as equipas de terreno e os hospitais (Excel)">Ficha simples (PT)</a>
+            <span class="rp-pack-tier" title="For hospital and field teams">One-page summary</span>
+            <span class="rp-pack-lang" data-l="en"><span class="rp-pack-lname">English</span>
+              <a id="rp-sum-pdf" class="rp-btn" target="_blank" rel="noopener"
+                 title="One-page summary, for hospital and field teams: the coming months, a region table and maps (PDF, one A4 page)">PDF</a>
+              <a id="rp-sum-xlsx" class="rp-btn" rel="noopener"
+                 title="The same one-page summary as an Excel page, to copy the numbers">Excel</a></span>
+            <span class="rp-pack-lang" data-l="fr" hidden><span class="rp-pack-lname" lang="fr">Français</span>
+              <a id="rp-sum-fr-pdf" class="rp-btn" target="_blank" rel="noopener" lang="fr"
+                 title="Synthèse en une page, pour les équipes de terrain et les hôpitaux (PDF)">PDF</a>
+              <a id="rp-sum-fr-xlsx" class="rp-btn" rel="noopener" lang="fr"
+                 title="Synthèse en une page (Excel)">Excel</a></span>
+            <span class="rp-pack-lang" data-l="es" hidden><span class="rp-pack-lname" lang="es">Español</span>
+              <a id="rp-sum-es-pdf" class="rp-btn" target="_blank" rel="noopener" lang="es"
+                 title="Resumen de una página, para los equipos de terreno y los hospitales (PDF)">PDF</a>
+              <a id="rp-sum-es-xlsx" class="rp-btn" rel="noopener" lang="es"
+                 title="Resumen de una página (Excel)">Excel</a></span>
+            <span class="rp-pack-lang" data-l="pt" hidden><span class="rp-pack-lname" lang="pt">Português</span>
+              <a id="rp-sum-pt-pdf" class="rp-btn" target="_blank" rel="noopener" lang="pt"
+                 title="Resumo de uma página, para hospitais e trabalho de campo (PDF)">PDF</a>
+              <a id="rp-sum-pt-xlsx" class="rp-btn" rel="noopener" lang="pt"
+                 title="Resumo de uma página (Excel)">Excel</a></span>
+            <span class="rp-pack-tier" title="For analysts">Full analysis</span>
+            <span class="rp-pack-lang" data-l="full">
+              <a id="rp-pack-pdf" class="rp-btn" target="_blank" rel="noopener"
+                 title="Full analysis, for analysts: the forecast, the regional forecast with its skill, past El Niño seasons, outbreaks and sources (PDF, English)">PDF</a>
+              <a id="rp-pack-xlsx" class="rp-btn" rel="noopener"
+                 title="The full analysis with every table behind it, as an Excel workbook (English)">Excel</a></span>
           </span>
         </div>
       </div>
@@ -899,12 +918,12 @@
 
   </main>
 
-  <script src="static/lib/d3.min.js?v=20261017c"></script>
-  <script src="static/lib/d3-geo-projection.min.js?v=20261017c"></script>
-  <script src="static/lib/chart.umd.min.js?v=20261017c"></script>
-  <script src="static/js/data_base.js?v=20261017c"></script>
-  <script src="static/js/index_names.js?v=20261017c"></script>
-  <script src="static/js/site.js?v=20261017c"></script>
-  <script src="static/js/event_replay.js?v=20261017c"></script>
+  <script src="static/lib/d3.min.js?v=20261019a"></script>
+  <script src="static/lib/d3-geo-projection.min.js?v=20261019a"></script>
+  <script src="static/lib/chart.umd.min.js?v=20261019a"></script>
+  <script src="static/js/data_base.js?v=20261019a"></script>
+  <script src="static/js/index_names.js?v=20261019a"></script>
+  <script src="static/js/site.js?v=20261019a"></script>
+  <script src="static/js/event_replay.js?v=20261019a"></script>
 </body>
 </html>

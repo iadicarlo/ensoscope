@@ -7,7 +7,7 @@
   <meta name="description" content="A short guide to using ENSOscope: how to read the ENSO forecast, the teleconnection impact maps, and the skill, and how to turn the signal into anticipatory action.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/guide.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261017c">
+  <link rel="stylesheet" href="static/css/style.css?v=20261019a">
   <style>
     .guide-steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
     .guide-steps li { position: relative; padding: 0.55rem 0 0.55rem 2.6rem; border-bottom: 1px solid var(--border); }
@@ -29,14 +29,14 @@
     .schem-wrap svg { display: block; margin: 0 auto; height: auto; }
     .schem-note { font-size: 0.82rem; color: var(--text-muted); margin: 0 0 0.4rem; }
   </style>
-  <link rel="icon" type="image/png" href="favicon.png?v=20261017c">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261019a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="guide">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017c" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -131,7 +131,7 @@
         </li>
         <li>
           <h3>See what past events did</h3>
-          <p>Replay a past El Niño or La Niña month by month for your country, with the floods, droughts, heat waves and outbreaks recorded at the time, and download the country pack.</p>
+          <p>Replay a past El Niño or La Niña month by month for your country, with the floods, droughts, heat waves and outbreaks recorded at the time, and download the One-page summary or the Full analysis.</p>
           <a href="event_replay.html">Open Event replay &rarr;</a>
         </li>
         <li>
@@ -141,7 +141,7 @@
         </li>
         <li class="act">
           <h3>Act on the lead time</h3>
-          <p>Pre-position supplies, brief teams and trigger anticipatory-action plans in the months of warning. The country pack puts the outlook in plain words to share with your team.</p>
+          <p>Pre-position supplies, brief teams and trigger anticipatory-action plans in the months of warning. The One-page summary puts the outlook in plain words to share with your team.</p>
         </li>
       </ol>
     </section>
@@ -180,8 +180,8 @@
           <p>The maps show what an El Niño usually does. Now see what one actually did: open <a href="event_replay.html?event=extreme_el_nino_199705&amp;country=kenya">Event replay for Kenya in the 1997-98 El Niño</a>. Kenya's rainfall climbs far above normal through the short rains of late 1997. The timeline underneath shows a flood on the coast in September 1997 and, under <em>Disease</em>, cholera through 1997 and Rift Valley fever from December 1997, each linked to its source. Move the month slider to follow the season, and compare it with the 2023-24 El Niño side by side. <strong>Why it matters:</strong> a real event shows when the rain came and what followed, which an average cannot.</p>
         </li>
         <li>
-          <h3>Take the country pack</h3>
-          <p>On the same page, download the Kenya <strong>country pack</strong> (PDF or Excel). It gives the outlook for the next three and six months in plain words, with maps, charts and what the published research says about El Niño and disease, ready to share with colleagues who will never open the site.</p>
+          <h3>Take the downloads</h3>
+          <p>On the same page, download Kenya's <strong>One-page summary</strong> (PDF or Excel), for hospital and field teams: the coming months in plain words, the forecast of rain, dry days, maximum temperature and heat-stress days region by region, and maps. The <strong>Full analysis</strong> (PDF or Excel), for analysts, adds the charts, the forecast's skill and what the published research says about El Niño and disease. Both are ready to share with colleagues who will never open the site.</p>
         </li>
         <li>
           <h3>Ask: can I trust it?</h3>
@@ -252,10 +252,11 @@
           region, the number a planner writes down.
         </p>
         <p>
-          <strong>Country pack.</strong> The PDF and Excel buttons next to the country give a pack
-          for that country: the outlook for the next three and six months in plain words, maps of
-          the country, charts, and what peer-reviewed research says about El Niño and disease
-          there. Every chart comes with a line on how to read it. Past El Niño seasons are read in
+          <strong>Downloads.</strong> Next to the country, the <em>One-page summary</em> (for hospital
+          and field teams, PDF and Excel, in English and the country's working language) gives the
+          outlook and the forecast region by region on one page; the <em>Full analysis</em> (for
+          analysts, PDF and Excel) adds maps of the country, charts, and what peer-reviewed research
+          says about El Niño and disease there. Every chart comes with a line on how to read it. Past El Niño seasons are read in
           three levels: <em>drier</em> or <em>wetter</em> when at least 7 in 10 went that way,
           <em>tends drier</em> or <em>tends wetter</em> when 6 in 10 did, each with a median more
           than 5% from normal, and <em>no clear signal</em> otherwise.
@@ -265,11 +266,11 @@
           chose, so you can send someone straight to the same view.
         </p>
         <p class="schem-note">
-          Everything here comes from the record: rainfall is observed (CHIRPS), heat comes from the ERA5
-          reanalysis. The one exception is
-          drawn dashed and labelled: where an event is still running, the sea-surface-temperature
-          panel also carries the live forecast. There is no forecast of country rainfall or heat
-          behind this site, so those panels stop where the observations do.
+          Rainfall is observed (CHIRPS); heat is from the ERA5 reanalysis. Forecasts are drawn dashed
+          and labelled: where an event is still running, the sea-surface-temperature panel carries the
+          live ENSO forecast, and the rainfall and temperature charts carry the regional forecast (the
+          median of the runs and the middle 80% of them) in the months where a model's past forecasts
+          show skill for that region.
         </p>
       </div>
     </section>
@@ -441,6 +442,6 @@
     </section>
   </main>
 
-  <script src="static/js/site.js?v=20261017c"></script>
+  <script src="static/js/site.js?v=20261019a"></script>
 </body>
 </html>

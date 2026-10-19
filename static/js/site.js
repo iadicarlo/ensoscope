@@ -54,9 +54,9 @@
       gl.textContent = "Guide";
       gl.setAttribute("data-nav", "guide");
       if (document.body.dataset.page === "guide") gl.classList.add("active");
-      // Guide follows Forecast and Event replay, the two main tabs
+      // Order: Forecast, Guide, Event replay (Isma, 17 Oct 2026)
       var replay = nav.querySelector('a[data-nav="event_replay"]');
-      nav.insertBefore(gl, replay ? replay.nextSibling : (nav.children[1] || null));
+      nav.insertBefore(gl, replay || nav.children[1] || null);
     }
 
     if (nav && !nav.querySelector('.nav-dropdown[data-nav-group="about"]')) {

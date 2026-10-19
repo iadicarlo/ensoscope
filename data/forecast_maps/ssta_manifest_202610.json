@@ -22,6 +22,7 @@
     "mf9"
   ],
   "n_centres": 2,
-  "units": "\u03c3",
-  "stipple_threshold": 1
+  "units": "σ",
+  "stipple_threshold": 1,
+  "outlook": "2026-10"
 }

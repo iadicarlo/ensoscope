@@ -15,6 +15,17 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-10-18",
+    tag: "New feature",
+    title: "A forecast for every region, and two downloads per country",
+    items: [
+      "A regional forecast for the next six months, region by region, from the two forecast models (ECMWF SEAS5 and Météo-France System 9), each corrected against the observed record: rain, dry days, maximum temperature and heat-stress days. It shows on the Forecast page maps, on the Event replay for the El Niño under way, and in the downloads.",
+      "A model's forecast is described only where its past forecasts matched what happened. Where the match is modest the tables say \"weak skill\"; where it is no better than chance they say \"no skill shown\" and give no forecast. On the maps, dots mark where the two models disagree. Where at least 9 in 10 runs of each model go past the wettest, driest or warmest season since 1982, the tables say so.",
+      "Two downloads per country replace the country pack and the one-page sheet: a One-page summary for hospital and field teams (PDF and Excel, in English and the country's working language), and the Full analysis for analysts (PDF and Excel).",
+      "How the regional forecast is made, and what it cannot tell, is on the Methodology page.",
+    ],
+  },
+  {
     date: "2026-10-17",
     tag: "Fix",
     title: "Extreme El Niño: the rain test now uses observed millimetres",
@@ -97,7 +108,7 @@ window.ENSOSCOPE_UPDATES = [
       "Teleconnections: the colour bars of the heat-stress layers said \"UTCI 32 °C or more\" (and the same for WBGT and warm nights) on maps that count one band only, for example 32 to 38 °C. They now name the band, as the menu does. From the CESM2 climate model these layers are offered only as the change against neutral seasons, as the Methodology page explains; the absolute day counts come from ERA5 only.",
       "Skill page and Guide: lead L1 is the month the forecast is issued and L6 five months later, not \"next month\" and \"six months ahead\". The heatmap colours run from blue to red; the text no longer says \"greener\".",
       "Forecast page: the headline is now called the ENSO forecast, and the window it averages is named by its months (December 2026 to March 2027, L3 to L6). The chance of each class is the share of the forecast runs in it.",
-      "Event replay: the line for the El Niño under way now says what the Forecast page says, from both models: an extreme El Niño is favoured through January 2027. Rainfall on the site is observed (CHIRPS); heat comes from the ERA5 reanalysis, and the pages now say so instead of calling both observed.",
+      "Event replay: the line for the El Niño under way now says what the Forecast page says, from both models: an extreme El Niño is most likely through January 2027. Rainfall on the site is observed (CHIRPS); heat comes from the ERA5 reanalysis, and the pages now say so instead of calling both observed.",
       "Methodology: neutral months are those inside a catalogued neutral period, not every month outside an event; the neutral reference on the replay charts uses 15 to 22 years per calendar month, not 11 to 16; the heat bands are described as bands.",
       "Country packs and one-page sheets, in every language: where past El Niño seasons went no consistent way, the sheet now says \"no clear signal\" and counts the side most seasons fell on (Kenya, November to January: wetter in 9 of 14, median 111% of normal), instead of \"no large change\"; counts are of seasons, not years or episodes; the headline figures name the forecast months (October 2026 to March 2027) instead of \"next 6 months\", which on the same sheet means November to April; the forecast table's most likely class follows the Forecast page's rule.",
     ],

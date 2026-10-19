@@ -7,15 +7,15 @@
   <meta name="description" content="Methodology and open data sources behind the ENSOscope ENSO forecasts, skill verification and teleconnection composites, with DOIs.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/methodology.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261017c">
-  <link rel="icon" type="image/png" href="favicon.png?v=20261017c">
+  <link rel="stylesheet" href="static/css/style.css?v=20261019a">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261019a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="methodology">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261017c" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261019a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -298,7 +298,7 @@
         <ul>
           <li><strong>UTCI</strong> - days in three bands: <strong>32 to 38 °C</strong> (strong heat
               stress), <strong>38 to 46 °C</strong> (very strong) and <strong>46 °C and above</strong>
-              (extreme), following the standard UTCI thermal-stress scale.</li>
+              (extreme), following the standard UTCI thermal-stress scale (Bröde et al. 2012, Table 3).</li>
           <li><strong>WBGT</strong> - days in <strong>29 to 31 °C</strong>, <strong>31 to 32 °C</strong>
               and <strong>32 °C and above</strong>, approximately the US National Weather Service
               category edges (29.4, 31.1 and 32.2 °C).</li>
@@ -404,7 +404,7 @@
           value that must not be allowed to define what ordinary means.
         </p>
         <p>
-          <strong>Past El Niño seasons in the country packs.</strong> The packs and the one-page sheets
+          <strong>Past El Niño seasons in the downloads.</strong> The Full analysis and the One-page summary
           say how rain went in past El Niño seasons over the coming three and six months, for the country
           and each region, as % of normal. Three levels, the same in every language. <em>Drier</em> or
           <em>wetter</em>: at least 7 in 10 seasons on that side of normal and a median below 95% or above
@@ -507,11 +507,99 @@
           look wet or dry for no physical reason.
         </p>
         <p>
-          <strong>What is deliberately absent.</strong> An event still running also carries the live
-          ECMWF sea-surface-temperature forecast, shown dashed. The rainfall and heat panels stop at
-          the observed record: there is no calibrated forecast of country rainfall or heat behind
-          this site, and deriving one from the SST forecast would be a considerably larger claim than
-          that forecast supports.
+          <strong>Forecasts on this page.</strong> An event still running also carries the live
+          ECMWF SEAS5 and Météo-France System 9 sea-surface-temperature forecast, shown dashed. Where
+          the selected event is still running, the rainfall and temperature charts also carry the
+          regional forecast: ECMWF SEAS5 and Météo-France System 9, corrected day by day against
+          CHIRPS rainfall and the ERA5 reanalysis, dashed: the median of the runs and the middle 80% of
+          them, drawn only in months where that model's past forecasts show skill for that region (see
+          <a href="#regional-forecast">Regional forecast</a>). Nothing is derived from the SST
+          forecast itself, which would be a considerably larger claim than that forecast supports.
+        </p>
+      </div>
+    </div>
+
+    <div class="card" id="regional-forecast">
+      <h2>Regional forecast</h2>
+      <div class="prose">
+        <p>
+          For every admin-1 region, every country and the zones partners use, the regional forecast
+          gives rainfall, the heaviest 10-day rainfall, the longest dry spell, dry days, maximum
+          temperature, heat-stress days and warm nights for each lead month and for the next 3 and
+          next 6 months (the months after the forecast month: November to January and November to
+          April for the October forecast). It is built from the <strong>daily</strong> fields of ECMWF
+          SEAS5 and Météo-France System 9 from the Copernicus Climate Change Service, because every
+          index is a daily statistic (dry days under 1 mm, dry spells, heat-stress bands).
+        </p>
+        <p>
+          <strong>Correction.</strong> On a 1 degree grid, each model's daily values are mapped onto
+          the daily values on the same cells, lead month by lead month, by quantile mapping fitted
+          on its 33 past seasons (1993-2016 past forecasts and 2017-2025 real-time forecasts, 25
+          ensemble members a year): CHIRPS for rain, ERA5 reanalysis for temperature and UTCI. The
+          indices are then computed from the corrected days with the same reductions as the observed
+          series, and averaged over each region with overlap weights.
+        </p>
+        <p>
+          <strong>Normal.</strong> A model is compared with its own climate first: the mean of its
+          past forecasts for the seasons that were ENSO neutral (most months inside a confirmed
+          neutral period of the catalogue). The forecast is then put on the site's normal (neutral
+          years since 1982) with the observations alone: rain times the ratio of the observed
+          neutral mean over the model's years to the observed normal, other indices plus the
+          difference of the two. Rain is shown as % of normal, the rest as the difference from
+          normal, from the average of the runs.
+        </p>
+        <p>
+          <strong>Thirds and leans.</strong> The chances are the share of the forecast's runs (51)
+          in the driest, middle and wettest thirds of the model's 33 past seasons, El Niño and La
+          Niña years included (25 ensemble members a year, pooled). A share does not depend on the
+          number of runs, though its resolution and sampling noise do. A model leans one way only
+          when at least half its runs fall in one third and its past forecasts picked out that
+          third better than chance: the ROC area of that third, on the leave-one-season-out past
+          forecasts described below, must pass a one-sided 5% Mann-Whitney test (normal approximation, about 0.68 for 11 events in 33
+          seasons).
+        </p>
+        <p>
+          <strong>Skill.</strong> Skill is checked against the region series this site shows
+          (CHIRPS, ERA5) for the same months, on past forecasts corrected with each season left out
+          of its own fit (leave-one-season-out), so that no season helps correct itself; the ROC test
+          and the El Niño counts below use the same past forecasts, while the forecast and its thirds
+          use the fit on all 33 seasons. Skill is the same measure as on the Skill page: the
+          correlation between the average of the past forecasts and the observations. It is shown
+          when it reaches the one-sided 5% limit (n - 2 degrees of freedom: 0.29 for 33 seasons).
+          In the tables a model's cell says "weak skill" above that limit but below 0.6, and "no skill
+          shown" under the limit, with no forecast described; a cell with neither mark has useful skill
+          (0.6 or more, the Skill page's line). The maps show the forecast in every cell and
+          leave skill to the tables; dots mark where the two models disagree on the sign. About one
+          region in twenty passes by chance alone. For temperature, part of the skill can come from
+          the warming trend shared by the forecasts and the observations: where the correlation no
+          longer passes once a linear trend is removed from both (n - 3 degrees of freedom), the text
+          says that much of this skill comes from the warming trend. For
+          each region and model the detailed workbook also counts, in the El Niño seasons of
+          1993-2025, how often the model leaned the right way, the wrong way or not at all.
+        </p>
+        <p>
+          <strong>What is not said.</strong> Rain is not described in windows that normally bring
+          under 8% of a region's yearly rain, or, for a single month, a month bringing under 2.7% of
+          the year's rain: the 8% three-month rule spread over one month.
+          Where at least 9 in 10 runs of each model are past the wettest or driest (or warmest)
+          season since 1982, every cell that shows a number says "beyond the record since 1982" with
+          the record and its season. Where more than half of a season's forecast rain comes from days
+          beyond the range the correction was fitted on, the map's cell detail says "beyond the
+          model's past range; treat as indicative". Where the runs reach past the warmest (or wettest,
+          driest) season since 1982, the text says how many do (more than three in four, more than
+          nine in ten) and names that season and its value. Temperatures are compared with past neutral years since 1982, so part of any warm
+          reading, observed or forecast, is the warming since then and not the current El Niño; the
+          forecast values include this warming, and so does the skill measure. On a 1 degree grid a region
+          smaller than a cell borrows from its neighbours, and day counts run a little different
+          from the 0.25 degree counts of the record, which is why only ratios and differences are
+          compared across columns. An index is compared with this season's column only where it
+          passes a like-for-like check, region by region: over 1982-2025 the record's seasons on the
+          forecast's 1 degree cells and the series this site shows must correlate at 0.9 or more,
+          and the site's year-to-year spread must be 0.8 to 1.25 times the 1 degree spread. Where
+          the check fails (for example warm nights in the Philippines), the tables say "not
+          comparable with this season's column" and describe no forecast. Where no observation cell
+          covers a region, or the record holds no values there (rainfall north of 50 degrees), past
+          forecasts cannot be checked and no forecast is shown.
         </p>
       </div>
     </div>
@@ -615,6 +703,6 @@
     </div>
   </main>
 
-  <script src="static/js/site.js?v=20261017c"></script>
+  <script src="static/js/site.js?v=20261019a"></script>
 </body>
 </html>

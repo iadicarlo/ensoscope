@@ -17,7 +17,7 @@ const DATA_BASE = "data/";
 // Monthly data-build cache-buster. Bump whenever the served data/*.json are
 // regenerated (forecast, members, hindcast). Appended to every data fetch so a
 // fresh forecast vintage is never masked by a stale browser/CDN copy.
-const DATA_VERSION = "20261017c";
+const DATA_VERSION = "20261019a";
 function _dv(url) {
   return url + (url.indexOf("?") === -1 ? "?" : "&") + "v=" + DATA_VERSION;
 }
@@ -710,7 +710,7 @@ function _buildStatusBanner(forecast) {
   const card3 = `
     <div class="status-card phase-${domFamily}">
       <div class="status-card-label">Phase balance · ${leadRangeLabel}</div>
-      <div class="status-card-value">${domFamilyLabel} favoured</div>
+      <div class="status-card-value">${domFamilyLabel} most likely</div>
       <div class="status-card-sub">LN ${pct(avgLN)} · Neu ${pct(avgNeu)} · EN ${pct(avgEN)}</div>
     </div>`;
 
@@ -858,7 +858,7 @@ async function initForecastPage() {
 
 // Plain-language outlook headline derived from the live forecast, across every
 // selected centre (e.g. SEAS5 + Météo-France). Says which phase/intensity is
-// favoured and by when, reports whether the centres agree, and links into the
+// most likely and by when, reports whether the centres agree, and links into the
 // teleconnection maps preset to that phase. Generic over EN / LN / neutral.
 function renderOutlookBanner(forecasts, sources) {
   const el = document.getElementById("outlook-banner");
@@ -909,7 +909,7 @@ function renderOutlookBanner(forecasts, sources) {
       if (r > peakRank) { peakRank = r; peakInt = c; peakMonth = l.valid_time; }
     }
     // The last lead at which the peak intensity is still the modal class. The
-    // month an intensity is "favoured through" must stop where the members
+    // month an intensity is "most likely through" must stop where the members
     // stop favouring it, not at the end of the horizon: for the September 2026
     // SEAS5 issue extreme is modal to January 2027 and strong from February.
     let peakLastMonth = peakMonth;
@@ -946,11 +946,11 @@ function renderOutlookBanner(forecasts, sources) {
   const whenStr = A.length === 1 ? _formatValidMonth(peakWhenMonth) : coarseWhen(peakWhenMonth);
   let headline;
   if (dom === "neu") {
-    headline = `ENSO forecast: ENSO-neutral conditions are favoured through ${lastMonth}.`;
+    headline = `ENSO forecast: ENSO-neutral conditions are most likely through ${lastMonth}.`;
   } else if (rankOf(peakInt) > rankOf(nearInt)) {
     headline = `ENSO forecast: ${_artcl(INTLABEL[nearInt])} ${INTLABEL[nearInt]} ${FAMLABEL[dom]} now, strengthening toward ${INTLABEL[peakInt]} by ${whenStr}.`;
   } else {
-    headline = `ENSO forecast: ${_artcl(INTLABEL[peakInt])} ${INTLABEL[peakInt]} ${FAMLABEL[dom]} is favoured through ${_formatValidMonth(throughMonth)}.`;
+    headline = `ENSO forecast: ${_artcl(INTLABEL[peakInt])} ${INTLABEL[peakInt]} ${FAMLABEL[dom]} is most likely through ${_formatValidMonth(throughMonth)}.`;
   }
 
   const ctaPhase = dom === "en" ? "strong_el_nino" : dom === "ln" ? "strong_la_nina" : "neutral";
@@ -979,7 +979,7 @@ function renderOutlookBanner(forecasts, sources) {
     const shares = A.map(a => `${Math.round(a.meanSP * 100)}% (${nameOf(a.src)})`).join(" and ");
     sub = `${namesText} agree on ${FAMLABEL[dom]}; the share of runs in the strong-or-extreme range from ${winTxt} is ${shares}, forecast issued ${vintage}. That lead time is the window for anticipatory action.`;
   } else {
-    sub = `${names[0]} favours a ${INTLABEL[primary.peakInt]} ${FAMLABEL[primary.dom]} from ${winTxt} (forecast issued ${vintage}); the models differ on phase, compare them below.`;
+    sub = `For ${names[0]}, a ${INTLABEL[primary.peakInt]} ${FAMLABEL[primary.dom]} is most likely from ${winTxt} (forecast issued ${vintage}); the models differ on phase, compare them below.`;
   }
 
   el.style.display = "block";
