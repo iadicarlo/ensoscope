@@ -580,6 +580,14 @@ function _renderOutlook() {
     if (/cooler|fewer heat-stress/.test(s)) return "cool";
     return "";
   };
+  // The table is the country downloads' table, built for one period; the Months menu
+  // drives the map only. Say which period, from the data, so it rolls forward monthly.
+  const tp = _olTablePeriod(t);
+  if (!tp) throw new Error(`regional forecast: no forecast period matches the table header "${t.columns[3]}"`);
+  document.getElementById("rp-outlook-period").textContent =
+    `This table covers the next ${tp.id.slice(1)} months, ${_monthLong(tp.months[0])} to `
+    + `${_monthLong(tp.months[tp.months.length - 1])}, as in the country downloads. `
+    + "The Months menu changes the map only.";
   const fc = new Set(t.columns.map((col, j) => /SEAS5|Météo-France/.test(col) ? j : -1));
   const rng = _olRanges(RPFC.key, t);
   document.getElementById("rp-outlook-table").innerHTML =
@@ -602,13 +610,21 @@ function _renderOutlook() {
 // the model has useful skill there (r >= 0.6), open where its skill is weak, and no
 // mark where no skill is shown or in dry months. Only published fields are used
 // (anom, q10, q90, skill, r); one scale per table so rows can be compared.
+// The forecast period a comparison table covers, read from its SEAS5 column header
+// ("SEAS5, Nov to Apr") against the forecast index's periods, so the page names the
+// period the pack built rather than one written here.
+function _olTablePeriod(t) {
+  if (!RPFC.index || !t.columns[3]) return null;
+  const months = String(t.columns[3]).split(", ").slice(1).join(", ");
+  return (RPFC.index.periods || []).find(p => p.id[0] === "N"
+    && p.label.replace(/ \d{4}/g, "") === months) || null;
+}
+
 function _olRanges(key, t) {
   const doc = RPFC.docs[key];
-  if (!doc || !RPFC.index || !t.columns[3]) return null;
+  if (!doc) return null;
   const F = {}; doc.fields.forEach((f, i) => { F[f] = i; });
-  const months = String(t.columns[3]).split(", ").slice(1).join(", ");
-  const per = (RPFC.index.periods || []).find(p => p.id[0] === "N"
-    && p.label.replace(/ \d{4}/g, "") === months);
+  const per = _olTablePeriod(t);
   if (!per) return null;
   const rain = key === "pr_total", ref = rain ? 100 : 0;
   const unitOf = name => /^whole country$/i.test(name)
@@ -633,8 +649,10 @@ function _olRanges(key, t) {
   const fmt = v => rain ? `${Math.round(v)}%` : `${v > 0 ? "+" : v < 0 ? "\u2212" : ""}${Math.abs(v).toFixed(key === "tmax" ? 1 : 0)}`;
   const ticks = [ref, lo + pad, hi - pad].filter((v, i, a) => a.findIndex(w => Math.abs(w - v) < (hi - lo) * 0.28) === i);   // keep labels apart
   const head = `<svg class="rp-ol-axis" viewBox="0 0 ${W} 30" width="${W}" height="30" role="img" aria-label="Scale of the range column">`
-    + ticks.map(v => `<text x="${x(v).toFixed(1)}" y="12" text-anchor="middle">${fmt(v)}</text>`
-      + `<line x1="${x(v).toFixed(1)}" x2="${x(v).toFixed(1)}" y1="16" y2="22"/>`).join("")
+    + ticks.map(v => { const xv = x(v), a = xv < 22 ? "start" : xv > W - 22 ? "end" : "middle";
+        const xt = a === "start" ? Math.max(0, xv - 2) : a === "end" ? Math.min(W, xv + 2) : xv;
+        return `<text x="${xt.toFixed(1)}" y="12" text-anchor="${a}">${fmt(v)}</text>`
+          + `<line x1="${xv.toFixed(1)}" x2="${xv.toFixed(1)}" y1="16" y2="22"/>`; }).join("")
     + `<line x1="${L}" x2="${W - R}" y1="22" y2="22"/></svg>`;
   const svgRows = rows.map(pair => `<svg class="rp-ol-range" viewBox="0 0 ${W} 30" width="${W}" height="30" role="img" aria-label="`
     + pair.map((m, j) => `${j ? "Météo-France" : "SEAS5"}: ${m ? fmt(m.v) + ", runs " + fmt(m.lo) + " to " + fmt(m.hi)

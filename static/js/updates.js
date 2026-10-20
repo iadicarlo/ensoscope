@@ -16,6 +16,15 @@
 window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-20",
+    tag: "Fix",
+    title: "Downloads where El Niño has a clear effect; regional table names its period",
+    items: [
+      "France, Germany, Greece, Italy, Portugal, Spain and Turkey no longer have country downloads, because El Niño's effect on their climate is weak and inconsistent. Their Event replay pages are unchanged.",
+      "On Event replay, the regional forecast table now says which months it covers (the next 6 months) and that the Months menu changes the map only, and the menus no longer cut off their labels.",
+    ],
+  },
+  {
+    date: "2026-10-20",
     tag: "New feature",
     title: "The Full analysis download is now the full country report",
     items: [

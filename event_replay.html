@@ -7,8 +7,8 @@
   <meta name="description" content="Replay a past El Niño or La Niña month by month for any country: sea surface temperature, rainfall, drought and heat, against every other observed event.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/event_replay.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261020a">
-  <link rel="icon" type="image/png" href="favicon.png?v=20261020a">
+  <link rel="stylesheet" href="static/css/style.css?v=20261020b">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261020b">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
     /* Event replay page layout. Shared components (cards, key boxes, tables,
@@ -140,10 +140,17 @@
     #rp-ol-canvas { position: absolute; inset: 0; width: 100%; height: 250px; }
     #rp-ol-svg { display: block; width: 100%; height: 250px; position: relative; }
     .rp-ol-mapbar { display: flex; gap: var(--s4); flex-wrap: wrap; margin-bottom: var(--s2); }
+    /* The period names are long ("Nov 2026 to Jan 2027 (next 3 months)"): these two
+       selects take the width their text needs, up to the bar, and wrap below it. */
+    .rp-ol-mapbar .rp-zc-ctrl { min-width: 0; max-width: 100%; }
+    .rp-ol-mapbar .rp-zc-ctrl select { max-width: 100%; }
     .rp-ol-mapnote { font-size: var(--fs-sm); color: var(--muted); line-height: 1.45; margin: var(--s2) 0 0; }
     .rp-rg-na { color: var(--muted); }
     /* Range column, as in Fig 1 d of the paper */
-    .rp-ol-table .rp-ol-rng { min-width: 0; width: 176px; padding-right: 0; }
+    /* The range column keeps its 170 px scale whole and the same right padding as the
+       other cells, so the scale's end label never meets the card edge. */
+    .rp-ol-table .rp-ol-rng { min-width: 0; width: auto; padding-right: var(--s3); }
+    .rp-ol-axis, .rp-ol-range { min-width: 170px; }
     .rp-ol-table th.rp-ol-rng { vertical-align: bottom; }
     .rp-ol-axis text { font-size: 12px; fill: var(--tick); font-variant-numeric: tabular-nums; }
     .rp-ol-axis line { stroke: var(--axis); stroke-width: 1; }
@@ -314,7 +321,7 @@
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261020a" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261020b" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -551,6 +558,7 @@
             </div>
             <p class="rp-sub rp-ol-mapnote" id="rp-ol-mapnote"></p>
           </div>
+          <p class="rp-sub" id="rp-outlook-period"></p>
           <div class="rp-regions-tablewrap">
             <table class="rp-regions-table rp-ol-table" id="rp-outlook-table"></table>
           </div>
@@ -804,14 +812,14 @@
 
   </main>
 
-  <script src="static/lib/d3.min.js?v=20261020a"></script>
-  <script src="static/lib/d3-geo-projection.min.js?v=20261020a"></script>
-  <script src="static/lib/chart.umd.min.js?v=20261020a"></script>
-  <script src="static/js/chart_theme.js?v=20261020a"></script>
-  <script src="static/js/data_base.js?v=20261020a"></script>
-  <script src="static/js/index_names.js?v=20261020a"></script>
-  <script src="static/js/site.js?v=20261020a"></script>
-  <script src="static/js/ramps.js?v=20261020a"></script>
-  <script src="static/js/event_replay.js?v=20261020a"></script>
+  <script src="static/lib/d3.min.js?v=20261020b"></script>
+  <script src="static/lib/d3-geo-projection.min.js?v=20261020b"></script>
+  <script src="static/lib/chart.umd.min.js?v=20261020b"></script>
+  <script src="static/js/chart_theme.js?v=20261020b"></script>
+  <script src="static/js/data_base.js?v=20261020b"></script>
+  <script src="static/js/index_names.js?v=20261020b"></script>
+  <script src="static/js/site.js?v=20261020b"></script>
+  <script src="static/js/ramps.js?v=20261020b"></script>
+  <script src="static/js/event_replay.js?v=20261020b"></script>
 </body>
 </html>
