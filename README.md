@@ -14,8 +14,8 @@ This repository holds the published website and the data it shows:
 - how well those forecasts have done in the past
 - maps of how past El Niño and La Niña events changed rainfall (observed, CHIRPS) and heat (ERA5 reanalysis) worldwide, with a panel per country setting each month of the ENSO forecast beside what past events of that class did there, naming those events
 - an event replay: any past El Niño or La Niña, month by month, for each country, with a timeline of the floods, droughts, heat waves and disease outbreaks recorded at the time
-- a country pack for each country (PDF and Excel): the outlook for the next 3 and 6 months in plain words, four maps (rain and maximum temperature this season, and what past El Niño years did to rain and to heat-stress days over the coming months), a region table, charts and the tables behind them, and, where malaria is transmitted, WHO's yearly malaria incidence estimate
-- a one-page simple sheet per country (Excel) for hospital and field teams, in English and, where the country works in it, French, Spanish or Portuguese; past El Niño seasons are read in three levels (drier or wetter, tends drier or tends wetter, no clear signal)
+- a regional forecast for the next six months, region by region, from the same two forecast models corrected against the observed record: rain, dry days, maximum temperature, heat-stress days and warm nights, each with how well the model did in the past
+- two downloads per country: a One-page summary (PDF and Excel) for hospital and field teams, in English and, where the country works in it, French, Spanish or Portuguese; and a Full analysis (PDF and Excel) for analysts, with this El Niño month by month against every past one, for the country and each region, the regional forecast with its skill, the outbreak record and a methods annex
 
 The outbreak records from sources that allow it are in data/archive/, with a note on how to credit each source. The rest of the outbreak and disaster records are shown on the site but kept out of the archived releases until their owners agree.
 
