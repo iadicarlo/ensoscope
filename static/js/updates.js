@@ -15,6 +15,15 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-10-30",
+    tag: "Fix",
+    title: "Ecuador: Napo and Tungurahua show their own data",
+    items: [
+      "In Ecuador, the outlines of Napo and Tungurahua had each other's names in the map source we use, so each province showed the other's data. Event replay, the regional forecast and the Ecuador downloads now use the right outline for each.",
+      "A new check confirms that every region's outline contains its regional capital, so a swap like this one cannot come back unnoticed. It found no other swap in the 79 countries it can test.",
+    ],
+  },
+  {
     date: "2026-10-20",
     tag: "Fix",
     title: "Downloads where El Niño has a clear effect; regional table names its period",
