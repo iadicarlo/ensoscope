@@ -138,10 +138,10 @@ function _destroy(key) {
   if (RP.charts[key]) { RP.charts[key].destroy(); delete RP.charts[key]; }
 }
 
-function _lineChart(canvasId, key, labels, main, others, opts) {
-  _destroy(key);
-  const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
+// The datasets of one replay chart, in drawing order: the comparison events, the
+// Normal (flagged _isNormal, so code finds it by the flag, never by its label), this
+// event, then the live forecast. Kept apart from the chart so a test can build them.
+function _lineDatasets(main, others, opts) {
   const ds = [];
   // Comparison events first so they render underneath the highlighted one.
   for (const o of others) {
@@ -160,7 +160,8 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
   if (opts.neutral) {
     ds.push({ data: opts.neutral, borderColor: _tok("--muted"), borderWidth: 1.5,
               borderDash: [5, 4], pointRadius: 0, tension: 0, spanGaps: false,
-              fill: false, directLabel: false, label: "Normal (average of neutral years)" });
+              fill: false, directLabel: false, label: "Normal (average of neutral years)",
+              _isNormal: true });
   }
 
   ds.push({ data: main.values, borderColor: opts.color, borderWidth: 2.25,
@@ -187,6 +188,22 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
               borderDash: f.dash, pointRadius: 0, tension: 0, spanGaps: false,
               fill: false, directLabel: false, label: `${f.label} (${f.vintage})` });
   }
+  return ds;
+}
+
+// The dataset whose value the month readout prints: this event's own line, the first
+// that is neither a comparison event nor the Normal. Matching the Normal by its label
+// ("/Neutral/" against "Normal (average of neutral years)") never matched, so the box
+// printed the normal instead of the event.
+function _readoutDataset(datasets) {
+  return datasets.find(d => !d._isOther && !d._isNormal);
+}
+
+function _lineChart(canvasId, key, labels, main, others, opts) {
+  _destroy(key);
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  const ds = _lineDatasets(main, others, opts);
 
   // Marks the month the maps above are showing. Without it the reader has to
   // count ticks to find November 1997 on a 48-month axis, which is exactly the
@@ -208,7 +225,7 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
       c.setLineDash([]);
       // The value at that month, printed, because reading it off the axis is
       // the thing this marker exists to save.
-      const ds = chart.data.datasets.find(d => !d._isOther && !/Neutral/.test(d.label || ""));
+      const ds = _readoutDataset(chart.data.datasets);
       const v = ds && ds.data[i];
       if (v != null && isFinite(v)) {
         // Name the month as well as the value. The marker exists so the reader
@@ -1083,7 +1100,12 @@ function _tickStep(n, pxWide) {
 // Windows start in January by construction, but the offset is computed from
 // window_start anyway rather than assumed.
 function _neutralFor(sel, nMonths, key) {
-  const ref = RP.country.neutral && RP.country.neutral[key];
+  // The normal of the unit the charts show: a selected region's own (the clim its series were
+  // made absolute with in _regionSeries), else the country's. The country's normal under a
+  // region's series put Kenya Coast's December at 54 mm instead of its own 81.
+  const reg = RPRG.selected;
+  const src = reg ? reg.clim : RP.country.neutral;
+  const ref = src && src[key];
   if (!ref || ref.every(v => v == null)) return null;
   const m0 = parseInt(String(sel.window_start).slice(5), 10) - 1;   // 0 = January
   const out = [];

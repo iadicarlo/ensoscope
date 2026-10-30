@@ -17,6 +17,16 @@ window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-30",
     tag: "Fix",
+    title: "Regional charts use the region's own normal; Burkina Faso by province",
+    items: [
+      "On Event replay, with a region selected, the dashed Normal line on every chart now shows that region's normal instead of the country's, and the month box shows this event's value instead of the normal.",
+      "Burkina Faso's downloads and regional forecast now cover all 45 provinces, like every other country. Kadiogo's numbers were mixed with a wider area's; corrected.",
+      "In the Full analysis, dry months now say so instead of printing a record.",
+    ],
+  },
+  {
+    date: "2026-10-30",
+    tag: "Fix",
     title: "Rain forecasts beyond the record now show the record",
     items: [
       "Where a model's rain forecast goes beyond the wettest or driest season observed since 1982, the site and the downloads now say \"above the record since 1982\" (or below) with the record's value and year, instead of the model's number. In some places, such as the coast of Peru and Ecuador, the models forecast several times the record.",
