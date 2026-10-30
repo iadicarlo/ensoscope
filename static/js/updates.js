@@ -17,6 +17,15 @@ window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-10-30",
     tag: "Fix",
+    title: "Rain forecasts beyond the record now show the record",
+    items: [
+      "Where a model's rain forecast goes beyond the wettest or driest season observed since 1982, the site and the downloads now say \"above the record since 1982\" (or below) with the record's value and year, instead of the model's number. In some places, such as the coast of Peru and Ecuador, the models forecast several times the record.",
+      "Where the model also forecast too much or too little rain in past strong El Niño seasons, a line says so. The map hovers now follow the same comparability rule as the tables.",
+    ],
+  },
+  {
+    date: "2026-10-30",
+    tag: "Fix",
     title: "Ecuador: Napo and Tungurahua show their own data",
     items: [
       "In Ecuador, the outlines of Napo and Tungurahua had each other's names in the map source we use, so each province showed the other's data. Event replay, the regional forecast and the Ecuador downloads now use the right outline for each.",

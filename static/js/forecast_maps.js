@@ -12,7 +12,7 @@ const DATA_BASE = "data/forecast_maps/";
 // forecast vintage is never masked by a stale browser/CDN copy. Kept in sync
 // with app.js DATA_VERSION. Static basemaps (ne_*.geojson) never change and are
 // left unversioned, matching the app.js / map_explorer.js convention.
-const DATA_VERSION = "20261030a";
+const DATA_VERSION = "20261030b";
 function _dv(url) {
   return url + (url.indexOf("?") === -1 ? "?" : "&") + "v=" + DATA_VERSION;
 }
@@ -674,15 +674,26 @@ function _fcCellInfo(lon, lat) {
   const bs = Object.values(tile.per_centre).map(pc => pc.beyond ? _fcField(pc.beyond)[best] : null)
     .map(b => (b === null ? 0 : Math.round(b)));
   const joint = bs.length === 2 && bs[0] !== 0 && bs[0] === bs[1];
+  // a start year as the period's season: 1997 -> "1997-98" for November to April
+  const season = y => {
+    const p = tile.period, init = +String(_fcManifest.init).slice(0, 4);
+    if (y === null || y === undefined || !p) return "";
+    const a = y + (+p.months[0].slice(0, 4) - init), b = y + (+p.months[p.months.length - 1].slice(0, 4) - init);
+    return a === b ? `${a}` : `${a}-${String(b).slice(2)}`;
+  };
   for (const [s, pc] of Object.entries(tile.per_centre)) {
     const v = _fcField(pc.anom)[best];
     if (v === null) continue;
     const name = (_fcManifest.sources || {})[s] || s;
     const flags = [];
-    if (joint) flags.push("beyond the record since 1982 on this cell");
+    // rain past this cell's record since 1982: the record, never the number (build_region_forecast.past_cells)
+    const past = tile.rain && pc.past ? pc.past[String(best)] : null;
+    if (joint && !past) flags.push("beyond the record since 1982 on this cell");
     const x = pc.extrap ? _fcField(pc.extrap)[best] : null;
     if (x !== null && x > 0.5) flags.push("beyond the model's past range; treat as indicative");
-    const val = tile.rain ? `${Math.round(v)}${unit}` : `${v > 0 ? "+" : ""}${v.toFixed(1)}\u00a0${unit}`;
+    const val = past
+      ? `${past[0] > 0 ? "above" : "below"} the record since 1982 (${past[1]}%${season(past[2]) ? ", " + season(past[2]) : ""})`
+      : tile.rain ? `${Math.round(v)}${unit}` : `${v > 0 ? "+" : ""}${v.toFixed(1)}\u00a0${unit}`;
     parts.push(`${name} ${val}` + (flags.length ? ` (${flags.join("; ")})` : ""));
   }
   return parts.length ? `This cell: ${parts.join("; ")}.` : null;

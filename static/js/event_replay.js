@@ -638,7 +638,12 @@ function _olRanges(key, t) {
       if (!row || row[F.skill] !== 1 || (u.dry || []).includes(per.id)) return null;
       const lk = (u.like || {})[per.id];
       if (lk && lk[2] === false) return null;
-      return { v: row[F.anom], lo: row[F.q10], hi: row[F.q90], useful: row[F.r] >= 0.6 };
+      // rain past the record since 1982 is drawn to the record and named, never printed (WS7, 30 Oct 2026)
+      const rhi = rain ? row[F.obs_hi] : null, rlo = rain ? row[F.obs_lo] : null;
+      const cap = v => (rhi !== null && v > rhi) ? rhi : (rlo !== null && v < rlo) ? rlo : v;
+      return { v: cap(row[F.anom]), lo: cap(row[F.q10]), hi: cap(row[F.q90]), useful: row[F.r] >= 0.6,
+               past: rain ? { v: _olPast(row, F, row[F.anom]), lo: _olPast(row, F, row[F.q10]),
+                              hi: _olPast(row, F, row[F.q90]) } : {} };
     });
   });
   let lo = ref, hi = ref;
@@ -647,6 +652,7 @@ function _olRanges(key, t) {
   const pad = (hi - lo) * 0.06; lo -= pad; hi += pad;
   const W = 170, L = 6, R = 6, x = v => L + (v - lo) / (hi - lo) * (W - L - R);
   const fmt = v => rain ? `${Math.round(v)}%` : `${v > 0 ? "+" : v < 0 ? "\u2212" : ""}${Math.abs(v).toFixed(key === "tmax" ? 1 : 0)}`;
+  const say = (m, f) => m.past[f] ? `${m.past[f] === "hi" ? "above" : "below"} the record since 1982 (${fmt(m[f])})` : fmt(m[f]);
   const ticks = [ref, lo + pad, hi - pad].filter((v, i, a) => a.findIndex(w => Math.abs(w - v) < (hi - lo) * 0.28) === i);   // keep labels apart
   const head = `<svg class="rp-ol-axis" viewBox="0 0 ${W} 30" width="${W}" height="30" role="img" aria-label="Scale of the range column">`
     + ticks.map(v => { const xv = x(v), a = xv < 22 ? "start" : xv > W - 22 ? "end" : "middle";
@@ -655,7 +661,7 @@ function _olRanges(key, t) {
           + `<line x1="${xv.toFixed(1)}" x2="${xv.toFixed(1)}" y1="16" y2="22"/>`; }).join("")
     + `<line x1="${L}" x2="${W - R}" y1="22" y2="22"/></svg>`;
   const svgRows = rows.map(pair => `<svg class="rp-ol-range" viewBox="0 0 ${W} 30" width="${W}" height="30" role="img" aria-label="`
-    + pair.map((m, j) => `${j ? "Météo-France" : "SEAS5"}: ${m ? fmt(m.v) + ", runs " + fmt(m.lo) + " to " + fmt(m.hi)
+    + pair.map((m, j) => `${j ? "Météo-France" : "SEAS5"}: ${m ? say(m, "v") + ", runs " + say(m, "lo") + " to " + say(m, "hi")
         + (m.useful ? ", useful skill" : ", weak skill") : "no skill shown"}`).join("; ") + `">`
     + `<line class="ref" x1="${x(ref).toFixed(1)}" x2="${x(ref).toFixed(1)}" y1="2" y2="28"/>`
     + pair.map((m, j) => {
@@ -698,15 +704,28 @@ function _b64(s) {
   return b;
 }
 
+/** A rain value past the record since 1982 for this unit and window: "hi" / "lo", else null. The
+ *  number is then not printed; the record is (region_outlook.past_record, WS7 audit 30 Oct 2026). */
+function _olPast(row, F, v) {
+  if (v === null || v === undefined) return null;
+  if (row[F.obs_hi] !== null && v > row[F.obs_hi]) return "hi";
+  if (row[F.obs_lo] !== null && v < row[F.obs_lo]) return "lo";
+  return null;
+}
+
 /** A region's hover text on the regional forecast map: its value for this model and months, and
  *  the cell-form flags (Isma, 17 Oct 2026): beyond the record since 1982, beyond the model's past
- *  range. Dry months and "no skill shown" say so instead of a number, as in the table. */
+ *  range. Dry months, "not comparable" and "no skill shown" say so instead of a number, as in the
+ *  table (region_outlook.cell_text). Rain past the record prints the record, never the number, and
+ *  the model's past strong El Niño seasons when it forecast them the same way. */
 function _olTip(name, key, sys, pid) {
   const doc = RPFC.docs[key];
   const unit = doc && doc.units_list.find(u => u.kind === "region" && u.name === name);
   const row = unit && unit.v[sys] && unit.v[sys][pid];
   if (!row) return name;
   if ((unit.dry || []).includes(pid)) return `${name}: dry months: little rain falls then`;
+  const lk = (unit.like || {})[pid];
+  if (lk && lk[2] === false) return `${name}: not comparable with this season's column`;
   const F = {};
   doc.fields.forEach((f, i) => { F[f] = i; });
   if (row[F.skill] !== 1) return `${name}: no skill shown`;
@@ -719,7 +738,12 @@ function _olTip(name, key, sys, pid) {
     const init = +RPFC.index.init.slice(0, 4), a = y + (y0 - init), b = y + (y1 - init);
     return a === b ? `${a}` : `${a}-${String(b).slice(2)}`;
   };
-  const out = [`${name}: ${rain ? Math.round(row[F.anom]) + "% of normal" : fmt(row[F.anom])}`];
+  const past = rain ? _olPast(row, F, row[F.anom]) : null;
+  const rec = side => {
+    const y = season(row[side === "hi" ? F.obs_hi_year : F.obs_lo_year]);
+    return `${side === "hi" ? "above" : "below"} the record since 1982 (${fmt(row[side === "hi" ? F.obs_hi : F.obs_lo])}${y ? ", " + y : ""})`;
+  };
+  const out = [`${name}: ${past ? rec(past) : rain ? Math.round(row[F.anom]) + "% of normal" : fmt(row[F.anom])}`];
   // at least 9 in 10 runs of EACH model past the record on the same side (region_outlook.joint_side)
   const side = r => {
     if (!r) return null;
@@ -728,10 +752,14 @@ function _olTip(name, key, sys, pid) {
   };
   const sides = Object.keys(unit.v).map(k => side(unit.v[k] && unit.v[k][pid]));
   const joint = sides.length === 2 && sides[0] && sides[0] === sides[1] ? sides[0] : null;
-  if (joint === "hi") out.push(`beyond the record since 1982 (record ${fmt(row[F.obs_hi])}, ${season(row[F.obs_hi_year])})`);
+  if (past) { /* the value already reads as the record */ }
+  else if (joint === "hi") out.push(`beyond the record since 1982 (record ${fmt(row[F.obs_hi])}, ${season(row[F.obs_hi_year])})`);
   else if (joint === "lo") out.push(`beyond the record since 1982 (record ${fmt(row[F.obs_lo])}, ${season(row[F.obs_lo_year])})`);
   if (rain && F.extrap !== undefined && row[F.extrap] !== null && row[F.extrap] > 0.5)
     out.push("beyond the model's past range; treat as indicative");
+  const b = F.en_bias !== undefined ? row[F.en_bias] : null;
+  if (past && b !== null && (past === "hi" ? b > 0 : b < 0))
+    out.push(`in past strong El Niño seasons this model forecast ${past === "hi" ? "more" : "less"} rain here than fell`);
   return out.join("; ");
 }
 
