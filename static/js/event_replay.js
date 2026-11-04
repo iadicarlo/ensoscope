@@ -25,6 +25,7 @@ const RP = {
   forecast: null,    // SEAS5 Nino3.4 plume, drawn only where the event is running
   forecastMf9: null, // Meteo-France System 9, same
   mapSeasons: null,  // teleconnection_event_seasons.json: the season each event gives the Teleconnections maps
+  calendar: null,    // replay/calendars/<country>.json: the normal-year strip under the rainfall chart
   charts: {},
   // Which cut-off each threshold panel is showing. Defaults are the mildest
   // useful one: >=32 UTCI and >=25 nights are the levels most countries
@@ -87,7 +88,8 @@ const RP_DATA_BASE = (typeof window !== "undefined" && window.ENSOSCOPE_DATA_BAS
 // and every country border on the tab would vanish the moment DATA_BASE is set.
 // regions joined the bucket on 2026-08-27: 981 files, 94 MB of admin-1 series,
 // which only this tab reads and which no page needs on first paint.
-const RP_HEAVY = /^data\/(replay\/(globalmonths|months|maps|regions|forecast)|maps|packs)\/(?!.*\.geojson$)/;
+// calendars joined on 2026-10-30: the seasonal calendar strip under the region's rainfall chart.
+const RP_HEAVY = /^data\/(replay\/(globalmonths|months|maps|regions|forecast|calendars)|maps|packs)\/(?!.*\.geojson$)/;
 
 const RP_DATA_VERSION = (typeof window !== "undefined" && window.ENSOSCOPE_DATA_VERSION) || "";
 
@@ -186,7 +188,7 @@ function _lineDatasets(main, others, opts) {
     }
     ds.push({ data: f.mean, borderColor: f.color, borderWidth: 2,
               borderDash: f.dash, pointRadius: 0, tension: 0, spanGaps: false,
-              fill: false, directLabel: false, label: `${f.label} (${f.vintage})` });
+              fill: false, directLabel: false, label: `${f.label} (${f.vintage})`, _past: f.past || null });
   }
   return ds;
 }
@@ -258,7 +260,7 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
     + `against ${others.length} other event${others.length === 1 ? "" : "s"}`);
   RP.charts[key] = new Chart(ctx, {
     type: "line",
-    plugins: [monthMarker],
+    plugins: [monthMarker].concat(opts.plugins || []),
     data: { labels, datasets: ds },
     options: {
       responsive: true, maintainAspectRatio: false, animation: false,
@@ -362,7 +364,8 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
                 const k = m0 + item.dataIndex;
                 own = ` \u00b7 ${RP_MON[k % 12]} ${y0 + Math.floor(k / 12)}`;
               }
-              return `${short}${own}: ${v.toFixed(1)}${opts.unit || ""}`;
+              const pa = item.dataset._past && item.dataset._past[item.dataIndex];
+              return _fcTooltipLabel(`${short}${own}`, v, opts.unit || "", pa);
             },
           },
         },
@@ -503,11 +506,52 @@ async function _fcLoad(id) {
   render();
 }
 
+// One forecast month on a replay chart, in the page's units: the median and the 10 to 90% band. Rain
+// past the record since 1982 for this unit is drawn to the record, never past it (as the table and the
+// hover), and a median clipped that way is flagged "hi" / "lo", with the record's year, so the tooltip
+// names the record instead of printing it as if it were the forecast (WS7, 4 Nov 2026).
+function _fcMonth(row, F, b, key) {
+  const rain = key === "pr_total", signed = key === "tmax";
+  const has = x => x !== null && x !== undefined;
+  const rhi = rain ? row[F.obs_hi] : null, rlo = rain ? row[F.obs_lo] : null;
+  const conv = q0 => {
+    if (!has(q0)) return null;
+    const q = (has(rhi) && q0 > rhi) ? rhi : (has(rlo) && q0 < rlo) ? rlo : q0;
+    const v = rain ? b * q / 100 : b + q;
+    return signed ? v : Math.max(0, v);
+  };
+  const q50 = row[F.q50];
+  const past = !has(q50) ? null : (has(rhi) && q50 > rhi) ? "hi" : (has(rlo) && q50 < rlo) ? "lo" : null;
+  return { mean: conv(q50), lo: conv(row[F.q10]), hi: conv(row[F.q90]), past,
+           year: past ? row[past === "hi" ? F.obs_hi_year : F.obs_lo_year] : null };
+}
+
+// The season of a record year for a forecast period (obs_hi_year / obs_lo_year are in the forecast
+// year's frame): "1997" for one month, "1997-98" when the period crosses a year end.
+function _olSeason(p, y) {
+  if (y === null || y === undefined || !p) return "";
+  const y0 = +p.months[0].slice(0, 4), y1 = +p.months[p.months.length - 1].slice(0, 4);
+  const init = +RPFC.index.init.slice(0, 4), a = y + (y0 - init), b = y + (y1 - init);
+  return a === b ? `${a}` : `${a}-${String(b).slice(2)}`;
+}
+
+// The record wording, one source for the map hover and the chart tooltip.
+function _recordText(side, value, season) {
+  return `${side === "hi" ? "above" : "below"} the record since 1982 (${value}${season ? ", " + season : ""})`;
+}
+
+// A chart tooltip value: a forecast median clipped to the record names the record, never a bare number.
+function _fcTooltipLabel(name, v, unit, past) {
+  return past ? `${name}: ${_recordText(past.side, v.toFixed(1) + unit, past.season)}`
+              : `${name}: ${v.toFixed(1)}${unit}`;
+}
+
 /** The two models' forecast of one index, on the chart's own scale: the page's own
  *  normal of that month (neutral years since 1982) times the forecast's % of normal
  *  (rain), or plus its difference from normal (everything else). The builder has already
  *  put both on that normal (to_site). Median and the 10 to 90% range of the runs, and
- *  only months where that model showed skill here. */
+ *  only months where that model showed skill here. Rain is drawn no further than the record
+ *  since 1982 for that month (obs_lo, obs_hi). */
 function _indexForecasts(sel, nMonths, seriesKey) {
   const key = RP_REGION_VAR[seriesKey];
   const idx = RPFC.index;
@@ -526,12 +570,11 @@ function _indexForecasts(sel, nMonths, seriesKey) {
   doc.fields.forEach((f, i) => { F[f] = i; });
   const pos = {};
   _monthsFrom(sel.window_start, nMonths).forEach((m, i) => { pos[m] = i; });
-  const rain = key === "pr_total", signed = key === "tmax";
   const out = [];
   for (const meta of RP_FC_SOURCES) {
     const per = unit.v[meta.key === "forecast" ? "seas5" : "mf9"];
     if (!per) continue;
-    const mean = new Array(nMonths).fill(null), lo = mean.slice(), hi = mean.slice();
+    const mean = new Array(nMonths).fill(null), lo = mean.slice(), hi = mean.slice(), past = mean.slice();
     let hit = 0;
     for (const p of idx.periods) {
       if (p.id[0] !== "L") continue;
@@ -544,15 +587,14 @@ function _indexForecasts(sel, nMonths, seriesKey) {
       if (lk && lk[2] === false) continue;
       const b = base[parseInt(p.months[0].slice(5), 10) - 1];
       if (b === null || b === undefined) continue;
-      const conv = q => {
-        if (q === null || q === undefined) return null;
-        const v = rain ? b * q / 100 : b + q;
-        return signed ? v : Math.max(0, v);
-      };
-      mean[i] = conv(row[F.q50]); lo[i] = conv(row[F.q10]); hi[i] = conv(row[F.q90]);
+      // rain past the record since 1982 is drawn to the record, never past it (the table and the hover
+      // name it): the same rule as the range column (_olRanges); the clipped median is flagged
+      const m = _fcMonth(row, F, b, key);
+      mean[i] = m.mean; lo[i] = m.lo; hi[i] = m.hi;
+      if (m.past) past[i] = { side: m.past, season: _olSeason(p, m.year) };
       hit++;
     }
-    if (hit) out.push({ mean, lo, hi, members: [], band: true, vintage: idx.init,
+    if (hit) out.push({ mean, lo, hi, past, members: [], band: true, vintage: idx.init,
                         label: meta.label, color: meta.color, faint: meta.faint, dash: meta.dash });
   }
   return out;
@@ -749,16 +791,11 @@ function _olTip(name, key, sys, pid) {
   const rain = key === "pr_total", u = doc.units || "";
   const fmt = v => rain ? `${Math.round(v)}%` : `${v > 0 ? "+" : ""}${(+v).toFixed(key === "tmax" ? 1 : 0)}\u00a0${u}`;
   const p = (RPFC.index.periods || []).find(x => x.id === pid);
-  const season = y => {
-    if (y === null || y === undefined || !p) return "";
-    const y0 = +p.months[0].slice(0, 4), y1 = +p.months[p.months.length - 1].slice(0, 4);
-    const init = +RPFC.index.init.slice(0, 4), a = y + (y0 - init), b = y + (y1 - init);
-    return a === b ? `${a}` : `${a}-${String(b).slice(2)}`;
-  };
+  const season = y => _olSeason(p, y);
   const past = rain ? _olPast(row, F, row[F.anom]) : null;
   const rec = side => {
     const y = season(row[side === "hi" ? F.obs_hi_year : F.obs_lo_year]);
-    return `${side === "hi" ? "above" : "below"} the record since 1982 (${fmt(row[side === "hi" ? F.obs_hi : F.obs_lo])}${y ? ", " + y : ""})`;
+    return _recordText(side, fmt(row[side === "hi" ? F.obs_hi : F.obs_lo]), y);
   };
   const out = [`${name}: ${past ? rec(past) : rain ? Math.round(row[F.anom]) + "% of normal" : fmt(row[F.anom])}`];
   // at least 9 in 10 runs of EACH model past the record on the same side (region_outlook.joint_side)
@@ -1011,9 +1048,11 @@ function render() {
                          values: _seriesFor(o, nMonths, ct, vals) })),
       { color: colour, unit, yTitle, xTitle, beginAtZero: zero, direct,
         neutral: _neutralFor(sel, nMonths, series),
-        forecasts: _indexForecasts(sel, nMonths, series) });
+        forecasts: _indexForecasts(sel, nMonths, series),
+        plugins: key === "rain" ? [RP_CAL_PLUGIN] : [] });
   }
   _renderThresholdUI();
+  for (const x of document.querySelectorAll(".rp-unit-name")) x.textContent = _unitName();
   for (const x of document.querySelectorAll(".rp-xnote")) x.textContent = xTitle + ".";
   _renderLegend(sel, others.length, _forecastsForWindow(sel, nMonths));
   _renderMeta(sel, others.length);
@@ -1097,6 +1136,100 @@ function _tickStep(n, pxWide) {
 // Ninos and La Ninas inside it, so an event measured against one is partly
 // measured against itself. See _enso_baseline.py.
 //
+// ── seasonal calendar strip (Isma, 30 Oct 2026) ──────────────────────────────
+// One thin strip under the rainfall chart of the selected region (the whole country: its rainy
+// season only), on that chart's own month axis: each month cell centred on the chart's point for
+// that month and clipped to the plot area, at most four rows (rainy season, planting, harvest, lean
+// season), one source line, details on hover. Laid out by a chart plugin after each draw, so it
+// follows resizes; rebuilt only when the plot area, the window or the unit changes.
+const RP_CAL_PLUGIN = { id: "rpCalendar", afterDraw(chart) { _layoutCalendar(chart); } };
+
+// half-month index to words: 0 = first half of January; spans are [first, last + 1)
+function _calSpanText(s) {
+  const from = h => (h % 2 ? "mid-" : "") + RP_MON_LONG[h >> 1];
+  const to = e => (e % 2 ? "mid-" + RP_MON_LONG[e >> 1] : "end of " + RP_MON_LONG[(e >> 1) - 1]);
+  return `${from(s[0])} to ${to(s[1])}`;
+}
+
+function _layoutCalendar(chart) {
+  const wrap = chart.canvas.closest(".rp-canvas-wrap");
+  const doc = RP.calendar, reg = RPRG.selected;
+  const unit = !doc ? null : reg ? doc.regions[reg.name] : doc.country_level;
+  const sel = RP.events && RP.events.events.find(e => e.id === document.getElementById("rp-event").value);
+  const A = chart.chartArea, x = chart.scales.x, n = chart.data.labels.length;
+  if (!wrap || !sel || !A || n < 2) return;
+  const step = x.getPixelForTick(1) - x.getPixelForTick(0);
+  const sig = JSON.stringify([doc && doc.country, reg && reg.name, sel.window_start, n, A.left, A.right, step,
+                              chart.canvas.offsetLeft]);
+  if (chart.$calSig === sig) return;
+  chart.$calSig = sig;
+  const old = wrap.parentElement.querySelector(".rp-cal");
+  if (old) old.remove();
+  if (!unit || !unit.rows.length) return;
+  const m0 = parseInt(sel.window_start.slice(5), 10) - 1;
+  const left = chart.canvas.offsetLeft + A.left, width = A.right - A.left;
+  const name = reg ? reg.name : doc.label;
+  const box = document.createElement("div");
+  box.className = "rp-cal";
+  box.setAttribute("role", "img");
+  box.setAttribute("aria-label", `Typical year, ${name}: `
+    + unit.rows.map(r => `${r.label} ${r.spans.map(_calSpanText).join(" and ")}`).join("; "));
+  for (const r of unit.rows) {
+    const src = doc.sources[r.source];
+    const row = document.createElement("div");
+    row.className = "rp-cal-row";
+    const lab = document.createElement("span");
+    lab.className = "rp-cal-lab";
+    lab.textContent = r.label;
+    lab.style.left = left + "px";
+    row.appendChild(lab);
+    const tr = document.createElement("div");
+    tr.className = "rp-cal-track";
+    tr.style.left = left + "px";
+    tr.style.width = width + "px";
+    // an empty row (every crop harvested all year) shows its note, not an empty list of months
+    const months = r.spans.length ? `${r.label}: ${r.spans.map(_calSpanText).join("; ")}` : r.label;
+    const title = months + (r.detail ? `\n${r.detail}` : "") + `\n${src.label}`;
+    // every calendar year the window crosses gets the same normal-year spans; half-month cells
+    // that touch are merged so a season reads as one piece
+    const cells = [];
+    for (let i = 0; i < n; i++) {
+      const m = (m0 + i) % 12;
+      for (const sp of r.spans) for (let h = sp[0]; h < sp[1]; h++) {
+        if ((h >> 1) !== m) continue;
+        const c = x.getPixelForTick(i) - step / 2 + (h % 2) * step / 2 - A.left;
+        cells.push([Math.max(0, c), Math.min(c + step / 2, width)]);
+      }
+    }
+    cells.sort((a, b) => a[0] - b[0]);
+    const bars = [];
+    for (const c of cells) {
+      if (c[1] <= c[0]) continue;
+      const last = bars[bars.length - 1];
+      if (last && c[0] - last[1] < 1) last[1] = Math.max(last[1], c[1]); else bars.push([...c]);
+    }
+    if (!bars.length) tr.title = title;       // e.g. every crop harvested all year: the note is on the track
+    for (const [a, z] of bars) {
+      const b = document.createElement("div");
+      b.className = "rp-cal-bar " + r.kind;
+      b.style.left = a + "px";
+      b.style.width = (z - a) + "px";
+      b.title = title;
+      tr.appendChild(b);
+    }
+    row.appendChild(tr);
+    box.appendChild(row);
+  }
+  const used = [...new Set(unit.rows.map(r => r.source))].map(k => doc.sources[k]);
+  const line = document.createElement("p");
+  line.className = "rp-cal-src";
+  line.textContent = `Typical year, ${name}: ${used.map(s => s.label).join("; ")}.`;
+  line.title = used.map(s => [s.label, s.method, s.url, s.accessed && `accessed ${s.accessed}`, s.licence]
+    .filter(Boolean).join(". ")).join("\n");
+  box.appendChild(line);
+  wrap.after(box);
+}
+
 // Windows start in January by construction, but the offset is computed from
 // window_start anyway rather than assumed.
 function _neutralFor(sel, nMonths, key) {
@@ -1140,8 +1273,19 @@ const RP_THR_TEXT = {
                    + "to August.",
 };
 
+// The unit the regional charts show: a selected region by its name, else "the country". Captions that
+// name it carry <span class="rp-unit-name">, rewritten on every render so they follow the region menu.
+function _unitName() {
+  return RPRG.selected ? RPRG.selected.name : "the country";
+}
+
 function _renderThresholdUI() {
-  const cs = RP.country ? RP.country.series : {};
+  // the same series the charts draw: the selected region's, else the country's
+  const cs = (RPRG.selected && RPRG.selected.series) || (RP.country ? RP.country.series : {});
+  const who = RPRG.selected ? RPRG.selected.name : RP.country.label;
+  // the record the state is judged on starts where that unit's series does (country 1981, regions 1982)
+  // (render() calls this only with a country loaded)
+  const t0 = String(((RPRG.selected && RPRG.selected.times) || RP.country.times)[0]).slice(0, 4);
   for (const b of document.querySelectorAll(".rp-thr button[data-panel][data-key]")) {
     const on = RP.thr[b.dataset.panel] === b.dataset.key;
     b.classList.toggle("on", on);
@@ -1152,7 +1296,7 @@ function _renderThresholdUI() {
     const st = _thrState(cs, b.dataset.key);
     b.classList.toggle("empty", st !== "ok" && !on);
     b.dataset.state = st;
-    b.title = st === "never" ? "never reached in this country over 1981-2025"
+    b.title = st === "never" ? `never reached in ${RPRG.selected ? RPRG.selected.name : "this country"} over ${t0}-2025`
             : st === "rare" ? "reached in under a day per month, even at its worst"
             : st === "absent" ? "not available in the data currently served" : "";
   }
@@ -1163,14 +1307,14 @@ function _renderThresholdUI() {
     const st = _thrState(cs, key);
     let extra = "";
     if (st === "never") {
-      extra = `  ${RP.country.label} never reaches this threshold anywhere in the 1981-2025 record.`;
+      extra = `  ${who} never reaches this threshold anywhere in the ${t0}-2025 record.`;
     } else if (st === "rare") {
       const vv = (cs[key] || []).filter(x => x != null);
       const mx = vv.length ? Math.max(...vv) : 0;
       const n = vv.filter(x => x > 0).length;
-      extra = `  ${RP.country.label} barely reaches this threshold: ${n} month`
+      extra = `  ${who} barely reaches this threshold: ${n} month`
             + `${n === 1 ? "" : "s"} out of ${vv.length} in the whole record, peaking at `
-            + `${mx.toFixed(1)} days averaged over the country.`;
+            + `${mx.toFixed(1)} days averaged over ${_unitName()}.`;
     } else if (st === "absent") {
       extra = "  This threshold is not in the data currently served.";
     }
@@ -2482,7 +2626,18 @@ async function _loadCountry(id) {
   if (dl) dl.hidden = false;
   if (wait) wait.hidden = true;
   RP.country = await _getJSON(`data/replay/${id}.json`);
+  RP.calendar = null;
   _fcLoad(id);            // in the background: render() draws without it, then again with it
+  _calLoad(id).catch(e => console.warn(e));           // the same for the seasonal calendar strip
+}
+
+// The country's seasonal calendar (build_replay_calendars.py). Every country has one, so a failed
+// fetch is an error and is left to surface, not hidden; the rainfall chart redraws with the strip.
+async function _calLoad(id) {
+  const doc = await _getJSON(`data/replay/calendars/${id}.json`);
+  if (!RP.country || RP.country.id !== id) return;
+  RP.calendar = doc;
+  if (RP.charts.rain) RP.charts.rain.draw();
 }
 
 async function init() {

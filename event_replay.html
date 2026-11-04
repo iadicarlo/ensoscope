@@ -7,8 +7,8 @@
   <meta name="description" content="Replay a past El Niño or La Niña month by month for any country: sea surface temperature, rainfall, drought and heat, against every other observed event.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/event_replay.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261030c">
-  <link rel="icon" type="image/png" href="favicon.png?v=20261030c">
+  <link rel="stylesheet" href="static/css/style.css?v=20261104a">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261104a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
     /* Event replay page layout. Shared components (cards, key boxes, tables,
@@ -136,6 +136,21 @@
     .rp-ol-table td.cool { background: color-mix(in srgb, var(--ln-strong) 10%, var(--page)); }
     .rp-ol-tabs { margin: var(--s3) 0; }
     .rp-ol-sent { margin: 0 0 var(--s3) 1.2em; padding: 0; font-size: var(--fs-ui); line-height: 1.5; max-width: none; }
+    /* Seasonal calendar strip under the rainfall chart (event_replay.js, _layoutCalendar):
+       thin, low contrast, labels above each row. Rainy season in the wet tint (teal means
+       wetter on every page), planting and harvest a light ink tint, lean season a darker one,
+       so the rows also read in greyscale; the labels name every row. */
+    .rp-cal { position: relative; margin: 2px 0 var(--s2); }
+    .rp-cal-row { position: relative; height: 7px; margin: 15px 0 4px; }
+    .rp-cal-track { position: absolute; top: 0; bottom: 0; background: var(--page);
+      box-shadow: inset 0 0 0 1px var(--hairline); border-radius: 2px; overflow: hidden; }
+    .rp-cal-bar { position: absolute; top: 0; bottom: 0; }
+    .rp-cal-bar.rain { background: color-mix(in srgb, var(--wet) 45%, var(--page)); }
+    .rp-cal-bar.planting, .rp-cal-bar.harvest { background: color-mix(in srgb, var(--ink) 22%, var(--page)); }
+    .rp-cal-bar.lean { background: color-mix(in srgb, var(--ink) 48%, var(--page)); }
+    .rp-cal-lab { position: absolute; top: -15px; font-size: 11px; line-height: 14px; color: var(--muted); white-space: nowrap; }
+    .rp-cal-src { font-size: var(--fs-xs); color: var(--muted); margin: 6px 0 0; }
+    @media print { .rp-cal-bar { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
     .rp-ol-mapbox { max-width: 540px; margin: var(--s3) 0 var(--s4); }
     #rp-ol-canvas { position: absolute; inset: 0; width: 100%; height: 250px; }
     #rp-ol-svg { display: block; width: 100%; height: 250px; position: relative; }
@@ -321,7 +336,7 @@
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261030c" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261104a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -700,7 +715,7 @@
           <div class="rp-pair">
         <div class="rp-panel">
           <div class="panel-head"><span class="panel-letter">a</span><h3 class="panel-title">Rainfall</h3></div>
-          <p class="panel-sub rp-sub">Monthly total over the country, and the difference from normal (the average of neutral years) for that same calendar month.</p>
+          <p class="panel-sub rp-sub">Monthly total over <span class="rp-unit-name">the country</span>, and the difference from normal (the average of neutral years) for that same calendar month.</p>
           <span class="rp-yunit" data-for="rp-chart-rain"></span>
           <div class="rp-canvas-wrap"><canvas id="rp-chart-rain" role="img"></canvas></div>
         </div>
@@ -742,7 +757,7 @@
           <div class="rp-pair">
         <div class="rp-panel">
           <div class="panel-head"><span class="panel-letter">a</span><h3 class="panel-title">Maximum temperature <span class="code">(Tmax)</span></h3></div>
-          <p class="panel-sub rp-sub">Monthly mean of the daily maximum, averaged over the country.</p>
+          <p class="panel-sub rp-sub">Monthly mean of the daily maximum, averaged over <span class="rp-unit-name">the country</span>.</p>
           <span class="rp-yunit" data-for="rp-chart-tmax"></span>
           <div class="rp-canvas-wrap"><canvas id="rp-chart-tmax" role="img"></canvas></div>
         </div>
@@ -812,14 +827,14 @@
 
   </main>
 
-  <script src="static/lib/d3.min.js?v=20261030c"></script>
-  <script src="static/lib/d3-geo-projection.min.js?v=20261030c"></script>
-  <script src="static/lib/chart.umd.min.js?v=20261030c"></script>
-  <script src="static/js/chart_theme.js?v=20261030c"></script>
-  <script src="static/js/data_base.js?v=20261030c"></script>
-  <script src="static/js/index_names.js?v=20261030c"></script>
-  <script src="static/js/site.js?v=20261030c"></script>
-  <script src="static/js/ramps.js?v=20261030c"></script>
-  <script src="static/js/event_replay.js?v=20261030c"></script>
+  <script src="static/lib/d3.min.js?v=20261104a"></script>
+  <script src="static/lib/d3-geo-projection.min.js?v=20261104a"></script>
+  <script src="static/lib/chart.umd.min.js?v=20261104a"></script>
+  <script src="static/js/chart_theme.js?v=20261104a"></script>
+  <script src="static/js/data_base.js?v=20261104a"></script>
+  <script src="static/js/index_names.js?v=20261104a"></script>
+  <script src="static/js/site.js?v=20261104a"></script>
+  <script src="static/js/ramps.js?v=20261104a"></script>
+  <script src="static/js/event_replay.js?v=20261104a"></script>
 </body>
 </html>

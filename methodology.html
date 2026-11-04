@@ -7,7 +7,7 @@
   <meta name="description" content="Methodology and open data sources behind the ENSOscope ENSO forecasts, skill verification and teleconnection composites, with DOIs.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/methodology.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261030c">
+  <link rel="stylesheet" href="static/css/style.css?v=20261104a">
   <style>
     /* Methodology layout. Shared components live in style.css. */
     .section .prose { max-width: var(--measure); }
@@ -23,14 +23,14 @@
     table.datasets td { vertical-align: top; line-height: 1.45; }
     @media (max-width: 600px) { table.datasets th[scope=row] { width: auto; min-width: 8rem; } }
   </style>
-  <link rel="icon" type="image/png" href="favicon.png?v=20261030c">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261104a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="methodology">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261030c" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261104a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -655,6 +655,18 @@
         <p class="table-notes">Licences as each provider states them, from the project's data licence check of
           14 October 2026. "See source": no value checked by the project yet; the dataset's own page or paper,
           cited in the table, has it.</p>
+        <h3 id="seasonal-calendar">Seasonal calendar (event replay)</h3>
+        <p class="prose">Under the rainfall chart, a thin strip shows a typical year for the selected region: its
+          rainy season and, where a source gives them, planting, harvest and the lean season. Rainy months come
+          from CHIRPS rainfall (observed): a month counts when it holds 10% or more of the year's rain, averaged
+          over the whole years of the served series, and rainy months that follow each other make one season.
+          Planting, harvest and the lean season come from FEWS NET's seasonal calendars. A region takes the
+          calendar of the FEWS NET zone it lies in on FEWS NET's locator map, or the country's own calendar where
+          FEWS NET publishes one for the whole country or for its rural households; in Tanzania, regions are
+          assigned to the zone with the same rain pattern. In four countries without a FEWS NET calendar, FAO's
+          Crop Calendar gives planting and harvest for the region's staple crops. It is used under FAO's terms
+          (non-commercial use, with acknowledgement) and is not covered by ENSOscope's CC BY 4.0. Every cell of
+          the strip traces to a row of the source ledger, <code>data/calendars/sources_ledger.csv</code>.</p>
         <h3>Disasters and outbreaks (event replay timeline)</h3>
         <ul class="refs" id="outbreak-sources-list">
           <li><strong>EM-DAT</strong>: Emergency Events Database (EM-DAT), UCLouvain / CRED, Brussels, Belgium,
@@ -683,6 +695,6 @@
     </section>
   </main>
 
-  <script src="static/js/site.js?v=20261030c"></script>
+  <script src="static/js/site.js?v=20261104a"></script>
 </body>
 </html>

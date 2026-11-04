@@ -15,6 +15,23 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-11-04",
+    tag: "New feature",
+    title: "A typical year for every region: rainy seasons, planting, harvest and lean season",
+    items: [
+      "On Event replay, a thin strip under each region's rainfall chart shows its typical year: the rainy season from CHIRPS observations everywhere, and planting, harvest and the lean season where FEWS NET or the FAO Crop Calendar gives them. The sources are named under the strip and on the Methodology page.",
+      "The downloads gain the same calendar with the November update.",
+    ],
+  },
+  {
+    date: "2026-11-04",
+    tag: "Fix",
+    title: "Event replay tables show the record, not a rain forecast past it",
+    items: [
+      "The regional tables and sentences on Event replay now say \"above the record since 1982\" (or below) where a rain forecast goes past the wettest or driest season observed, as the rest of the site has done since 30 October. On the charts, such a forecast stops at the record and its label says so.",
+    ],
+  },
+  {
     date: "2026-10-30",
     tag: "Fix",
     title: "Regional charts use the region's own normal; Burkina Faso by province",
