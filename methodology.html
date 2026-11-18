@@ -7,7 +7,7 @@
   <meta name="description" content="Methodology and open data sources behind the ENSOscope ENSO forecasts, skill verification and teleconnection composites, with DOIs.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/methodology.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261104a">
+  <link rel="stylesheet" href="static/css/style.css?v=20261118a">
   <style>
     /* Methodology layout. Shared components live in style.css. */
     .section .prose { max-width: var(--measure); }
@@ -23,14 +23,14 @@
     table.datasets td { vertical-align: top; line-height: 1.45; }
     @media (max-width: 600px) { table.datasets th[scope=row] { width: auto; min-width: 8rem; } }
   </style>
-  <link rel="icon" type="image/png" href="favicon.png?v=20261104a">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261118a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="methodology">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261104a" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261118a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -431,7 +431,14 @@
           14 seasons with a median of 89% of normal. Otherwise <em>no clear signal</em>, with the count of
           seasons on the side the median falls on. When 7 in 10 seasons or more went one way but the
           median stayed between 95% and 105%, the sheet says the change was slight. Counts are of seasons,
-          not events: an event that lasts into a second year can give two seasons.
+          not events. Both downloads count the same seasons: each past event's window starts as many
+          months after January of its onset year as the forecast's starts after January of the current
+          event's onset year, and it counts when more than half of its months fall inside the event. The
+          same window a year later counts too while more than half of it stays inside the event, so an
+          event that lasts into a second or third year can give two or three seasons. Until 18 November
+          2026 the One-page summary counted every calendar season most of whose months were El Niño
+          months; for December to May that took in December 1992 to May 1993, which the Full analysis
+          did not count.
         </p>
         <p>
           <strong>Thresholds.</strong> Heat stress and warm nights each carry all three health
@@ -494,7 +501,13 @@
           row says "part" in the cells column. A small island that no cell box overlaps takes the
           nearest cell within half a degree ("nearest"). A unit no data cell reaches, such as
           northern Germany for rainfall (CHIRPS stops at 50° N) or a remote island, is shown
-          as "none" rather than left out.
+          as "none" rather than left out. A unit that reaches past 50° and has rain on under 90% of
+          its cells shows its rain with the count, such as Santa Cruz in Argentina, rain on 353 of its
+          477 cells, and the downloads list it as partly covered. A unit with rain on under a quarter
+          of its cells shows no rain value anywhere, only "not covered by CHIRPS (rain on 30 of 235
+          cells)" for Magallanes in Chile; Hessen in Germany and Nord in France are the other two. Their
+          heat values stay. A country's rain is the average of every cell with rain; where that is not
+          every cell, the downloads say how many it is.
         </p>
         <p>
           <strong>The ± beside a regional figure is a spread, not an error bar.</strong> It is the
@@ -695,6 +708,6 @@
     </section>
   </main>
 
-  <script src="static/js/site.js?v=20261104a"></script>
+  <script src="static/js/site.js?v=20261118a"></script>
 </body>
 </html>

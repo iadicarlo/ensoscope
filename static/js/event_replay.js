@@ -168,7 +168,7 @@ function _lineDatasets(main, others, opts) {
 
   ds.push({ data: main.values, borderColor: opts.color, borderWidth: 2.25,
             pointRadius: 0, tension: 0, spanGaps: false, fill: false,
-            label: main.label, directText: opts.direct || null });
+            label: main.label, directText: opts.direct || null, _prelim: main.prelim || [] });
 
   // Live forecast, only when it overlaps this window (i.e. the event is running).
   // Dashed so it can never be mistaken for something that has happened.
@@ -199,6 +199,13 @@ function _lineDatasets(main, others, opts) {
 // printed the normal instead of the event.
 function _readoutDataset(datasets) {
   return datasets.find(d => !d._isOther && !d._isNormal);
+}
+
+/** " (Oct 2026 preliminary)" for the observed line when some of its months are CHIRPS preliminary. */
+function _prelimSuffix(months) {
+  if (!months.length) return "";
+  const name = ym => `${RP_MON[parseInt(ym.slice(5), 10) - 1]} ${ym.slice(0, 4)}`;
+  return ` (${months.map(name).join(", ")} preliminary)`;
 }
 
 function _lineChart(canvasId, key, labels, main, others, opts) {
@@ -236,7 +243,7 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
         // Value only. The month is named once, prominently, under the slider
         // that sets it; repeating "Jan 1997:" in all six panels tripled the
         // width of every box to restate something already on screen.
-        const txt = `${Math.round(v * 10) / 10}${opts.unit || ""}`;
+        const txt = `${Math.round(v * 10) / 10}${opts.unit || ""}` + ((ds._prelim || []).includes(i) ? " (preliminary)" : "");
         c.font = "600 12px " + _tok("--font");
         const wd = c.measureText(txt).width + 8;
         const bx = Math.min(Math.max(x - wd / 2, chart.chartArea.left), chart.chartArea.right - wd);
@@ -338,7 +345,9 @@ function _lineChart(canvasId, key, labels, main, others, opts) {
             title: items => {
               if (!items.length) return "";
               const l = labels[items[0].dataIndex];
-              return (l && l._abs) || (Array.isArray(l) ? l.join(" ") : String(l));
+              const main = _readoutDataset(items[0].chart.data.datasets);
+              const pre = main && (main._prelim || []).includes(items[0].dataIndex) ? " (preliminary)" : "";
+              return ((l && l._abs) || (Array.isArray(l) ? l.join(" ") : String(l))) + pre;
             },
             label: item => {
               const v = item.parsed.y;
@@ -686,9 +695,10 @@ function _olRanges(key, t) {
   const per = _olTablePeriod(t);
   if (!per) return null;
   const rain = key === "pr_total", ref = rain ? 100 : 0;
-  const unitOf = name => /^whole country$/i.test(name)
+  const unitOf0 = name => /^whole country$/i.test(name)
     ? doc.units_list.find(u => u.kind === "country")
     : doc.units_list.find(u => u.kind !== "country" && u.name === name);
+  const unitOf = name => { const u = unitOf0(name); return u && u.no_obs === "not_covered" ? null : u; };
   const SYS = [["seas5", "--seas5", "c"], ["mf9", "--mf9", "s"]];
   const rows = t.rows.map(r => {
     const u = unitOf(String(r[0]));
@@ -777,9 +787,18 @@ function _olPast(row, F, v) {
  *  range. Dry months, "not comparable" and "no skill shown" say so instead of a number, as in the
  *  table (region_outlook.cell_text). Rain past the record prints the record, never the number, and
  *  the model's past strong El Niño seasons when it forecast them the same way. */
+// A region whose rain CHIRPS covers on under a quarter of its cells shows no rain value anywhere
+// (region_outlook.rain_hidden; the data carries it as no_obs "not_covered" or rain_hidden, 18 Nov 2026).
+function _notCovered(n, t) {
+  return `not covered by CHIRPS (rain on ${n} of ${t} cells)`;
+}
+
 function _olTip(name, key, sys, pid) {
   const doc = RPFC.docs[key];
   const unit = doc && doc.units_list.find(u => u.kind === "region" && u.name === name);
+  if (unit && unit.no_obs === "not_covered" && unit.no_obs_cells) {
+    return `${name}: ${_notCovered(unit.no_obs_cells[0], unit.no_obs_cells[1])}`;
+  }
   const row = unit && unit.v[sys] && unit.v[sys][pid];
   if (!row) return name;
   if ((unit.dry || []).includes(pid)) return `${name}: dry months: little rain falls then`;
@@ -1039,11 +1058,17 @@ function render() {
     ["rp-chart-heat",  "heat",  RP.thr.heat,    " days", "days",       true],
     ["rp-chart-night", "night", RP.thr.night,   " days", "days",       true],
   ];
+  const winMonths = _monthsFrom(sel.window_start, nMonths);
   for (const [cid, key, series, unit, yTitle, zero] of panels) {
     const vals = cs[series];
     if (!vals) { _destroy(key); continue; }
+    // CHIRPS months still preliminary (data/raw/chirps_p25/PRELIMINARY.json, served with the country file):
+    // named on the line, in the readout and in the tooltip (Isma, 4 Nov 2026)
+    const pre = new Set((RP.country.preliminary || {})[series] || []);
+    const mainVals = _seriesFor(sel, nMonths, ct, vals);
+    const preIdx = winMonths.map((m, i) => (pre.has(m) && mainVals[i] != null ? i : -1)).filter(i => i >= 0);
     _lineChart(cid, key, labels,
-      { label: sel.label, values: _seriesFor(sel, nMonths, ct, vals) },
+      { label: sel.label + _prelimSuffix(preIdx.map(i => winMonths[i])), values: mainVals, prelim: preIdx },
       others.map(o => ({ label: o.label, start: o.window_start,
                          values: _seriesFor(o, nMonths, ct, vals) })),
       { color: colour, unit, yTitle, xTitle, beginAtZero: zero, direct,
@@ -1056,6 +1081,7 @@ function render() {
   for (const x of document.querySelectorAll(".rp-xnote")) x.textContent = xTitle + ".";
   _renderLegend(sel, others.length, _forecastsForWindow(sel, nMonths));
   _renderMeta(sel, others.length);
+  _applyNotices(RP.country && RP.country.id, sel);
   _renderImpacts(sel, nMonths);
   _renderOutlook();
 }
@@ -2091,12 +2117,18 @@ function _wireThresholds() {
 // UK: the count came from whichever grid loaded first, which is CHIRPS, and
 // CHIRPS stops at 50N. The chip now reports the grid the panels actually use
 // and names any source that is thinner.
+// Rain over part of the country (18 Nov 2026): Germany showed "726 grid cells" with rain on 228 of them,
+// CHIRPS stopping at 50N. Under 95% of the cells, the chip says how many have rain; "land" because the
+// shortfall is also coastal cells CHIRPS does not cover (Guatemala 142 of 154).
 function _cellsChip(c) {
   const by = c.n_cells_by_source || {};
   const n = c.n_cells || 0;
   const empty = Object.keys(by).filter(k => !by[k]);
   const suffix = empty.length ? `, no ${empty.join("/")} coverage` : "";
-  return `${c.label} (${n} grid cells${suffix})`;
+  const rain = by.chirps || 0;
+  const part = rain && rain < 0.95 * n
+    ? `; rain on ${rain}, CHIRPS covers land from 50°S to 50°N` : "";
+  return `${c.label} (${n} grid cells${suffix}${part})`;
 }
 
 /** Legend beside the charts. Swatches match the line styles exactly, so the
@@ -2178,7 +2210,7 @@ function _renderMeta(sel, nOthers) {
     ["Forecast issued", sel.forecast_vintage || "n/a"],
     ["Status", "developing, not yet a catalogued event"],
   ].concat([
-    ["Country", `${c.label} (${c.n_cells} grid cells)`],
+    ["Country", _cellsChip(c)],
   ]) : [
     ["Window", `${sel.window_start} to ${sel.window_end}`],
     ["Event length", `${sel.duration_months || "?"} months`],
@@ -2710,6 +2742,7 @@ async function init() {
   _wireThresholds();
   _wireEnlarge();
   _wireImpacts();
+  _setOpeningMonth(RP.events.events.find(e => e.id === evSel.value));
   render();
   _drawPickerMap().then(() => _drawZoom()).catch(err => {
     // The page is fully usable from the dropdown, so a map failure must not
@@ -2720,6 +2753,7 @@ async function init() {
   });
 
   evSel.addEventListener("change", () => {
+    _setOpeningMonth(RP.events.events.find(e => e.id === evSel.value));
     syncUrl(); render(); _drawEventLayer().catch(() => {}); _drawZoom().catch(() => {});
   });
   document.getElementById("rp-compare").addEventListener("change", render);
@@ -2830,7 +2864,26 @@ document.addEventListener("DOMContentLoaded", init);
 // monthIdx -1 is the whole-window average; 0 is January of year 0, which is
 // where the page opens. A window average smears a season that started early
 // into one that caught up late, and that difference is usually the point.
-const RPZ = { cmp: null, monthIdx: 0, cache: {}, panel: { a: null, b: null }, token: 0 };
+const RPZ = { cmp: null, monthIdx: 0, autoMonth: false, cache: {}, panel: { a: null, b: null }, token: 0 };
+
+// The current event opens on its latest month with data, the last month of its window the monthly
+// maps hold (globalmonths/index.json), not on month 1 (Isma, 13 Nov 2026). null when none is held.
+function _latestDataMonthIdx(sel, months) {
+  const have = new Set(months);
+  for (let i = sel.window_months - 1; i >= 0; i--) if (have.has(_monthKeyAt(sel, i))) return i;
+  return null;
+}
+
+// Called when an event is selected (first load and every change). A month the opening rule chose is
+// marked autoMonth; past events still open on month 1, and a month the reader moved the slider to is
+// kept, as before.
+function _setOpeningMonth(sel) {
+  if (sel && sel.is_current && RPGM.index) {
+    const i = _latestDataMonthIdx(sel, RPGM.index.months);
+    if (i !== null) { RPZ.monthIdx = i; RPZ.autoMonth = true; return; }
+  }
+  if (RPZ.autoMonth) { RPZ.monthIdx = 0; RPZ.autoMonth = false; }
+}
 
 /** Blank the two panels and their tables at once, so nothing from the previous
  *  country is ever on screen under the new country's name. */
@@ -3022,6 +3075,7 @@ async function _regionSeries(countryId, regionName) {
     const r = d.regions.find(x => x.name === regionName);
     if (!r) continue;
     out.times = out.times || d.times;
+    if (r.rain_hidden) { out.hidden = [r.n_cells, r.n_cells_all]; continue; }   // no rain line: not covered
     if (!r.clim || r.clim.every(x => x === null)) continue;   // cannot make an absolute
     out.series[countryKey] = d.times.map((t, i) => {
       const a = r.values[i], c = r.clim[parseInt(t.slice(5), 10) - 1];
@@ -3130,6 +3184,7 @@ function _updateRegionBanner() {
   if (!r) { el.hidden = true; el.innerHTML = ""; return; }
   el.hidden = false;
   el.innerHTML = `Charts below show <strong>${r.name}</strong>`
+    + (r.hidden ? `; rainfall ${_notCovered(r.hidden[0], r.hidden[1])}` : "")
     + `<button type="button" id="rp-region-clear">Show whole country</button>`;
   const btn = document.getElementById("rp-region-clear");
   if (btn) btn.addEventListener("click", () => _selectRegion(r.country, null));
@@ -3139,6 +3194,7 @@ function _updateRegionBanner() {
 async function _renderRegions(countryId, varKey, sel, cmp) {
   const box = document.getElementById("rp-regions");
   if (!box) return;
+  _applyNotices(countryId, sel);                       // follows the month slider too
   const data = await _loadRegions(countryId, varKey);
   // No admin-1 coverage for this country is a normal state, not an error: say
   // nothing rather than showing an empty table.
@@ -3154,8 +3210,9 @@ async function _renderRegions(countryId, varKey, sel, cmp) {
   if (!A) { box.hidden = true; return; }          // window view: no single month to tabulate
 
   const rows = data.regions.map(r => ({
-    name: r.name, n: r.n_cells, how: r.method || "centres",
-    a: r.values[A.i], b: B ? r.values[B.i] : undefined,
+    name: r.name, n: r.n_cells, all: r.n_cells_all, how: r.method || "centres",
+    hidden: r.rain_hidden === true,
+    a: r.rain_hidden ? null : r.values[A.i], b: B ? (r.rain_hidden ? null : r.values[B.i]) : undefined,
     // One stand-in cell has no spread to report: "+/- 0.0" would read as uniform.
     sa: (r.sd && r.method !== "nearest_cell") ? r.sd[A.i] : null,
     sb: (B && r.sd && r.method !== "nearest_cell") ? r.sd[B.i] : null,
@@ -3176,7 +3233,8 @@ async function _renderRegions(countryId, varKey, sel, cmp) {
   // How each region got its number (see build_region_month_series.py): most are
   // the mean of the cells centred inside them; small ones say otherwise.
   const cellsCell = (r) => r.how === "area_weighted" ? `${r.n} part`
-    : r.how === "nearest_cell" ? "nearest" : r.how === "no_cells" ? "none" : `${r.n}`;
+    : r.how === "nearest_cell" ? "nearest" : r.how === "no_cells" ? "none"
+    : r.all ? `${r.n} of ${r.all}` : `${r.n}`;
 
   const hdrA = `${_shortEv(sel)}<br><span class="rp-sub">${_monthLabelAt(sel, RPZ.monthIdx)}</span>`;
   const hdrB = cmp
@@ -3187,9 +3245,10 @@ async function _renderRegions(countryId, varKey, sel, cmp) {
   table.innerHTML =
     `<thead><tr><th>Region</th><th>${hdrA}</th>${hdrB ? `<th>${hdrB}</th>` : ""}` +
     `<th>cells</th></tr></thead><tbody>` +
-    rows.map(r => `<tr><td>${r.name}</td><td>${fmt(r.a, r.sa)}</td>` +
-                  (hdrB ? `<td>${fmt(r.b, r.sb)}</td>` : "") +
-                  `<td class="rp-rg-na">${cellsCell(r)}</td></tr>`).join("") +
+    rows.map(r => `<tr><td>${r.name}</td>` + (r.hidden
+        ? `<td class="rp-rg-na" colspan="${hdrB ? 2 : 1}">${_notCovered(r.n, r.all)}</td>`
+        : `<td>${fmt(r.a, r.sa)}</td>` + (hdrB ? `<td>${fmt(r.b, r.sb)}</td>` : ""))
+      + `<td class="rp-rg-na">${cellsCell(r)}</td></tr>`).join("") +
     `</tbody>`;
 
   document.getElementById("rp-regions-summary").textContent =
@@ -3203,6 +3262,8 @@ async function _renderRegions(countryId, varKey, sel, cmp) {
     + `it, weighted by the overlap ("part" in the cells column); a small island no cell `
     + `overlaps takes the nearest cell ("nearest"); "none" means no data cell reaches `
     + `the region for this variable. `
+    + (rows.some(r => r.all) ? `CHIRPS stops at 50°S and 50°N, so a region reaching past it is averaged over `
+       + `the cells it has rain for ("4 of 44": 4 of its 44 cells). ` : "")
     + `Click a region on the maps above to put it in the charts below.`;
   box.hidden = false;
 }
@@ -3266,6 +3327,32 @@ function _monthLabelAt(e, i) {
   return `${RP_MON[k % 12]} ${y0 + Math.floor(k / 12)}`;
 }
 
+// Short data notices (data/replay/notices.json, from data/notices): a notice shows for a listed country when
+// the viewed month, or with no month chosen the event's window, includes one of its months. Removing it is
+// deleting its entry; no code changes (18 Nov 2026, the October 2026 CHIRPS caution).
+const RPN = { doc: null };
+function _noticeFor(doc, countryId, months) {
+  const out = [];
+  for (const n of (doc && doc.notices) || []) {
+    const area = (n.countries || {})[countryId];
+    if (area && (n.months || []).some(m => months.includes(m))) out.push(n.text.replace("{area}", area));
+  }
+  return out.join(" ");
+}
+function _viewedMonths(sel) {
+  if (!sel) return [];
+  if (typeof RPZ !== "undefined" && RPZ.monthIdx >= 0) return [_monthKeyAt(sel, RPZ.monthIdx)];
+  return Array.from({ length: sel.window_months || 0 }, (_, i) => _monthKeyAt(sel, i));
+}
+async function _applyNotices(countryId, sel) {
+  if (RPN.doc === null) RPN.doc = await _getJSON("data/replay/notices.json").catch(() => ({ notices: [] }));
+  const text = _noticeFor(RPN.doc, countryId, _viewedMonths(sel));
+  for (const id of ["rp-rain-notice", "rp-regions-notice"]) {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = text; el.hidden = !text; }
+  }
+}
+
 function _monthKeyAt(e, i) {
   const y0 = parseInt(String(e.window_start).slice(0, 4), 10);
   const m0 = parseInt(String(e.window_start).slice(5), 10) - 1;
@@ -3303,6 +3390,7 @@ function _syncZoomControls(sel) {
     if (!sl._wired) {
       sl.addEventListener("input", () => {
         RPZ.monthIdx = +sl.value;
+        RPZ.autoMonth = false;               // the reader's month, kept across event changes
         _drawZoom().catch(() => {});
         _drawEventLayer().catch(() => {});   // the world map follows the month
         _prefetchNeighbours();

@@ -7,8 +7,8 @@
   <meta name="description" content="Replay a past El Niño or La Niña month by month for any country: sea surface temperature, rainfall, drought and heat, against every other observed event.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/event_replay.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261104a">
-  <link rel="icon" type="image/png" href="favicon.png?v=20261104a">
+  <link rel="stylesheet" href="static/css/style.css?v=20261118a">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261118a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
     /* Event replay page layout. Shared components (cards, key boxes, tables,
@@ -330,13 +330,16 @@
       .rp-ol-table td.wet, .rp-ol-table td.dry, .rp-ol-table td.hot, .rp-ol-table td.cool,
       .rp-imp-ev, .rp-imp-dot, .rp-cb-ticks, #rp-map-canvas { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
+    /* the data-driven notices (data/replay/notices.json): a callout box, the caption's size */
+    .rp-notice { font-size: var(--fs-sm); color: var(--ink); background: var(--key); border-radius: var(--r-key);
+                 padding: var(--s2) var(--s3); margin: 0 0 var(--s3); max-width: none; }
   </style>
 </head>
 <body data-page="event_replay">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261104a" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261118a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -543,6 +546,7 @@
       <details class="rp-regions" id="rp-regions" hidden>
         <summary id="rp-regions-summary">By sub-national region</summary>
         <div class="rp-regions-body">
+          <p class="rp-sub rp-notice" id="rp-regions-notice" hidden></p>
           <p class="rp-sub" id="rp-regions-note"></p>
           <div class="rp-regions-tablewrap">
             <table class="rp-regions-table" id="rp-regions-table"></table>
@@ -716,6 +720,7 @@
         <div class="rp-panel">
           <div class="panel-head"><span class="panel-letter">a</span><h3 class="panel-title">Rainfall</h3></div>
           <p class="panel-sub rp-sub">Monthly total over <span class="rp-unit-name">the country</span>, and the difference from normal (the average of neutral years) for that same calendar month.</p>
+          <p class="rp-sub rp-notice" id="rp-rain-notice" hidden></p>
           <span class="rp-yunit" data-for="rp-chart-rain"></span>
           <div class="rp-canvas-wrap"><canvas id="rp-chart-rain" role="img"></canvas></div>
         </div>
@@ -827,14 +832,14 @@
 
   </main>
 
-  <script src="static/lib/d3.min.js?v=20261104a"></script>
-  <script src="static/lib/d3-geo-projection.min.js?v=20261104a"></script>
-  <script src="static/lib/chart.umd.min.js?v=20261104a"></script>
-  <script src="static/js/chart_theme.js?v=20261104a"></script>
-  <script src="static/js/data_base.js?v=20261104a"></script>
-  <script src="static/js/index_names.js?v=20261104a"></script>
-  <script src="static/js/site.js?v=20261104a"></script>
-  <script src="static/js/ramps.js?v=20261104a"></script>
-  <script src="static/js/event_replay.js?v=20261104a"></script>
+  <script src="static/lib/d3.min.js?v=20261118a"></script>
+  <script src="static/lib/d3-geo-projection.min.js?v=20261118a"></script>
+  <script src="static/lib/chart.umd.min.js?v=20261118a"></script>
+  <script src="static/js/chart_theme.js?v=20261118a"></script>
+  <script src="static/js/data_base.js?v=20261118a"></script>
+  <script src="static/js/index_names.js?v=20261118a"></script>
+  <script src="static/js/site.js?v=20261118a"></script>
+  <script src="static/js/ramps.js?v=20261118a"></script>
+  <script src="static/js/event_replay.js?v=20261118a"></script>
 </body>
 </html>

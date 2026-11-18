@@ -15,6 +15,41 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-11-18",
+    tag: "Forecast update",
+    title: "November 2026 forecast",
+    items: [
+      "ECMWF SEAS5 and Météo-France updated to the November 2026 start, with refreshed sea surface temperature maps and a new regional forecast for every country and region.",
+      "Observed rain and heat now run to October 2026. The rain is CHIRPS's final October release.",
+      "On Event replay, the current event now opens on its latest month with data.",
+    ],
+  },
+  {
+    date: "2026-11-18",
+    tag: "Fix",
+    title: "Where CHIRPS rain stops at 50 degrees, the site and the downloads say so",
+    items: [
+      "CHIRPS observes rain on land from 50°S to 50°N. Where a country or region reaches past that, its rain now comes with the number of grid cells it rests on, for example Santa Cruz in Argentina, rain on 353 of its 477 cells.",
+      "Three regions have rain on under a quarter of their cells: Magallanes in Chile, Hessen in Germany and Nord in France. They now show no rain value, only \"not covered by CHIRPS\". Their heat values stay.",
+    ],
+  },
+  {
+    date: "2026-11-18",
+    tag: "Fix",
+    title: "One rule for past El Niño seasons in both downloads",
+    items: [
+      "The One-page summary now counts past El Niño seasons the same way as the Full analysis. For December to May this leaves out the short 1993 event, so the record holds 9 past seasons instead of 10. The wording changes in 17 of the 81 countries: Kenya, for example, now reads \"no clear signal\" instead of \"slightly wetter\".",
+    ],
+  },
+  {
+    date: "2026-11-18",
+    tag: "New data",
+    title: "A note on October 2026 rain in Argentina, Chile and Ethiopia",
+    items: [
+      "October 2026 was very wet in the central Andes and in Ethiopia's Somali region. Other rain datasets confirm a wet month but disagree on how much rain fell, so Event replay shows a short note whenever the view includes October 2026.",
+    ],
+  },
+  {
     date: "2026-11-04",
     tag: "New feature",
     title: "A typical year for every region: rainy seasons, planting, harvest and lean season",
