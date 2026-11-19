@@ -31,7 +31,7 @@ window.ENSOSCOPE_UPDATES = [
     tag: "New feature",
     title: "A page for your country, a typical year, and links you can send",
     items: [
-      "A new country page gathers in one place what ENSOscope holds for a country: the current forecast, the event so far, its regions and both downloads. Choose the country on the home page.",
+      "A new country page gathers in one place what ENSOscope holds for a country and each of its regions: the typical year, the latest observed season, the forecast for the next six months, past El Niño seasons and both downloads. Choose the country on the home page or under \"Your country\".",
       "Event replay now reads in one order, with a section menu. Click a region on the map to open it.",
       "A \"Typical year\" strip shows the rainy season of each region (CHIRPS, observed, 1982 to 2025) with the planting, harvest and lean seasons of the country. The agricultural calendars come from FEWS NET, from FAO GIEWS and the FAO Crop Calendar, or, where neither covers a country, from the modelled GGCMI crop calendar; the source is named under each strip. Kiribati and Puerto Rico have no agricultural calendar. The same calendar is a sheet in both downloads.",
       "\"Copy link\" gives a link to exactly what is on screen (country, region, event, month), to send to a colleague.",
