@@ -7,8 +7,8 @@
   <meta name="description" content="Replay a past El Niño or La Niña month by month for any country: sea surface temperature, rainfall, drought and heat, against every other observed event.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/event_replay.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261118a">
-  <link rel="icon" type="image/png" href="favicon.png?v=20261118a">
+  <link rel="stylesheet" href="static/css/style.css?v=20261119a">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261119a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
     /* Event replay page layout. Shared components (cards, key boxes, tables,
@@ -20,6 +20,35 @@
        here that sets display (.rp-grid, .rp-region-banner, ...) kept rendering
        elements the script had hidden. One rule fixes them all. */
     [hidden] { display: none !important; }
+
+    /* The reader's order (18 Nov 2026): numbered sections, a menu that stays in view, one takeaway each, detail
+       that folds in place. Type and spacing from the site scale: the kicker small and muted, the heading at the
+       section size, the takeaway at body size; sections set apart by space, not boxes. */
+    .rp-secnav { position: sticky; top: var(--hdr-h, 0px); z-index: 30; background: var(--page); border-bottom: 1px solid var(--rule);
+      display: flex; flex-wrap: wrap; gap: 2px var(--s4); padding: 10px 0; margin: 0 0 var(--s3); font-size: var(--fs-ui); }
+    .rp-secnav a { text-decoration: none; color: var(--ink); white-space: nowrap; }
+    .rp-secnav a:hover { color: var(--link); text-decoration: underline; }
+    .rp-sec { margin: 44px 0 0; scroll-margin-top: calc(var(--hdr-h, 0px) + 56px); }
+    .rp-sec:first-of-type { margin-top: var(--s3); }
+    #sec-notes .notes > h2 { display: none; }        /* the section heading names it once */
+    .rp-sec-k { margin: 0; font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .rp-sec-h { margin: 2px 0 6px; font-size: 1.35rem; line-height: var(--lh-tight); }
+    .rp-take { margin: 0 0 var(--s3); font-size: var(--fs-body); color: var(--ink); max-width: 62rem; }
+    details.rp-fold { margin: var(--s2) 0 var(--s3); border-top: 1px solid var(--hairline); }
+    details.rp-fold > summary { cursor: pointer; padding: 8px 0; color: var(--link); font-size: var(--fs-ui); }
+    details.rp-fold > summary:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+    #rp-ty { padding: var(--s3) var(--s4); }
+    /* a div with role="navigation", not a nav element: the site's mobile rules for nav are the header's menu */
+    @media (max-width: 600px) {
+      .rp-secnav { flex-wrap: nowrap; overflow-x: auto; gap: var(--s3); font-size: var(--fs-sm); padding: 8px 0;
+        scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+      .rp-secnav::-webkit-scrollbar { display: none; }
+      #rp-ty { padding: var(--s3); }
+    }
+    @media print {
+      .rp-secnav, details.rp-fold > summary { display: none; }
+      .rp-sec { margin-top: var(--s4); break-inside: auto; }
+    }
 
     /* Controls card */
     .rp-controls { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-end; }
@@ -339,7 +368,7 @@
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261118a" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261119a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -348,6 +377,7 @@
             <a href="forecast_maps.html" data-nav-item="forecast_maps">Maps</a>
           </div>
         </div>
+        <a href="country.html" data-nav="country">Your country</a>
         <a href="event_replay.html" data-nav="event_replay" class="active">Event replay</a>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="map_explorer">Teleconnections</span>
@@ -381,9 +411,25 @@
       </p>
     </div>
 
+
+    <!-- The reader's order (Isma, 18 Nov 2026), the same as the country page and the downloads: who and where; a
+         normal year; the El Niño now; maps; rain and drought; heat; the forecast; past events; notes. The menu
+         stays in view; a section the chosen country cannot fill hides with its link. -->
+    <div class="rp-secnav" id="rp-secnav" role="navigation" aria-label="Sections of this page">
+      <a href="#sec-country">Country</a><a href="#sec-year">Typical year</a><a href="#sec-enso" id="nav-enso">The El Niño</a>
+      <a href="#sec-maps">Maps</a><a href="#sec-rain">Rain and drought</a><a href="#sec-heat">Heat</a>
+      <a href="#sec-fc">Forecast</a><a href="#sec-past">Past events</a><a href="#sec-notes">Notes</a>
+    </div>
+
+    <section class="rp-sec" id="sec-country" aria-labelledby="sec-country-h">
+      <p class="rp-sec-k">Who and where</p>
+      <h2 class="rp-sec-h" id="sec-country-h">Country and downloads</h2>
+      <p class="rp-take" id="take-country" hidden></p>
+      <details class="rp-fold" id="fold-howto"><summary>How to read this page</summary>
     <p class="callout howto"><b>How to read this page.</b> The faint grey lines behind each chart are every other observed event of the same
       type, lined up so that month 0 is January of each one's own first year. If the coloured line sits outside the grey
       band, this event was doing something the others did not. <a href="guide.html#replay">More in the Guide</a>.</p>
+      </details>
 
     <!-- Country first, as numbered steps (Isma, 19 Oct 2026). A link can still name both
          (?event=...&country=...) or the country alone (?country=...). -->
@@ -462,6 +508,50 @@
       event of its kind.</span>
     </div>
 
+    </section>
+
+    <section class="rp-sec" id="sec-year" aria-labelledby="sec-year-h" data-needs-country hidden>
+      <p class="rp-sec-k">A normal year</p>
+      <h2 class="rp-sec-h" id="sec-year-h">Typical year</h2>
+      <p class="rp-take" id="take-year" hidden></p>
+      <div class="card" id="rp-ty"></div>
+    </section>
+
+    <section class="rp-sec" id="sec-enso" aria-labelledby="sec-enso-h" data-needs-country hidden>
+      <p class="rp-sec-k rp-sec-now">What is happening now</p>
+      <h2 class="rp-sec-h" id="sec-enso-h">The El Niño itself</h2>
+      <p class="rp-take" id="take-enso" hidden></p>
+    <dl class="facts rp-meta" id="rp-meta" aria-label="This event and country"></dl>
+
+      <div class="rp-chartbar" id="rp-chartbar" hidden>
+        <div class="rp-zc-ctrl">
+          <label for="rp-compare">Compare charts with</label>
+          <select id="rp-compare">
+            <option value="same_family">Other events of the same type</option>
+            <option value="same_level">Same type and intensity only</option>
+            <option value="none">Nothing (this event alone)</option>
+          </select>
+        </div>
+      </div>
+
+      <figure class="fig">
+        <div class="card">
+        <div class="rp-panel rp-wide">
+          <div class="panel-head"><h3 class="panel-title">Sea surface temperature <span class="code">(relative Niño 3.4)</span></h3></div>
+          <p class="panel-sub rp-sub" style="margin-left:0">The index the event was classified from, in standard deviations.</p>
+          <span class="rp-yunit" data-for="rp-chart-nino"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-nino" role="img"></canvas></div>
+        </div>
+          <div class="key rp-legend" data-key-for="nino"></div>
+        </div>
+        <figcaption><b>Fig. 3. Sea surface temperature, Niño 3.4.</b> <span class="rp-xnote"></span></figcaption>
+      </figure>
+    </section>
+
+    <section class="rp-sec" id="sec-maps" aria-labelledby="sec-maps-h">
+      <p class="rp-sec-k rp-sec-now">What is happening now</p>
+      <h2 class="rp-sec-h" id="sec-maps-h">Maps, month by month</h2>
+      <p class="rp-take" id="take-maps" hidden></p>
     <!-- One map, two jobs: it shows what this event did, and clicking a country
          selects it for the charts below. Data on a canvas, outlines as SVG on top. -->
     <figure class="fig" id="rp-fig-map">
@@ -553,11 +643,125 @@
           </div>
         </div>
       </details>
+    </section>
+
+    <section class="rp-sec" id="sec-rain" aria-labelledby="sec-rain-h" data-needs-country hidden>
+      <p class="rp-sec-k rp-sec-now">What is happening now</p>
+      <h2 class="rp-sec-h" id="sec-rain-h">Rain and drought</h2>
+      <p class="rp-take" id="take-rain" hidden></p>
+
+      <figure class="fig">
+        <div class="card">
+          <div class="rp-pair">
+        <div class="rp-panel">
+          <div class="panel-head"><span class="panel-letter">a</span><h3 class="panel-title">Rainfall <span class="code">(monthly total)</span></h3></div>
+          <p class="panel-sub rp-sub">Monthly total over <span class="rp-unit-name">the country</span>, and the difference from normal (the average of neutral years) for that same calendar month.</p>
+          <p class="rp-sub rp-notice" id="rp-rain-notice" hidden></p>
+          <span class="rp-yunit" data-for="rp-chart-rain"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-rain" role="img"></canvas></div>
+        </div>
+        <div class="rp-panel">
+          <div class="panel-head"><span class="panel-letter">b</span><h3 class="panel-title">Dry days <span class="code">(under 1 mm)</span></h3></div>
+          <p class="panel-sub rp-sub">Days below 1 mm in each month. The seasonal maps show the longest dry <em>run</em> instead.</p>
+          <span class="rp-yunit" data-for="rp-chart-dry"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-dry" role="img"></canvas></div>
+        </div>
+          </div>
+          <div class="key rp-legend" data-key-for="pair"></div>
+        </div>
+        <figcaption><b>Fig. 5. Rainfall and dry days.</b></figcaption>
+      </figure>
+      <details class="rp-fold" id="fold-rx"><summary>More rain indices: heaviest 10-day rainfall (Rx10day) and longest dry spell (CDD)</summary>
+
+      <figure class="fig">
+        <div class="card">
+          <div class="rp-pair">
+        <div class="rp-panel">
+          <div class="panel-head"><span class="panel-letter">a</span><h3 class="panel-title">Heaviest 10-day rainfall <span class="code">(Rx10day)</span></h3></div>
+          <p class="panel-sub rp-sub">The wettest ten consecutive days in each month, a flood-risk index, computed within the calendar month.</p>
+          <span class="rp-yunit" data-for="rp-chart-rx10"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-rx10" role="img"></canvas></div>
+        </div>
+        <div class="rp-panel">
+          <div class="panel-head"><span class="panel-letter">b</span><h3 class="panel-title">Longest dry spell <span class="code">(CDD)</span></h3></div>
+          <p class="panel-sub rp-sub">The longest run of days below 1 mm inside each month. A missing day breaks a spell.</p>
+          <span class="rp-yunit" data-for="rp-chart-cdd"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-cdd" role="img"></canvas></div>
+        </div>
+          </div>
+          <div class="key rp-legend" data-key-for="pair"></div>
+        </div>
+        <figcaption><b>Fig. 6. Heaviest 10-day rainfall and longest dry spell.</b></figcaption>
+      </figure>
+      </details>
+    </section>
+
+    <section class="rp-sec" id="sec-heat" aria-labelledby="sec-heat-h" data-needs-country hidden>
+      <p class="rp-sec-k rp-sec-now">What is happening now</p>
+      <h2 class="rp-sec-h" id="sec-heat-h">Heat</h2>
+      <p class="rp-take" id="take-heat" hidden></p>
+
+      <figure class="fig">
+        <div class="card">
+          <div class="rp-pair">
+        <div class="rp-panel">
+          <div class="panel-head"><span class="panel-letter">a</span><h3 class="panel-title">Maximum temperature <span class="code">(Tmax)</span></h3></div>
+          <p class="panel-sub rp-sub">Monthly mean of the daily maximum, averaged over <span class="rp-unit-name">the country</span>.</p>
+          <span class="rp-yunit" data-for="rp-chart-tmax"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-tmax" role="img"></canvas></div>
+        </div>
+        <div class="rp-panel">
+          <div class="panel-head"><span class="panel-letter">b</span><h3 class="panel-title">Heat-stress days <span class="code">(UTCI band)</span></h3></div>
+          <span class="rp-thr seg" role="group" aria-label="UTCI band">
+              <button type="button" data-panel="heat" data-key="utci_strong_days" class="on">32-38 °C</button>
+              <button type="button" data-panel="heat" data-key="utci_vstrong_days">38-46 °C</button>
+              <button type="button" data-panel="heat" data-key="utci_extreme_days">46 °C+</button>
+            </span>
+          <p class="panel-sub rp-sub" id="rp-sub-heat"></p>
+          <span class="rp-yunit" data-for="rp-chart-heat"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-heat" role="img"></canvas></div>
+        </div>
+          </div>
+          <div class="key rp-legend" data-key-for="pair"></div>
+        </div>
+        <figcaption><b>Fig. 7. Maximum temperature and heat stress.</b></figcaption>
+      </figure>
+      <details class="rp-fold" id="fold-nights"><summary>More heat indices: warm nights</summary>
+
+      <figure class="fig">
+        <div class="card">
+        <div class="rp-panel rp-wide">
+          <div class="panel-head"><h3 class="panel-title">Warm nights <span class="code">(night minimum band)</span></h3></div>
+          <span class="rp-thr seg" role="group" aria-label="Night temperature band">
+              <button type="button" data-panel="night" data-key="night_tropical">20-25 °C</button>
+              <button type="button" data-panel="night" data-key="night_equatorial" class="on">25-30 °C</button>
+              <button type="button" data-panel="night" data-key="night_torrid">30 °C+</button>
+            </span>
+          <p class="panel-sub rp-sub" id="rp-sub-night" style="margin-left:0"></p>
+          <span class="rp-yunit" data-for="rp-chart-night"></span>
+          <div class="rp-canvas-wrap"><canvas id="rp-chart-night" role="img"></canvas></div>
+        </div>
+          <div class="key rp-legend" data-key-for="nino"></div>
+        </div>
+        <figcaption><b>Fig. 8. Warm nights.</b></figcaption>
+      </figure>
+      </details>
+    <!-- The legend line the script writes for the enlarge dialog and for print. -->
+    <div class="rp-legend" id="rp-legend" hidden></div>
+
+    </section>
+
+    <section class="rp-sec" id="sec-fc" aria-labelledby="sec-fc-h" data-needs-country hidden>
+      <p class="rp-sec-k">What is forecast</p>
+      <h2 class="rp-sec-h" id="sec-fc-h">The regional forecast</h2>
+      <p class="rp-take" id="take-fc" hidden></p>
       <details class="rp-regions rp-outlook" id="rp-outlook" open hidden>
         <summary id="rp-outlook-summary">What the forecast models say, by region</summary>
         <div class="rp-regions-body">
           <p class="rp-sub" id="rp-outlook-intro"></p>
+          <details class="rp-fold" id="fold-ol-sent"><summary>Every forecast sentence for this country</summary>
           <ul class="rp-ol-sent" id="rp-outlook-sent"></ul>
+          </details>
           <div class="rp-ol-tabs seg" id="rp-outlook-tabs" role="group" aria-label="Index"></div>
           <div class="rp-ol-mapbox">
             <div class="rp-ol-mapbar">
@@ -585,32 +789,12 @@
         </div>
       </details>
 
-    <dl class="facts rp-meta" id="rp-meta" aria-label="This event and country"></dl>
+    </section>
 
-      <div class="rp-chartbar" id="rp-chartbar" hidden>
-        <div class="rp-zc-ctrl">
-          <label for="rp-compare">Compare charts with</label>
-          <select id="rp-compare">
-            <option value="same_family">Other events of the same type</option>
-            <option value="same_level">Same type and intensity only</option>
-            <option value="none">Nothing (this event alone)</option>
-          </select>
-        </div>
-      </div>
-
-    <div class="rp-grid" id="rp-grid" hidden>
-      <figure class="fig">
-        <div class="card">
-        <div class="rp-panel rp-wide">
-          <div class="panel-head"><h3 class="panel-title">Sea surface temperature, Niño 3.4</h3></div>
-          <p class="panel-sub rp-sub" style="margin-left:0">The index the event was classified from, in standard deviations.</p>
-          <span class="rp-yunit" data-for="rp-chart-nino"></span>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-nino" role="img"></canvas></div>
-        </div>
-          <div class="key rp-legend" data-key-for="nino"></div>
-        </div>
-        <figcaption><b>Fig. 3. Sea surface temperature, Niño 3.4.</b> <span class="rp-xnote"></span></figcaption>
-      </figure>
+    <section class="rp-sec" id="sec-past" aria-labelledby="sec-past-h" data-needs-country hidden>
+      <p class="rp-sec-k">What past events did</p>
+      <h2 class="rp-sec-h" id="sec-past-h">Past events</h2>
+      <p class="rp-take" id="take-past" hidden></p>
 
       <!-- Recorded impacts, on the SAME month axis as the charts, so a marker lines
            up with the anomaly that preceded it. Method: Anyamba et al. 2019,
@@ -645,6 +829,7 @@
           <!-- Jake Levi, 2026-08-27: the panel has to say plainly what it is not.
                An empty stretch is not "nothing happened", and a marker inside an
                El Nino window is not evidence the event caused it. -->
+          <details class="rp-fold" id="fold-limits"><summary>What this cannot tell you, and the sources</summary>
           <aside class="callout limits">
             <b>What this cannot tell you.</b>
             EM-DAT holds only events that were reported and met its entry
@@ -710,105 +895,24 @@
           and not a measure of correlation.
             <a href="methodology.html#event-replay">How these are built</a>.
           </aside>
+          </details>
         </div>
         <figcaption><b>Fig. 4. Reported disasters and outbreaks.</b></figcaption>
       </figure>
+    </section>
 
-      <figure class="fig">
-        <div class="card">
-          <div class="rp-pair">
-        <div class="rp-panel">
-          <div class="panel-head"><span class="panel-letter">a</span><h3 class="panel-title">Rainfall</h3></div>
-          <p class="panel-sub rp-sub">Monthly total over <span class="rp-unit-name">the country</span>, and the difference from normal (the average of neutral years) for that same calendar month.</p>
-          <p class="rp-sub rp-notice" id="rp-rain-notice" hidden></p>
-          <span class="rp-yunit" data-for="rp-chart-rain"></span>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-rain" role="img"></canvas></div>
-        </div>
-        <div class="rp-panel">
-          <div class="panel-head"><span class="panel-letter">b</span><h3 class="panel-title">Dry days</h3></div>
-          <p class="panel-sub rp-sub">Days below 1 mm in each month. The seasonal maps show the longest dry <em>run</em> instead.</p>
-          <span class="rp-yunit" data-for="rp-chart-dry"></span>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-dry" role="img"></canvas></div>
-        </div>
-          </div>
-          <div class="key rp-legend" data-key-for="pair"></div>
-        </div>
-        <figcaption><b>Fig. 5. Rainfall and dry days.</b></figcaption>
-      </figure>
-
-      <figure class="fig">
-        <div class="card">
-          <div class="rp-pair">
-        <div class="rp-panel">
-          <div class="panel-head"><span class="panel-letter">a</span><h3 class="panel-title">Heaviest 10-day rainfall <span class="code">(Rx10day)</span></h3></div>
-          <p class="panel-sub rp-sub">The wettest ten consecutive days in each month, a flood-risk index, computed within the calendar month.</p>
-          <span class="rp-yunit" data-for="rp-chart-rx10"></span>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-rx10" role="img"></canvas></div>
-        </div>
-        <div class="rp-panel">
-          <div class="panel-head"><span class="panel-letter">b</span><h3 class="panel-title">Longest dry spell <span class="code">(CDD)</span></h3></div>
-          <p class="panel-sub rp-sub">The longest run of days below 1 mm inside each month. A missing day breaks a spell.</p>
-          <span class="rp-yunit" data-for="rp-chart-cdd"></span>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-cdd" role="img"></canvas></div>
-        </div>
-          </div>
-          <div class="key rp-legend" data-key-for="pair"></div>
-        </div>
-        <figcaption><b>Fig. 6. Heaviest 10-day rainfall and longest dry spell.</b></figcaption>
-      </figure>
-
-      <figure class="fig">
-        <div class="card">
-          <div class="rp-pair">
-        <div class="rp-panel">
-          <div class="panel-head"><span class="panel-letter">a</span><h3 class="panel-title">Maximum temperature <span class="code">(Tmax)</span></h3></div>
-          <p class="panel-sub rp-sub">Monthly mean of the daily maximum, averaged over <span class="rp-unit-name">the country</span>.</p>
-          <span class="rp-yunit" data-for="rp-chart-tmax"></span>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-tmax" role="img"></canvas></div>
-        </div>
-        <div class="rp-panel">
-          <div class="panel-head"><span class="panel-letter">b</span><h3 class="panel-title">Heat stress</h3></div>
-          <span class="rp-thr seg" role="group" aria-label="UTCI band">
-              <button type="button" data-panel="heat" data-key="utci_strong_days" class="on">32-38 °C</button>
-              <button type="button" data-panel="heat" data-key="utci_vstrong_days">38-46 °C</button>
-              <button type="button" data-panel="heat" data-key="utci_extreme_days">46 °C+</button>
-            </span>
-          <p class="panel-sub rp-sub" id="rp-sub-heat"></p>
-          <span class="rp-yunit" data-for="rp-chart-heat"></span>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-heat" role="img"></canvas></div>
-        </div>
-          </div>
-          <div class="key rp-legend" data-key-for="pair"></div>
-        </div>
-        <figcaption><b>Fig. 7. Maximum temperature and heat stress.</b></figcaption>
-      </figure>
-
-      <figure class="fig">
-        <div class="card">
-        <div class="rp-panel rp-wide">
-          <div class="panel-head"><h3 class="panel-title">Warm nights</h3></div>
-          <span class="rp-thr seg" role="group" aria-label="Night temperature band">
-              <button type="button" data-panel="night" data-key="night_tropical">20-25 °C</button>
-              <button type="button" data-panel="night" data-key="night_equatorial" class="on">25-30 °C</button>
-              <button type="button" data-panel="night" data-key="night_torrid">30 °C+</button>
-            </span>
-          <p class="panel-sub rp-sub" id="rp-sub-night" style="margin-left:0"></p>
-          <span class="rp-yunit" data-for="rp-chart-night"></span>
-          <div class="rp-canvas-wrap"><canvas id="rp-chart-night" role="img"></canvas></div>
-        </div>
-          <div class="key rp-legend" data-key-for="nino"></div>
-        </div>
-        <figcaption><b>Fig. 8. Warm nights.</b></figcaption>
-      </figure>
-    </div>
-
-    <!-- The legend line the script writes for the enlarge dialog and for print. -->
-    <div class="rp-legend" id="rp-legend" hidden></div>
-
+    <section class="rp-sec" id="sec-notes" aria-labelledby="sec-notes-h">
+      <p class="rp-sec-k">Method</p>
+      <h2 class="rp-sec-h" id="sec-notes-h">Notes and sources</h2>
     <section class="notes">
       <h2 class="h3">Notes</h2>
       <p class="rp-legend-note" id="rp-note"></p>
     </section>
+    </section>
+
+    <!-- Kept for the load-error message (event_replay.js init); the charts live in the sections above. -->
+    <div class="rp-grid" id="rp-grid" hidden></div>
+
 
   <!-- Enlarge one panel. Jake asked for it in August 2026: eight panels fit on
        a screen at a size you can compare but not read closely. The chart is
@@ -832,14 +936,16 @@
 
   </main>
 
-  <script src="static/lib/d3.min.js?v=20261118a"></script>
-  <script src="static/lib/d3-geo-projection.min.js?v=20261118a"></script>
-  <script src="static/lib/chart.umd.min.js?v=20261118a"></script>
-  <script src="static/js/chart_theme.js?v=20261118a"></script>
-  <script src="static/js/data_base.js?v=20261118a"></script>
-  <script src="static/js/index_names.js?v=20261118a"></script>
-  <script src="static/js/site.js?v=20261118a"></script>
-  <script src="static/js/ramps.js?v=20261118a"></script>
-  <script src="static/js/event_replay.js?v=20261118a"></script>
+  <script src="static/lib/d3.min.js?v=20261119a"></script>
+  <script src="static/lib/d3-geo-projection.min.js?v=20261119a"></script>
+  <script src="static/lib/chart.umd.min.js?v=20261119a"></script>
+  <script src="static/js/chart_theme.js?v=20261119a"></script>
+  <script src="static/js/data_base.js?v=20261119a"></script>
+  <script src="static/js/index_names.js?v=20261119a"></script>
+  <script src="static/js/site.js?v=20261119a"></script>
+  <script src="static/js/ramps.js?v=20261119a"></script>
+  <script src="static/js/link_state.js?v=20261119a"></script>
+  <script src="static/js/typical_year.js?v=20261119a"></script>
+  <script src="static/js/event_replay.js?v=20261119a"></script>
 </body>
 </html>

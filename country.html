@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your country | ENSOscope</title>
+  <meta name="description" content="Choose a country, click a region, and see the typical year, this season, the regional forecast and what past El Niño seasons did.">
+  <link rel="stylesheet" href="static/css/style.css?v=20261119a">
+  <style>
+    /* Country page (18 Nov 2026). Shared components live in style.css; colours are its tokens. One
+       accent (--link) for the opened block; the data palette (--wet, --dry, warm, cool) only on the chips. */
+    #cp-title-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: var(--s4) 0 var(--s3); }
+    #cp-title-row h2 { margin: 0; }
+    #cp-where { font-size: var(--fs-ui); color: var(--muted); }
+    .cp-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: var(--s4); align-items: start; }
+    @media (max-width: 900px) { .cp-grid { grid-template-columns: 1fr; } }
+    #cp-mapwrap { width: 100%; }
+    #cp-map { display: block; width: 100%; height: auto; }
+    .cp-reg { fill: var(--neighbour); stroke: var(--ink); stroke-opacity: .55; stroke-width: .7px; cursor: pointer; vector-effect: non-scaling-stroke; }
+    .cp-reg:hover { fill: color-mix(in srgb, var(--link) 18%, var(--page)); }
+    .cp-reg.on { fill: color-mix(in srgb, var(--link) 34%, var(--page)); stroke-opacity: 1; stroke-width: 1.6px; }
+    .cp-reg:focus { outline: none; stroke: var(--link); stroke-width: 2px; }
+    .cp-hint { font-size: var(--fs-sm); color: var(--muted); margin: var(--s1) 0 0; }
+    .cp-sub { font-size: var(--fs-sm); color: var(--muted); margin: 2px 0 var(--s2); }
+    .cp-empty { color: var(--muted); font-size: var(--fs-sm); margin: 0; }
+    /* the right column: white, sections set apart by space and one hairline, no tinted box inside a tinted card */
+    #cp-unit { background: var(--page); border: 1px solid var(--hairline); border-radius: var(--r-card); padding: var(--s3) var(--s4); }
+    .cp-sec + .cp-sec { border-top: 1px solid var(--hairline); margin-top: var(--s4); padding-top: var(--s3); }
+    .cp-sec h3 { margin: 0 0 4px; font-size: 1.05rem; }
+    .cp-facts-t { width: 100%; border-collapse: collapse; font-size: var(--fs-ui); }
+    .cp-facts-t th { text-align: left; font-weight: 400; color: var(--ink); padding: 3px 8px 3px 0; width: 34%; }
+    .cp-facts-t td { padding: 3px 8px 3px 0; font-variant-numeric: tabular-nums; }
+    .cp-group { margin-top: var(--s3); }
+    .cp-gh { margin: 0; font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600;
+      padding-bottom: 4px; border-bottom: 1px solid var(--rule); }
+    .cp-block { border-bottom: 1px solid var(--hairline); }
+    .cp-block summary { cursor: pointer; list-style: none; padding: 10px 0 10px 4px; display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto; gap: 2px 14px; align-items: baseline; }
+    .cp-block summary::-webkit-details-marker { display: none; }
+    .cp-block summary:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+    .cp-block[open] { border-left: 3px solid var(--link); }
+    .cp-block[open] summary { padding-left: 10px; }
+    .cp-bt { grid-column: 1 / -1; font-size: var(--fs-sm); color: var(--muted); display: flex; align-items: center; gap: 8px; }
+    .cp-verdict { grid-column: 1; font-size: 1.02rem; font-weight: 600; color: var(--ink); }
+    .cp-mv { font-size: var(--fs-sm); color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+    .cp-skn { grid-column: 1 / -1; font-size: 12px; color: var(--muted); }
+    .cp-mv i { font-style: normal; color: var(--muted); font-size: 11px; margin-right: 2px; }
+    .cp-chip { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 3px;
+      font-size: 10px; color: #fff; flex: none; }
+    .cp-chip.wet { background: var(--wet); } .cp-chip.dry { background: var(--dry); }
+    .cp-chip.warm { background: var(--warm); } .cp-chip.cool { background: var(--cool); }
+    .cp-chip.none { background: var(--page); color: var(--muted); box-shadow: inset 0 0 0 1px var(--rule); font-size: 12px; }
+    .cp-detail { padding: 0 0 var(--s3) 10px; }
+    .cp-block:not([open]) .cp-detail { display: none; }
+    .cp-facts { display: grid; grid-template-columns: minmax(0, 9rem) minmax(0, 1fr); gap: 4px var(--s3); margin: 0 0 var(--s2); font-size: var(--fs-sm); }
+    .cp-facts dt { color: var(--muted); } .cp-facts dd { margin: 0; color: var(--ink); }
+    .cp-words { font-size: var(--fs-sm); color: var(--ink); margin: 0 0 var(--s2); }
+    .cp-models { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); margin: 0 0 var(--s2); }
+    .cp-models th, .cp-models td { padding: 5px 6px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+    .cp-models thead th { text-align: right; font-weight: 600; border-bottom: 1px solid var(--rule); }
+    .cp-models tbody th { text-align: left; font-weight: 400; color: var(--ink); }
+    .cp-models tbody th span { color: var(--muted); }
+    .cp-models td { text-align: right; font-variant-numeric: tabular-nums; width: 30%; }
+    .cp-models td.both { text-align: center; }
+    .cp-note { display: block; font-size: var(--fs-sm); color: var(--muted); margin: 2px 0 0; }
+    .cp-links { margin: 0; padding-left: 1.1em; font-size: var(--fs-ui); } .cp-links li + li { margin-top: 4px; }
+    #cp-notfound { margin: var(--s2) 0 0; }
+    .cp-skip { position: absolute; left: -9999px; } .cp-skip:focus { position: static; display: inline-block; margin: 0 0 var(--s2); }
+    .cp-season { color: var(--ink); }
+    @media print {
+      #cp-chooser, .lk-copy, .lk-ok, .cp-hint, .site-footer, body > footer { display: none !important; }
+      .cp-grid { grid-template-columns: 1fr; }
+      .cp-grid > div:first-child { break-inside: avoid; }          /* the map and the typical year stay together */
+      .cp-block, .cp-group { break-inside: avoid; }
+      .cp-block summary { padding-left: 0; }
+    }
+    @media (max-width: 520px) {
+      #cp-unit { padding: var(--s3); }
+      .cp-block summary { grid-template-columns: minmax(0, 1fr) auto; }
+      .cp-verdict { grid-column: 1 / -1; }
+      .cp-facts { grid-template-columns: 1fr; gap: 0; } .cp-facts dd { margin-bottom: var(--s1); }
+      .cp-facts-t th { width: 55%; }
+      .cp-detail { padding-left: 8px; } .cp-models th, .cp-models td { padding: 4px 3px; }
+    }
+  </style>
+  <link rel="icon" type="image/png" href="favicon.png?v=20261119a">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body data-page="country">
+  <header>
+    <div class="header-inner">
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261119a" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <nav>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
+          <div class="nav-dropdown-menu">
+            <a href="index.html" data-nav-item="forecast_enso">ENSO</a>
+            <a href="forecast_maps.html" data-nav-item="forecast_maps">Maps</a>
+          </div>
+        </div>
+        <a href="country.html" data-nav="country" class="active">Your country</a>
+        <a href="event_replay.html" data-nav="event_replay">Event replay</a>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="map_explorer">Teleconnections</span>
+          <div class="nav-dropdown-menu">
+            <a href="map_explorer.html" data-nav-item="telecon_maps">Maps</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="hindcasts">Hindcasts</span>
+          <div class="nav-dropdown-menu">
+            <a href="hindcast_explorer.html" data-nav-item="hindcast_enso">ENSO</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-toggle" data-nav="skill">Skill</span>
+          <div class="nav-dropdown-menu">
+            <a href="hindcast_skill.html" data-nav-item="skill_enso">ENSO</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="cp-page">
+    <div class="page-head">
+      <p class="kicker">Your country</p>
+      <h1 class="page-title">The El Niño outlook for your country</h1>
+      <p class="page-subtitle" id="cp-status">Loading the El Niño status...</p>
+    </div>
+    <a class="cp-skip" href="#cp-title-row">Skip the country list</a>
+    <div class="card" id="cp-chooser"></div>
+    <p class="cp-empty" id="cp-notfound" role="status" hidden></p>
+    <div id="cp-body" hidden>
+      <div id="cp-title-row"><h2 id="cp-title"></h2><span id="cp-where"></span></div>
+      <div class="cp-grid">
+        <div>
+          <figure class="fig">
+            <div class="card">
+              <div id="cp-mapwrap"><svg id="cp-map" role="group" aria-label="Regions: click one for its numbers"></svg></div>
+              <p class="cp-hint">Click a region for its numbers; click it again for the whole country.</p>
+            </div>
+          </figure>
+          <div class="card">
+            <h3>Typical year</h3>
+            <div id="cp-cal"></div>
+          </div>
+        </div>
+        <div id="cp-unit"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="static/lib/d3.min.js?v=20261119a"></script>
+  <script src="static/js/data_base.js?v=20261119a"></script>
+  <script src="static/js/site.js?v=20261119a"></script>
+  <script src="static/js/link_state.js?v=20261119a"></script>
+  <script src="static/js/typical_year.js?v=20261119a"></script>
+  <script src="static/js/country.js?v=20261119a"></script>
+</body>
+</html>

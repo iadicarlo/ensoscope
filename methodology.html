@@ -7,7 +7,7 @@
   <meta name="description" content="Methodology and open data sources behind the ENSOscope ENSO forecasts, skill verification and teleconnection composites, with DOIs.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/methodology.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261118a">
+  <link rel="stylesheet" href="static/css/style.css?v=20261119a">
   <style>
     /* Methodology layout. Shared components live in style.css. */
     .section .prose { max-width: var(--measure); }
@@ -23,14 +23,14 @@
     table.datasets td { vertical-align: top; line-height: 1.45; }
     @media (max-width: 600px) { table.datasets th[scope=row] { width: auto; min-width: 8rem; } }
   </style>
-  <link rel="icon" type="image/png" href="favicon.png?v=20261118a">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261119a">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="methodology">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261118a" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261119a" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -39,6 +39,7 @@
             <a href="forecast_maps.html" data-nav-item="forecast_maps">Maps</a>
           </div>
         </div>
+        <a href="country.html" data-nav="country">Your country</a>
         <a href="event_replay.html" data-nav="event_replay">Event replay</a>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="map_explorer">Teleconnections</span>
@@ -86,9 +87,27 @@
           teleconnections and removes the background warming with it, without fitting anything.
         </p>
         <p>
-          Each index is then deseasonalised against a 30-year rolling climatology and
-          standardised per calendar month over <strong>1980-2014</strong>, every dataset and
-          every model by its own spread. Until 14 September 2026 the warming was instead removed
+          Each index is then deseasonalised and standardised per calendar month over
+          <strong>1980-2014</strong>, every dataset and every model by its own spread.
+        </p>
+        <p>
+          <strong>The normal of each month (observations).</strong> The normal of a month is the
+          mean of the same calendar month over the 31 years centred on its year, 15 before and 15
+          after, shifted to fit inside 1980 to <strong>2025</strong>: the years 1980 to 1994 use
+          1980-2009, the years 1995 to 2010 the 31 years around them, and every year from 2011
+          on uses 1996-2025. The end year is fixed at the last complete five-year block; it moves
+          to 2030 in 2031, then every five years. Until November 2026 the window ended at the
+          last month of data, so each new month changed the normal of the 15 or so years before
+          it: October 2026 lowered every October since 2012 by 0.09 standard deviations and moved
+          four event dates. With the end fixed, a new month never changes a past value. NOAA CPC
+          also moves its ONI base periods only every five years and keeps past episode
+          classifications at each update
+          (<a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_change.shtml" target="_blank" rel="noopener">CPC</a>).
+          The last month or two can still change when JMA revises COBE-SST 2, as CPC notes for
+          RONI.
+        </p>
+        <p>
+          Until 14 September 2026 the warming was instead removed
           by regressing each index on a global mean temperature curve. That estimator drifts:
           measured against the relative index it runs about 0.2 standard deviations low in the
           early 1980s and 0.3 high in the 2020s, in four independent SST products alike, so
@@ -106,6 +125,21 @@
           are computed once on COBE-SST 2 and shared by every dataset and model, so a product
           with weaker variance is never handed an easier test. There is no seasonal
           phase-locking requirement and no bridging of gaps inside the rule.
+        </p>
+        <p>
+          <strong>The peak of an event</strong> (and of a neutral period) is the month with the
+          largest three-month mean anomaly of the relative NINO3.4 index in °C. Until November
+          2026 it was the largest standardised value, which drifted towards April to September,
+          when the index varies least (0.44 °C in May against 0.96 °C in December), so a modest
+          spring anomaly could outrank a larger winter one. The peak in °C falls within one month
+          of NOAA's RONI peak for 24 of the 25 events, against 13 before.
+        </p>
+        <p>
+          <strong>What changed in November 2026.</strong> Event dates or peaks change on 28 of the
+          39 rows of the event table; no event is added, dropped or reclassified. The observed
+          index does not change in degrees before 2011; in standard deviations, values before 2011
+          move by at most 0.003 (the 1980-2014 standard deviation includes 2011-2014), and from
+          2011 on by up to 0.108.
         </p>
         <p>
           <strong>Multi-year events.</strong> Two episodes of the same sign are treated as one
@@ -243,8 +277,8 @@
           dry days) by ENSO phase, from observed rainfall (CHIRPS), heat from the ERA5 reanalysis, and the
           CESM2 large ensemble, a climate model run 50 times.
           The <strong>ENSO indices</strong> used to classify each event are relative indices
-          (the box mean minus the concurrent 20°S to 20°N tropical mean), deseasonalised with a
-          30-year rolling window and standardised by the <strong>ENSO standard deviation over
+          (the box mean minus the concurrent 20°S to 20°N tropical mean), deseasonalised against a
+          31-year window that ends in 2025 for the observations (see above) and standardised by the <strong>ENSO standard deviation over
           1980-2014</strong>, where the threshold is expressed in standard deviations. The
           <strong>composited fields themselves are left alone</strong>: taking the tropical mean
           out belongs to the classification, so a composite shows the conditions actually
@@ -269,7 +303,7 @@
           against normal, so a season there reads smaller and can differ in sign; for an event that starts
           late in the year it also draws the first year's months, where the map takes the next year's
           season (2014-16: SON 2015, DJF 2015-16), and the replay page names those seasons under the charts.
-          A change under 0.5 mm or 0.5 days either way, as printed, reads "no clear signal". The number of
+          A change under 0.5 mm or 0.5 days either way, as printed, reads "little change". The number of
           past events is shown with the season each one gave and how many of them went the way of the
           average ("n = 4: 1986, 1991, 2015, 2023; heavier in 2 of 4"), because one or two events make a
           weak guide and an average can rest on one event. The map tiles store the composite as computed;
@@ -428,7 +462,7 @@
           <em>wetter</em>: at least 7 in 10 seasons on that side of normal and a median below 95% or above
           105% of normal. <em>Tends drier</em> or <em>tends wetter</em>: 6 in 10 seasons (60 to 69%) on
           that side and a median beyond the same limits; Honduras, November to January, was drier in 9 of
-          14 seasons with a median of 89% of normal. Otherwise <em>no clear signal</em>, with the count of
+          14 seasons with a median of 89% of normal. Otherwise <em>no consistent direction</em>, with the count of
           seasons on the side the median falls on. When 7 in 10 seasons or more went one way but the
           median stayed between 95% and 105%, the sheet says the change was slight. Counts are of seasons,
           not events. Both downloads count the same seasons: each past event's window starts as many
@@ -708,6 +742,6 @@
     </section>
   </main>
 
-  <script src="static/js/site.js?v=20261118a"></script>
+  <script src="static/js/site.js?v=20261119a"></script>
 </body>
 </html>

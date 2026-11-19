@@ -121,7 +121,7 @@
     if (mean === null || mean === undefined) return 0;
     const t = THRESHOLD[variable] != null ? THRESHOLD[variable] : 0.5;
     // Decide on the value as the panel prints it (one decimal), so a printed
-    // "+0.5" can never sit beside "no clear signal".
+    // "+0.5" can never sit beside "little change".
     const r = Math.round(mean * 10) / 10;
     return r >= t ? 1 : r <= -t ? -1 : 0;
   }

@@ -968,6 +968,115 @@ function _seriesFor(evt, nMonths, times, values) {
 // Everything below the picker describes ONE event. With no event chosen there
 // is nothing for it to describe, so it is hidden rather than left showing the
 // last thing drawn or an empty frame.
+// ── the reader's order (Isma, 18 Nov 2026): sections, their takeaways, the Typical year ──────────────────
+// The order is the page's markup (event_replay.html): who and where; a normal year; the El Niño now; maps; rain
+// and drought; heat; the forecast; past events; notes. Each section opens with one takeaway taken from served
+// sentences only (the event's label, the calendar's source line, the ENSO status, the comparison tables' own
+// cells with their column labels, the outlook's next-six-months sentence); a section with nothing served says
+// nothing. Pure, so a node test can call it (scripts/analysis/tests/test_replay_sections.py).
+function _sectionTakeaways(s) {
+  const out = {};
+  if (s.sel) out.country = s.sel.label;
+  if (s.sel && s.sel.is_current && s.enso)
+    out.enso = `${s.enso.observed.line}. ${s.enso.forecast.run_label}: ${s.enso.forecast.sentence}`;
+  if (s.metaLine) out.maps = s.metaLine + ".";
+  const cmp = s.sel && s.sel.is_current ? s.cmp : null;          // the tables describe the current season
+  if (cmp && cmp.tables) {
+    const rowOf = key => {
+      const t = cmp.tables[key];
+      if (!t) return null;
+      const r = (s.region && t.rows.find(x => x[0] === s.region)) || t.rows.find(x => x[0] === "Whole country");
+      return r ? { t, r, whole: r[0] === "Whole country" && !!s.region } : null;
+    };
+    const say = (pairs, col) => {
+      const got = pairs.map(([k, w]) => [rowOf(k), w]).filter(([x]) => x);
+      if (!got.length) return null;
+      const where = got[0][0].whole ? ` (${s.countryLabel} as a whole)` : "";
+      return got.map(([x, w]) => `${w}: ${x.r[col]}`).join("; ") + ` (${got[0][0].t.columns[col]})${where}.`;
+    };
+    out.rain = say([["pr_total", "Rainfall"], ["dry_days", "dry days"]], 1);
+    out.heat = say([["tmax", "Maximum temperature"], ["heat_days", "heat-stress days"]], 1);
+    out.past = say([["pr_total", "Rainfall"], ["tmax", "maximum temperature"]], 2);
+    const lead = s.n6Label ? `Forecast for rainfall, ${s.n6Label}: ` : null;
+    const f = lead && (cmp.sentences || []).find(x => x.startsWith(lead));
+    if (f) out.fc = f + (s.region ? ` (${s.countryLabel} as a whole)` : "");
+  }
+  for (const k of Object.keys(out)) if (!out[k]) delete out[k];
+  return out;
+}
+
+/** The event's own headings: "The El Niño itself" or "The La Niña itself"; "What is happening now" only for the
+ *  current event, "What happened" for a past one (QA, 18 Nov 2026). */
+function _secTitles(sel) {
+  const fam = sel && sel.family === "La Nina" ? "La Niña" : "El Niño";
+  return { heading: `The ${fam} itself`, menu: `The ${fam}`,
+           kicker: sel && sel.is_current ? "What is happening now" : "What happened" };
+}
+
+// The menu shows a link only for a section on the page.
+function _syncSecNav() {
+  for (const a of document.querySelectorAll("#rp-secnav a")) {
+    const sec = document.querySelector(a.getAttribute("href"));
+    a.hidden = !sec || sec.hidden;
+  }
+}
+
+function _drawSections() {
+  const evSel = document.getElementById("rp-event");
+  const sel = RP.events && evSel && RP.events.events.find(e => e.id === evSel.value);
+  if (!sel || !RP.country) { _syncSecNav(); return; }
+  const region = RPRG.selected && RPRG.selected.country === RP.country.id ? RPRG.selected.name : null;
+  // the Typical year, the shared component (typical_year.js), following the selection
+  const ty = document.getElementById("rp-ty");
+  const n6 = RPFC.index && (RPFC.index.periods || []).find(p => p.id === "N6");
+  const d = new Date(), nowYm = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  if (ty && RP.calendar && window.ENSO_TYPICAL_YEAR) {
+    window.ENSO_TYPICAL_YEAR.render(ty, RP.calendar, region, { init: (RPFC.index && RPFC.index.init) || nowYm,
+      fcMonths: n6 ? n6.months : [], fcLabel: n6 ? n6.label : "", nowYm, rain: RP.rainCov || {} });
+  } else if (ty && !RP.calendar) {
+    ty.innerHTML = `<p class="ty-empty">Loading the typical year...</p>`;
+  }
+  // "Rain and heat observed through October 2026", as the facts line above the charts says it
+  let metaLine = null;
+  for (const dt of document.querySelectorAll("#rp-meta dt")) {
+    if (/^Rain and heat observed through$/.test(dt.textContent.trim()) && dt.nextElementSibling)
+      metaLine = `Rain and heat observed through ${dt.nextElementSibling.textContent.trim()}`;
+  }
+  // the headings follow the event: El Niño or La Niña, now or then
+  const T = _secTitles(sel);
+  const eh = document.getElementById("sec-enso-h"), en = document.getElementById("nav-enso");
+  if (eh) eh.textContent = T.heading;
+  if (en) en.textContent = T.menu;
+  document.querySelectorAll(".rp-sec-now").forEach(k => { k.textContent = T.kicker; });
+  const t = _sectionTakeaways({ sel, enso: RP.enso, metaLine, cmp: RPFC.country === RP.country.id ? RPFC.cmp : null,
+                                region, countryLabel: RP.country.label, n6Label: n6 ? n6.label : null });
+  for (const el of document.querySelectorAll(".rp-take")) {
+    const k = el.id.replace(/^take-/, "");
+    el.textContent = t[k] || "";
+    el.hidden = !t[k];
+  }
+  const fc = document.getElementById("sec-fc"), ol = document.getElementById("rp-outlook");
+  if (fc && ol) fc.hidden = ol.hidden;                  // no regional forecast for this country: no section
+  _syncSecNav();
+}
+
+// The site header is sticky too: the section menu sits under it, at its measured height.
+function _hdrHeight() {
+  const h = document.querySelector("body > header");
+  const sticks = h && getComputedStyle(h).position === "sticky";   // on a phone the header scrolls away
+  document.documentElement.style.setProperty("--hdr-h", `${sticks ? h.offsetHeight : 0}px`);
+}
+window.addEventListener("resize", _hdrHeight);
+document.addEventListener("DOMContentLoaded", _hdrHeight);
+
+// Printing opens every fold, and closes again the ones the reader had closed.
+window.addEventListener("beforeprint", () => {
+  for (const d of document.querySelectorAll("details.rp-fold")) { d.dataset.wasOpen = d.open ? "1" : ""; d.open = true; }
+});
+window.addEventListener("afterprint", () => {
+  for (const d of document.querySelectorAll("details.rp-fold")) { if (d.dataset.wasOpen !== "1") d.open = false; }
+});
+
 function _setChosen(evOn, ctyOn) {
   const on = evOn && ctyOn;
   const empty = document.getElementById("rp-empty");
@@ -984,6 +1093,8 @@ function _setChosen(evOn, ctyOn) {
     const el = document.getElementById(id);
     if (el) el.hidden = !on;
   });
+  document.querySelectorAll("[data-needs-country]").forEach(el => { el.hidden = !on; });
+  _syncSecNav();
   if (!on) {                                  // region selection cannot outlive the event or country
     const b = document.getElementById("rp-region-banner");
     const r = document.getElementById("rp-regions");
@@ -1084,6 +1195,7 @@ function render() {
   _applyNotices(RP.country && RP.country.id, sel);
   _renderImpacts(sel, nMonths);
   _renderOutlook();
+  _drawSections();
 }
 
 // ── x axis: real months, on two lines, never rotated ─────────────────────────
@@ -1177,6 +1289,17 @@ function _calSpanText(s) {
   return `${from(s[0])} to ${to(s[1])}`;
 }
 
+// The source line under the strip and its hover text (calendars for all countries, 18 Nov 2026). One label per
+// source the unit's rows use, looked up in the served "sources" block: CHIRPS, FEWS NET, the FAO GIEWS country
+// brief (its label carries FAO's credit, "(c) FAO"), the FAO Crop Calendar, or the modelled GGCMI calendar. A source
+// key the served file does not describe is named by its key, never dropped and never an error. The line also says
+// what the calendar cannot show: "lean season not given by the source" for the unit, and the country's note when
+// no agricultural calendar exists. The rule lives in typical_year.js (sourceLine), shared with the Typical year
+// strip of both pages; tests/js/test_calendar_sources.mjs runs it.
+function _calSourceLine(doc, unit, name) {
+  return window.ENSO_TYPICAL_YEAR.sourceLine(doc, unit, name);      // the one rule, static/js/typical_year.js
+}
+
 function _layoutCalendar(chart) {
   const wrap = chart.canvas.closest(".rp-canvas-wrap");
   const doc = RP.calendar, reg = RPRG.selected;
@@ -1201,7 +1324,7 @@ function _layoutCalendar(chart) {
   box.setAttribute("aria-label", `Typical year, ${name}: `
     + unit.rows.map(r => `${r.label} ${r.spans.map(_calSpanText).join(" and ")}`).join("; "));
   for (const r of unit.rows) {
-    const src = doc.sources[r.source];
+    const src = { label: _calSourceLine(doc, unit, "").label(r.source) };
     const row = document.createElement("div");
     row.className = "rp-cal-row";
     const lab = document.createElement("span");
@@ -1246,12 +1369,11 @@ function _layoutCalendar(chart) {
     row.appendChild(tr);
     box.appendChild(row);
   }
-  const used = [...new Set(unit.rows.map(r => r.source))].map(k => doc.sources[k]);
+  const srcLine = _calSourceLine(doc, unit, name);
   const line = document.createElement("p");
   line.className = "rp-cal-src";
-  line.textContent = `Typical year, ${name}: ${used.map(s => s.label).join("; ")}.`;
-  line.title = used.map(s => [s.label, s.method, s.url, s.accessed && `accessed ${s.accessed}`, s.licence]
-    .filter(Boolean).join(". ")).join("\n");
+  line.textContent = srcLine.text;
+  line.title = srcLine.title;
   box.appendChild(line);
   wrap.after(box);
 }
@@ -2669,7 +2791,16 @@ async function _calLoad(id) {
   const doc = await _getJSON(`data/replay/calendars/${id}.json`);
   if (!RP.country || RP.country.id !== id) return;
   RP.calendar = doc;
+  // where CHIRPS does not cover a region's rain, the strip says so (the same rule as the forecast)
+  const pr = await _loadRegions(id, "pr_total").catch(() => null);
+  RP.rainCov = {};
+  for (const r of (pr && pr.regions) || []) {
+    if (r.rain_hidden) RP.rainCov[r.name] = { hidden: true, n: r.n_cells, t: r.n_cells_all };
+    else if (r.method === "no_cells") RP.rainCov[r.name] = { none: true };
+  }
+  if (!RP.country || RP.country.id !== id) return;
   if (RP.charts.rain) RP.charts.rain.draw();
+  _drawSections();
 }
 
 async function init() {
@@ -2725,13 +2856,18 @@ async function init() {
   const q = new URLSearchParams(location.search);
   if (ordered.some(e => e.id === q.get("event"))) evSel.value = q.get("event");
   if (cs.some(c => c.id === q.get("country"))) cSel.value = q.get("country");
-  const syncUrl = () => {
-    const p = new URLSearchParams();
-    if (evSel.value) p.set("event", evSel.value);
-    if (cSel.value) p.set("country", cSel.value);
-    history.replaceState(null, "", "?" + p.toString() + location.hash);
-  };
+  const syncUrl = () => _writeShareUrl();
+  // a link also names the month, the map layer, the compared event and the charts' comparison (Isma, 18 Nov
+  // 2026: every view can be sent); the month and the comparison are taken before the first draw
+  const link = window.ENSO_LINK ? window.ENSO_LINK.fromQuery(location.search, SHARE_SPEC) : {};
+  const cmpSel0 = document.getElementById("rp-compare");
+  if (link.compare && cmpSel0 && [...cmpSel0.options].some(o => o.value === link.compare)) cmpSel0.value = link.compare;
+  if (link.cmp) RPZ.cmp = link.cmp;
+  const host = document.querySelector("label[for=rp-country]");
+  if (host && window.ENSO_LINK) window.ENSO_LINK.copyButton(host.parentElement, { after: true });
 
+  // the ENSO status line, for the El Niño section's takeaway (the same file the site header reads)
+  RP.enso = await _getJSON("data/enso_now.json").catch(() => null);
   const packIdx = await _getJSON("data/packs_index.json").catch(() => null);
   RP.packs = packIdx ? new Set(packIdx.countries) : null;
   RP.packFiles = packIdx && packIdx.files ? packIdx.files : null;
@@ -2743,8 +2879,27 @@ async function init() {
   _wireEnlarge();
   _wireImpacts();
   _setOpeningMonth(RP.events.events.find(e => e.id === evSel.value));
+  if (link.month) {
+    const i = _monthIndexOf(RP.events.events.find(e => e.id === evSel.value), link.month);
+    if (i !== null) { RPZ.monthIdx = i; RPZ.autoMonth = false; }
+  }
   render();
-  _drawPickerMap().then(() => _drawZoom()).catch(err => {
+  // ...&region=<name> opens that region (the country page links here); only a name the region index lists
+  // for that country, exactly, is taken
+  if (cSel.value && q.get("region")) {
+    if (RPRG.index === null) RPRG.index = await _getJSON("data/replay/regions/index.json").catch(() => false);
+    const reg = _regionFromLink(q.get("region"), cSel.value, RPRG.index);
+    if (reg) await _selectRegion(cSel.value, reg);
+    syncUrl();
+  }
+  _drawPickerMap().then(() => {
+    const vs = document.getElementById("rp-map-variable");
+    if (link.index && vs && [...vs.options].some(o => o.value === link.index) && vs.value !== link.index) {
+      vs.value = link.index;
+      vs.dispatchEvent(new Event("change"));
+    }
+    return _drawZoom();
+  }).catch(err => {
     // The page is fully usable from the dropdown, so a map failure must not
     // take the charts down with it.
     console.warn("event_replay: picker map unavailable:", err.message);
@@ -2757,6 +2912,10 @@ async function init() {
     syncUrl(); render(); _drawEventLayer().catch(() => {}); _drawZoom().catch(() => {});
   });
   document.getElementById("rp-compare").addEventListener("change", render);
+  for (const id of ["rp-compare", "rp-map-variable"]) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("change", () => _writeShareUrl());
+  }
   cSel.addEventListener("change", async () => {
     syncUrl();
     if (!cSel.value) {                     // back to "Choose a country..."
@@ -2928,6 +3087,7 @@ async function _drawZoom() {
   _clearZoomPanels("Loading " + (RP.country.label || "") + "...");
 
   _syncZoomControls(sel);
+  _writeShareUrl();
   const cmp = RP.events.events.find(e => e.id === RPZ.cmp) || null;
   const varKey = (document.getElementById("rp-map-variable") || {}).value;
 
@@ -3160,6 +3320,41 @@ async function _loadRegions(countryId, varKey) {
 
 /** Select a sub-national region (or null for the whole country) and redraw.
  *  Awaits the series here so render(), which is synchronous, can just read it. */
+// The parameters of a shared view, in the order the link writes them (the Guide's table lists them).
+const SHARE_KEYS = ["event", "country", "region", "month", "index", "cmp", "compare"];
+const SHARE_SPEC = { event: "str", country: "str", region: "str", month: "str", index: "str", cmp: "str", compare: "str" };
+
+/** The month (YYYY-MM) as an index into the event's window, or null outside it. */
+function _monthIndexOf(e, ym) {
+  if (!e || !/^\d{4}-\d{2}$/.test(String(ym))) return null;
+  const y0 = parseInt(String(e.window_start).slice(0, 4), 10), m0 = parseInt(String(e.window_start).slice(5, 7), 10);
+  const [y, m] = String(ym).split("-").map(Number);
+  const i = (y - y0) * 12 + (m - m0);
+  return i >= 0 && i < e.window_months ? i : null;
+}
+
+/** The whole view as link parameters, from the page's own state. */
+function _shareState() {
+  const ev = document.getElementById("rp-event"), c = document.getElementById("rp-country");
+  const sel = RP.events && ev && RP.events.events.find(e => e.id === ev.value);
+  const vs = document.getElementById("rp-map-variable"), cmp = document.getElementById("rp-compare");
+  return { event: ev && ev.value, country: c && c.value,
+           region: c && c.value && RPRG.selected && RPRG.selected.country === c.value ? RPRG.selected.name : null,
+           month: sel && c && c.value ? _monthKeyAt(sel, RPZ.monthIdx) : null,
+           index: c && c.value && vs ? vs.value : null, cmp: c && c.value ? RPZ.cmp : null,
+           compare: c && c.value && cmp ? cmp.value : null };
+}
+
+function _writeShareUrl() {
+  if (window.ENSO_LINK) window.ENSO_LINK.write(_shareState(), SHARE_KEYS);
+}
+
+/** The region a link names (?region=), if the region index lists it for that country exactly; otherwise null. */
+function _regionFromLink(name, countryId, index) {
+  const c = index && index.countries && index.countries[countryId];
+  return c && Array.isArray(c.regions) && c.regions.includes(name) ? name : null;
+}
+
 async function _selectRegion(countryId, regionName) {
   if (!regionName) {
     RPRG.selected = null;
@@ -3170,6 +3365,8 @@ async function _selectRegion(countryId, regionName) {
     RPRG.selected = { country: countryId, name: regionName, ...s };
   }
   _updateRegionBanner();
+  // keep a shared link on the region shown (?region=), or drop it for the whole country
+  _writeShareUrl();
   render();
   _drawZoom().catch(() => {});
 }

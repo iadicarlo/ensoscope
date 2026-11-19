@@ -15,6 +15,46 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-11-19",
+    tag: "New data",
+    title: "A fixed normal for the observed ENSO index, and event peaks in degrees",
+    items: [
+      "In the observed ENSO index, the normal of each month is now the 31 years around it, kept inside 1980 to 2025. The end year stays at 2025 until 2031, then moves every five years. Until now the window ended at the latest month, so each update changed past values: October 2026 alone moved four event dates.",
+      "The peak of an event is now its largest three-month anomaly in °C. Peaks now fall within one month of NOAA's for 24 of 25 events, against 13 before.",
+      "The observed ENSO index, the ENSO meter and the skill tables now run to October 2026. They were held at September while this change was prepared.",
+      "28 of the 39 periods in the event list change their start, end or peak month; no event is added or removed. Event replay, the seasonal maps, the skill page, the regional forecast and both downloads follow the new dates.",
+      "Where a past season sat close to normal, a region's past El Niño label can change. Chari-Baguirmi in Chad, for example, now reads \"Tends drier (6 of 9)\" instead of \"Drier in 7 of 9\".",
+    ],
+  },
+  {
+    date: "2026-11-19",
+    tag: "New feature",
+    title: "A page for your country, a typical year, and links you can send",
+    items: [
+      "A new country page gathers in one place what ENSOscope holds for a country: the current forecast, the event so far, its regions and both downloads. Choose the country on the home page.",
+      "Event replay now reads in one order, with a section menu. Click a region on the map to open it.",
+      "A \"Typical year\" strip shows the rainy season of each region (CHIRPS, observed, 1982 to 2025) with the planting, harvest and lean seasons of the country. The agricultural calendars come from FEWS NET, from FAO GIEWS and the FAO Crop Calendar, or, where neither covers a country, from the modelled GGCMI crop calendar; the source is named under each strip. Kiribati and Puerto Rico have no agricultural calendar. The same calendar is a sheet in both downloads.",
+      "\"Copy link\" gives a link to exactly what is on screen (country, region, event, month), to send to a colleague.",
+    ],
+  },
+  {
+    date: "2026-11-19",
+    tag: "Fix",
+    title: "Clearer words where nothing stands out",
+    items: [
+      "The regional forecast and both downloads no longer say \"no clear signal\". Where past El Niño seasons went both ways they now say \"no consistent direction\"; where a forecast model leans neither wetter nor drier they say \"no lean\" and why: its runs are split, or it has not told such seasons apart in the past.",
+    ],
+  },
+  {
+    date: "2026-11-19",
+    tag: "Fix",
+    title: "Full analysis: missing charts restored",
+    items: [
+      "In 17 of the 81 Full analysis PDFs published on 18 November, a page break dropped charts and left empty pages. Brazil lacked the ENSO forecast chart on page 1. Afghanistan, Burkina Faso, China, Colombia, the Dominican Republic, India, Indonesia, Iran, Japan, Mexico, Nigeria, the Philippines, Thailand, Uganda, the USA and Vietnam lacked the past seasons charts in \"This season\". All 81 are rebuilt and complete.",
+      "In the One-page summaries, the Calendar sheet of the French downloads headed both June and July \"Jui\"; it now reads \"Juin\" and \"Juil.\". FAO crops now carry plain names, in the sheet's language (maize rather than corn, maïs in French).",
+    ],
+  },
+  {
     date: "2026-11-18",
     tag: "Forecast update",
     title: "November 2026 forecast",

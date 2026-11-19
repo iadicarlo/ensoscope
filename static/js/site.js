@@ -112,6 +112,7 @@
             '<li><a href="guide.html">Guide</a></li>' +
             '<li><a href="index.html">Forecast</a></li>' +
             '<li><a href="map_explorer.html">Teleconnections</a></li>' +
+            '<li><a href="country.html">Your country</a></li>' +
             '<li><a href="event_replay.html">Event replay</a></li>' +
             '<li><a href="hindcast_skill.html">Skill</a></li>' +
             '<li><a href="methodology.html">Methodology and data sources</a></li>' +

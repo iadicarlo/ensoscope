@@ -12,7 +12,7 @@ const DATA_BASE = "data/forecast_maps/";
 // forecast vintage is never masked by a stale browser/CDN copy. Kept in sync
 // with app.js DATA_VERSION. Static basemaps (ne_*.geojson) never change and are
 // left unversioned, matching the app.js / map_explorer.js convention.
-const DATA_VERSION = "20261118a";
+const DATA_VERSION = "20261119a";
 function _dv(url) {
   return url + (url.indexOf("?") === -1 ? "?" : "&") + "v=" + DATA_VERSION;
 }
@@ -770,6 +770,33 @@ function renderColorbar(vmin, vmax, units) {
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 
+const FM_KEYS = ["var", "lead", "model", "country"];
+const FM_SPEC = { var: "str", lead: "str", model: "str", country: "str" };
+let _fmCountry = null;
+
+function _writeFmLink() {
+  if (window.ENSO_LINK) window.ENSO_LINK.write({ var: _variable, lead: _lead, model: _centre, country: _fmCountry }, FM_KEYS);
+}
+
+/** Turn the globe to a country (its served region outlines, the replay's own) and fit it in the view. */
+async function _turnToCountry(id) {
+  if (!/^[a-z_]+$/.test(id)) return;
+  const idx = await fetch("data/replay/index.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
+  if (!idx || !(idx.countries || []).some(c => c.id === id)) { _fmCountry = null; return; }   // never guessed
+  const base = (window.ENSOSCOPE_DATA_BASE || "").replace(/\/+$/, "");
+  const v = window.ENSOSCOPE_DATA_VERSION || "";
+  const r = await fetch(`${base ? base + "/" : ""}data/replay/regions/${id}/_bounds.json${v ? "?v=" + v : ""}`);
+  if (!r.ok) throw new Error(`${id}: ${r.status}`);
+  const fc = await r.json();
+  const [cx, cy] = d3.geoCentroid(fc);
+  const [[w, s], [e, n]] = d3.geoBounds(fc);
+  const span = Math.max(Math.abs(e - w), Math.abs(n - s), 8) * Math.PI / 180;
+  if (_projectionKind === "orthographic") _projection.rotate([-cx, -cy]);
+  // the country with its neighbours around it: about a third of the view
+  _projection.scale(Math.max(100, Math.min(_W * 5, 0.4 * Math.min(_W, _H) / Math.sin(Math.min(3 * span, 2.6) / 2))));
+  _redraw();
+}
+
 async function init() {
   const container = document.getElementById("fm-map");
   if (!container) return;
@@ -858,14 +885,32 @@ async function init() {
   }
 
   await _loadFcManifest();
+  // a shared link (Isma, 18 Nov 2026): ?var=&lead=&model=&country= reopen the same map; a name the page
+  // does not offer is ignored, never guessed
+  const link = window.ENSO_LINK ? window.ENSO_LINK.fromQuery(location.search, FM_SPEC) : {};
+  if (link.var && VARIABLES[link.var]) {
+    _variable = link.var;
+    const vs = document.getElementById("fm-variable");
+    if (vs && [...vs.options].some(o => o.value === link.var)) vs.value = link.var;
+  }
+  if (link.lead) _lead = _isFc(_variable) ? link.lead : parseInt(link.lead, 10);
+  if (link.model) _centre = link.model;
+  _fmCountry = link.country || null;
   _syncMenus();
+  if (_isFc(_variable)) await loadTile(_variable, _lead).catch(err => console.warn(err));
+  if (_fmCountry) await _turnToCountry(_fmCountry).catch(err => console.warn("no country outline", err));
+  const head = document.querySelector(".page-head .page-title");
+  if (head && window.ENSO_LINK) window.ENSO_LINK.copyButton(head, { after: true });
+  _writeFmLink();
 
-  // Preload all SSTA leads for default variable
-  await preloadVariable(_variable);
+  // Preload all SSTA leads for default variable (a linked regional forecast map loads its one period above)
+  if (!_isFc(_variable)) await preloadVariable(_variable);
 
   const spec = VARIABLES[_variable];
   renderColorbar(spec.vmin, spec.vmax, spec.units);
 
+  for (const id of ["fm-lead", "fm-centre", "fm-variable"])
+    document.getElementById(id).addEventListener("change", () => setTimeout(_writeFmLink, 0));
   document.getElementById("fm-lead").addEventListener("change", async e => {
     _lead = _isFc(_variable) ? e.target.value : parseInt(e.target.value, 10);
     if (_isFc(_variable)) await loadTile(_variable, _lead).catch(err => console.warn(err));

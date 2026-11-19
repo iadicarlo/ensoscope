@@ -954,8 +954,8 @@ const _MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","No
 // Both forecast models, as on the Forecast page. ?v= is bumped with each build;
 // no-store because the files are small and change monthly.
 const _FC_FILES = [
-  { key: "seas5", name: "SEAS5", file: "data/forecast.json?v=20261118a" },
-  { key: "mf9", name: "Météo-France", file: "data/forecast_mf9.json?v=20261118a" },
+  { key: "seas5", name: "SEAS5", file: "data/forecast.json?v=20261119a" },
+  { key: "mf9", name: "Météo-France", file: "data/forecast_mf9.json?v=20261119a" },
 ];
 const _PANEL_VAR = {
   wet: { variable: "rx10day_anomaly", units: "mm", up: "heavier", down: "lighter" },
@@ -991,7 +991,9 @@ async function _signalFor(source, season, cls, pv) {
   const mean = EnsoSignal.areaMean(t, cells);
   const dir = EnsoSignal.direction(mean, pv.variable);
   const num = `${mean >= 0 ? "+" : ""}${mean.toFixed(1)} ${pv.units}`;
-  const word = dir > 0 ? pv.up : dir < 0 ? pv.down : "no clear signal";
+  // a past-events change under the threshold, as printed: little change (a change, not a level; the caption
+  // gives the threshold). One meaning per term (glossary, 18 Nov 2026)
+  const word = dir > 0 ? pv.up : dir < 0 ? pv.down : "little change";
   const n = t.meta && t.meta.n_events;
   // Which past events, and how many went the way of the average. Written by the
   // tile exporter from the event NetCDF, on the same cells and weights as the
@@ -1099,7 +1101,7 @@ async function _updateAlertPanel() {
     + `Most likely class: the family (El Niño, neutral or La Niña) with the highest chance, then its most likely `
     + `strength, the rule of the Forecast page; the % is the chance of that family. The change is averaged `
     + `over the map cells inside ${geoLabel}, weighted by cell area; a change under ${thr} ${pv.units} either way, `
-    + `as printed, reads "no clear signal". n is the number of past events behind the map${source === "cesm2"
+    + `as printed, reads "little change". n is the number of past events behind the map${source === "cesm2"
       ? " (counted over all CESM2 runs)"
       : `, then the season each one gave (its year, or years for December to February) and in how many of `
         + `them the change went the way of the average`}; few events make a weak guide. `
