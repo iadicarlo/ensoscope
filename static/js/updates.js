@@ -15,6 +15,14 @@
  */
 window.ENSOSCOPE_UPDATES = [
   {
+    date: "2026-11-20",
+    tag: "Fix",
+    title: "Rainy months corrected in nine regions",
+    items: [
+      "The rainy months in the Typical year strips and the Calendar sheets are now worked out from each region's observed rain (CHIRPS) as it is, not from a rounded copy of it. Nine regions change by one month: Jervis Bay Territory (Australia), San Juan (Dominican Republic), Eure (France), Enna and Nuoro (Italy), Carazo (Nicaragua), Çorum (Turkey), Điện Biên (Vietnam) and Aden (Yemen).",
+    ],
+  },
+  {
     date: "2026-11-19",
     tag: "New data",
     title: "A fixed normal for the observed ENSO index, and event peaks in degrees",
