@@ -12,7 +12,7 @@ const DATA_BASE = "data/forecast_maps/";
 // forecast vintage is never masked by a stale browser/CDN copy. Kept in sync
 // with app.js DATA_VERSION. Static basemaps (ne_*.geojson) never change and are
 // left unversioned, matching the app.js / map_explorer.js convention.
-const DATA_VERSION = "20261120a";
+const DATA_VERSION = "20261120b";
 function _dv(url) {
   return url + (url.indexOf("?") === -1 ? "?" : "&") + "v=" + DATA_VERSION;
 }
@@ -681,9 +681,11 @@ function _fcCellInfo(lon, lat) {
     const a = y + (+p.months[0].slice(0, 4) - init), b = y + (+p.months[p.months.length - 1].slice(0, 4) - init);
     return a === b ? `${a}` : `${a}-${String(b).slice(2)}`;
   };
+  let within = null;
   for (const [s, pc] of Object.entries(tile.per_centre)) {
     const v = _fcField(pc.anom)[best];
     if (v === null) continue;
+    const printed = _fcPrint(v, tile.rain, unit, (pc.anom.hi - pc.anom.lo) / 508);
     const name = (_fcManifest.sources || {})[s] || s;
     const flags = [];
     // rain past this cell's record since 1982: the record, never the number (build_region_forecast.past_cells)
@@ -693,10 +695,32 @@ function _fcCellInfo(lon, lat) {
     if (x !== null && x > 0.5) flags.push("beyond the model's past range; treat as indicative");
     const val = past
       ? `${past[0] > 0 ? "above" : "below"} the record since 1982 (${past[1]}%${season(past[2]) ? ", " + season(past[2]) : ""})`
-      : tile.rain ? `${Math.round(v)}${unit}` : `${v > 0 ? "+" : ""}${v.toFixed(1)}\u00a0${unit}`;
+      : printed.text;
+    if (!past && printed.within !== null && (within === null || printed.within > within.n)) {
+      within = { n: printed.within, dp: printed.dp };
+    }
     parts.push(`${name} ${val}` + (flags.length ? ` (${flags.join("; ")})` : ""));
   }
-  return parts.length ? `This cell: ${parts.join("; ")}.` : null;
+  if (!parts.length) return null;
+  const bound = within === null ? "" : ` Map values are rounded to within \u00b1${within.n.toFixed(within.dp)}`
+    + `${tile.rain ? "%" : "\u00a0" + unit}.`;
+  return `This cell: ${parts.join("; ")}.${bound}`;
+}
+
+/** A forecast cell's change from normal as the hover prints it, no finer than its 8-bit store holds (20 Nov 2026;
+ *  value = lo + (b - 1) / 254 * (hi - lo), the byte rounded to nearest, so half a step, qhalf = (hi - lo) / 508,
+ *  each way): rain in whole % of normal, maximum temperature to one decimal, days and mm whole, as the forecast
+ *  sentences print them. within: where the step is coarser than the printed unit, the bound on the printed number
+ *  (the store's half step plus the printing's half unit, rounded up to the printed unit); else null. */
+function _fcPrint(v, rain, unit, qhalf) {
+  const res = !rain && unit === "°C" ? 0.1 : 1, dp = res < 1 ? 1 : 0;
+  let t = (+v).toFixed(dp);
+  if (+t === 0) t = (0).toFixed(dp);
+  else if (!rain && +t > 0) t = "+" + t;
+  const text = rain ? `${t}${unit}` : `${t}\u00a0${unit}`;
+  const within = Number.isFinite(qhalf) && 2 * qhalf > res + 1e-9
+    ? Math.ceil((qhalf + res / 2) / res - 1e-9) * res : null;
+  return { text, within, dp };
 }
 
 /** Colour range for an outlook tile: rain 40 to 160 % of normal; the rest symmetric at

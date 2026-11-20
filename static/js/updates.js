@@ -17,6 +17,19 @@ window.ENSOSCOPE_UPDATES = [
   {
     date: "2026-11-20",
     tag: "Fix",
+    title: "Regional rain figures now exact, and one rule for dry months",
+    items: [
+      "Each region's rain was averaged from compressed map values. That moved monthly figures by 0.3 mm at the median and by up to 7 mm. Regional rain is now averaged from the CHIRPS values as they are.",
+      "Grid cells that CHIRPS never observes, mostly coastal sea inside country outlines, were counted as 0 mm. Dakar read a third too dry, and the rain of 39 countries read slightly low: Trinidad, August 2025, is 342 mm, not 311 mm. These cells are now left out.",
+      "In the downloads, 369 regional \"% of normal\" values for this season change, almost all by one point. The driest region named changes in Bangladesh, South Korea, Thailand and Yemen.",
+      "Months that normally bring very little rain (under 8% of a region's yearly rain, or under 15 mm) now read \"dry months\" in every table, the forecast and the country page, instead of a percentage of almost nothing.",
+      "The regional forecast was rebuilt on the exact figures. The rainy-season calendar is unchanged.",
+      "Map values under the pointer in Event replay and the Forecast tab are stored rounded. They are now shown without decimals they did not have, with a line giving the rounding.",
+    ],
+  },
+  {
+    date: "2026-11-20",
+    tag: "Fix",
     title: "Rainy months corrected in nine regions",
     items: [
       "The rainy months in the Typical year strips and the Calendar sheets are now worked out from each region's observed rain (CHIRPS) as it is, not from a rounded copy of it. Nine regions change by one month: Jervis Bay Territory (Australia), San Juan (Dominican Republic), Eure (France), Enna and Nuoro (Italy), Carazo (Nicaragua), Çorum (Turkey), Điện Biên (Vietnam) and Aden (Yemen).",

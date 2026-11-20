@@ -7,7 +7,7 @@
   <meta name="description" content="Methodology and open data sources behind the ENSOscope ENSO forecasts, skill verification and teleconnection composites, with DOIs.">
   <link rel="canonical" href="https://iadicarlo.org/ensoscope/methodology.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="stylesheet" href="static/css/style.css?v=20261120a">
+  <link rel="stylesheet" href="static/css/style.css?v=20261120b">
   <style>
     /* Methodology layout. Shared components live in style.css. */
     .section .prose { max-width: var(--measure); }
@@ -23,14 +23,14 @@
     table.datasets td { vertical-align: top; line-height: 1.45; }
     @media (max-width: 600px) { table.datasets th[scope=row] { width: auto; min-width: 8rem; } }
   </style>
-  <link rel="icon" type="image/png" href="favicon.png?v=20261120a">
+  <link rel="icon" type="image/png" href="favicon.png?v=20261120b">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body data-page="methodology">
 
   <header>
     <div class="header-inner">
-      <a class="site-title" href="index.html"><img src="favicon.png?v=20261120a" class="site-logo" alt=""><span>ENSO</span>scope</a>
+      <a class="site-title" href="index.html"><img src="favicon.png?v=20261120b" class="site-logo" alt=""><span>ENSO</span>scope</a>
       <nav>
         <div class="nav-dropdown">
           <span class="nav-dropdown-toggle" data-nav="forecast">Forecast</span>
@@ -643,9 +643,11 @@
           1993-2025, how often the model leaned the right way, the wrong way or not at all.
         </p>
         <p>
-          <strong>What is not said.</strong> Rain is not described in windows that normally bring
-          under 8% of a region's yearly rain, or, for a single month, a month bringing under 2.7% of
-          the year's rain: the 8% three-month rule spread over one month.
+          <strong>What is not said.</strong> Rain is not described, and no % of normal is given, in dry
+          months: a window whose normal rain (the mean of every whole year since 1982) is under 8% of
+          the region's yearly rain, under 2.7% for a single month (the 8% three-month rule spread over
+          one month), or under 15 mm. The same rule holds in every row of the site, the forecast and the
+          downloads.
           Where at least 9 in 10 runs of each model are past the wettest or driest (or warmest)
           season since 1982, every cell that shows a number says "beyond the record since 1982" with
           the record and its season. Where more than half of a season's forecast rain comes from days
@@ -742,6 +744,6 @@
     </section>
   </main>
 
-  <script src="static/js/site.js?v=20261120a"></script>
+  <script src="static/js/site.js?v=20261120b"></script>
 </body>
 </html>

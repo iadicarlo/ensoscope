@@ -368,7 +368,10 @@
    *  rain as % of normal (the season's total against its normal), maximum temperature the mean difference,
    *  dry days and heat-stress days (the three UTCI bands summed) the summed difference; the whole country is the
    *  cell-weighted mean of every region with cells, rain-hidden ones included (build_country_check.whole).
-   *  Returns {value} or {state: "hidden" | "noseries"}. */
+   *  A region's rain in dry months (under DRY_SHARE of its own year, mean_all, a single month DRY_SHARE / 3; or
+   *  under ROW_FLOOR_MM in all) is DRY_TEXT, not a % (glossary G7; build_country_check.window_dry, 20 Nov 2026);
+   *  the whole country by the same rule on the cell-weighted mean of its regions' mean_all, when all have one.
+   *  Returns {value} (with dry: true for DRY_TEXT) or {state: "hidden" | "noseries"}. */
   function seasonValue(files, key, unit, season) {
     const docs = key === "heat_days" ? files.utci : [files[key]];
     if (!season || !docs || !docs.length || docs.some(d => !d)) return { state: "noseries" };
@@ -384,7 +387,7 @@
       const anom = Array.from({ length: n }, (_, t) => rs.reduce((acc, r, j) => (j ? acc + val(r.values[t]) : val(r.values[t])), 0));
       const clim = Array.from({ length: 12 }, (_, m) => rs.reduce((acc, r, j) => (j ? acc + r.clim[m] : r.clim[m]), 0));
       return { name: r0.name, anom, clim, w: r0.cells_equiv !== undefined ? r0.cells_equiv : r0.n_cells,
-               hidden: rain && !!r0.rain_hidden };
+               hidden: rain && !!r0.rain_hidden, meanAll: key === "pr_total" ? r0.mean_all : undefined };
     }).filter(Boolean);
     let u;
     if (unit === "Whole country") {
@@ -392,12 +395,17 @@
       if (!all.length) return { state: "noseries" };
       const ws = npSum(all.map(r => r.w));
       const wmean = get => get(all[0]).map((_, i) => all.reduce((acc, r) => acc + get(r)[i] * r.w, 0) / ws);
-      u = { anom: wmean(r => r.anom), clim: wmean(r => r.clim) };
+      // its all-years mean the same cell-weighted mean, when every region has one (build_country_check.whole)
+      // (a region's missing month leaves that month unknown there too: null is NaN, never 0)
+      const meanAll = key === "pr_total" && all.every(r => Array.isArray(r.meanAll) && r.meanAll.length === 12)
+        ? wmean(r => r.meanAll.map(val)) : undefined;
+      u = { anom: wmean(r => r.anom), clim: wmean(r => r.clim), meanAll };
     } else {
       u = regs.find(r => r.name === unit);
       if (!u) return { state: "noseries" };
       if (u.hidden) return { state: "hidden" };
     }
+    if (key === "pr_total" && isDry(u.meanAll, season.months)) return { value: DRY_TEXT, dry: true };
     // the season's months, ending in its year; a month after a wrap belongs to the next calendar year
     let y = season.year - season.months.slice(1).filter((m, i) => m < season.months[i]).length;
     const ms = season.months.map((m, i) => { if (i && m < season.months[i - 1]) y += 1; return `${y}-${String(m).padStart(2, "0")}`; });
@@ -414,6 +422,18 @@
     return { value: fmtSigned(sv, key === "tmax" ? 1 : 0, key === "tmax" ? "°C" : "days") };
   }
   const val = v => (v === null || v === undefined ? NaN : v);
+  // Dry months (glossary G7; Isma, 20 Nov 2026; build_country_check.window_dry, the same constants and comparisons):
+  // a window that normally brings under DRY_SHARE of the region's year (its twelve all-years monthly means,
+  // January first), DRY_SHARE / 3 for one month, or under ROW_FLOOR_MM in all; unknown, so never dry, when a
+  // mean is missing or the year holds no rain. The words are region_outlook.DRY_TEXT, as the tables print them.
+  const DRY_SHARE = 0.08, ROW_FLOOR_MM = 15, DRY_TEXT = "dry months: little rain falls then";
+  function isDry(meanAll, months) {
+    if (!Array.isArray(meanAll) || meanAll.length !== 12 || !meanAll.every(Number.isFinite)) return false;
+    const year = npSum(meanAll);
+    if (!(year > 0)) return false;
+    const win = npSum(months.map(m => meanAll[m - 1]));
+    return win / year < (months.length > 1 ? DRY_SHARE : DRY_SHARE / 3) || win < ROW_FLOOR_MM;
+  }
 
   /** The downloads that exist for a country, from data/packs_index.json as Event replay reads it; [] when none. */
   function downloadsOf(id, idx) {
@@ -444,7 +464,7 @@
       const r = seasonValue(S.series, k, name, season);
       const v = r.value ? (suf && r.value.endsWith("%") ? `${r.value} ${suf}` : r.value)
         : r.state === "hidden" ? "not covered by CHIRPS" : "no observed series";
-      return `<tr><th scope="row">${esc(lab)}</th><td>${esc(v)}</td></tr>`;
+      return `<tr><th scope="row">${esc(lab)}</th><td${r.dry ? ' class="na"' : ""}>${esc(v)}</td></tr>`;
     }).join("");
     // the whole country's rain rests on the part CHIRPS covers: say so where regions fall outside it
     const nReg = (S.series.pr_total.regions || []).length;

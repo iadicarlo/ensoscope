@@ -2498,7 +2498,7 @@ async function _drawEventLayer() {
   // Cell size in projected pixels, from the grid spacing itself rather than a
   // guess, so 1 degree and 0.25 degree products both tile without gaps.
   const dLat = Math.abs(lats[1] - lats[0]), dLon = Math.abs(lons[1] - lons[0]);
-  RPMAP.field = { lats, lons, ri, ci, v, scale, meta, dLat, dLon };
+  RPMAP.field = { lats, lons, ri, ci, v, scale, meta, dLat, dLon, qhalf: 0.5 / scale };
   _repaintWorld();
 
   if (cb) {
@@ -2557,7 +2557,7 @@ async function _loadGlobalMonth(product, ym) {
     const meta = RPGM.index.products[product];
     out = { lats: g.lats, lons: g.lons, ri: keepR, ci: keepC,
             v: Array.from(v.slice(0, n)), scale: 1,
-            dLat: g.dlat, dLon: g.dlon,
+            dLat: g.dlat, dLon: g.dlon, qhalf: d.vmax / 254,      // the 8-bit store's half step
             // Rounded, not the raw percentile. A bar reading -92.6 / -46.3 / 0
             // is a number nobody can halve by eye; -100 / -50 / 0 is.
             // The index keys products BY variable, so the entry itself has no
@@ -3692,6 +3692,7 @@ async function _drawZoomPanel(canvasId, svgId, wrapId, feat, evt, varKey, monthl
           painted.lats.push(lats[i]); painted.lons.push(lons[i]); painted.v.push(val);
           painted.dLat = dlat; painted.dLon = dlon;
         }
+        painted.qhalf = monthly.vmax / 254;            // the 8-bit store: half a step, 2 x vmax / 254, each way
       } else {
         svg.append("text").attr("x", w / 2).attr("y", h / 2).attr("text-anchor", "middle")
           .attr("class", "rp-zoom-empty").text("outside the observed record");
@@ -3710,6 +3711,7 @@ async function _drawZoomPanel(canvasId, svgId, wrapId, feat, evt, varKey, monthl
           painted.v.push(v[i] / sc);
         }
         painted.dLat = dLat; painted.dLon = dLon;
+        painted.qhalf = 0.5 / sc;                      // integers over the tile's scale: half a unit each way
       }
     }
     ctx.restore();
@@ -3836,19 +3838,43 @@ function _wireReadout(canvasOrSvg, boxId, getField, getProj, getMeta, getTransfo
     // a zoomed map would report the coordinates of wherever that pixel used to be.
     const t = getTransform && getTransform();
     if (t) { px = (px - t.x) / t.k; py = (py - t.y) / t.k; }
-    const hit = _valueAt(getField(), getProj(), px, py);
+    const field = getField();
+    const hit = _valueAt(field, getProj(), px, py);
     if (!hit) { box.hidden = true; return; }
     const meta = getMeta() || {};
     box.hidden = false;
-    box.textContent = hit.value == null
-      ? `${_fmtLatLon(hit.lat, hit.lon)}: no data`
-      : `${_fmtLatLon(hit.lat, hit.lon)}  ${_varLabel(meta) || "value"} `
-        + `${hit.value > 0 ? "+" : ""}${_fmtV(Math.abs(hit.value)) * (hit.value < 0 ? -1 : 1)}`
-        + `${meta.units ? " " + meta.units : ""}`;
+    if (hit.value == null) { box.textContent = `${_fmtLatLon(hit.lat, hit.lon)}: no data`; return; }
+    const out = _readoutValue(hit.value, meta.units, field && field.qhalf);
+    box.textContent = `${_fmtLatLon(hit.lat, hit.lon)}  ${_varLabel(meta) || "value"} ${out.value}`;
+    if (out.within) {
+      const cap = document.createElement("span");
+      cap.className = "rp-readout-q";
+      cap.textContent = out.within;
+      box.appendChild(cap);
+    }
   };
   el.addEventListener("mousemove", show);
   el.addEventListener("click", show);
   el.addEventListener("mouseleave", () => { box.hidden = true; });
+}
+
+/** A map cell's value as the hover prints it, no finer than its store holds (20 Nov 2026): the 8-bit stores
+ *  (country month fields, world monthly maps) keep a value to half a step, 2 x vmax / 254, each way, up to 5 mm
+ *  for rain; the event tiles to half a unit of their scale. Rain prints in whole mm, everything else to one
+ *  decimal. Where the store's step is coarser than that, one line says how far the printed number can be from
+ *  the value mapped: the store's half step plus the printing's half unit, rounded up to the printed unit. */
+function _readoutValue(v, units, qhalf) {
+  const res = units === "mm" ? 1 : 0.1, dp = units === "mm" ? 0 : 1;
+  let t = (+v).toFixed(dp);
+  if (+t === 0) t = (0).toFixed(dp);
+  else if (+t > 0) t = "+" + t;
+  const value = `${t}${units ? " " + units : ""}`;
+  // a line only where the store is coarser than the printing (its step above the printed unit)
+  if (qhalf === undefined || qhalf === null || !Number.isFinite(qhalf) || 2 * qhalf <= res + 1e-9) {
+    return { value, within: null };
+  }
+  const n = Math.ceil((qhalf + res / 2) / res - 1e-9) * res;
+  return { value, within: `Map values are rounded to within \u00b1${n.toFixed(dp)}${units ? " " + units : ""}.` };
 }
 
 function _fmtV(v) {
